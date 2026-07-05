@@ -493,8 +493,20 @@
             <label for="select-zone" class="select-label">기본 권역 선택</label>
             <select id="select-zone" class="shadcn-select" onchange="handleZoneChange()">
               <option value="mylocation">📍 내 현재 위치 기준</option>
-              <option value="incheon" selected>🟦 인천 권역</option>
-              <option value="seoul">🟩 서울 권역</option>
+              <option value="seoul" selected>🟥 서울특별시</option>
+              <option value="incheon">🟦 인천광역시</option>
+              <option value="gyeonggi">🟨 경기도</option>
+              <option value="busan">🟩 부산광역시</option>
+              <option value="daegu">🟪 대구광역시</option>
+              <option value="daejeon">🟧 대전광역시</option>
+              <option value="gwangju">🟫 광주광역시</option>
+              <option value="ulsan">🎨 울산광역시</option>
+              <option value="sejong">🏛️ 세종특별자치시</option>
+              <option value="gangwon">🏔️ 강원특별자치도</option>
+              <option value="chungcheong">🌾 충청도 (청주/홍성)</option>
+              <option value="jeolla">🍵 전라도 (전주/무안)</option>
+              <option value="gyeongsang">🍏 경상도 (안동/창원)</option>
+              <option value="jeju">🌴 제주특별자치도</option>
             </select>
           </div>
           <div class="select-group" id="group-detail-place">
@@ -509,7 +521,7 @@
       <!-- 2단계: 실시간 주변 텍스트 검색 & 추천 칩 -->
       <section class="section">
         <div class="section-title">
-          <span>2. 주변 실시간 검색 (반경 1.5km)</span>
+          <span>2. 주변 실시간 검색 (반경 2km)</span>
         </div>
         
         <!-- 자유 텍스트 검색 바 -->
@@ -554,18 +566,69 @@
   <script src="https://dapi.kakao.com/v2/maps/sdk.js?appkey=012385551d235007080d46ee9ad59cb0&libraries=services&autoload=false"></script>
   
   <script>
-    // 지역 데이터 구성 (위도 경도 값 중 마지막 0은 린트 오류를 위해 배제)
+    // 지역 데이터 구성 (전국 17개 지자체 광역 거점망 수록, 마지막 0 배제)
     const ZONES_DATA = {
+      seoul: [
+        { name: "서울시청",   emoji: "🏛️", lat: 37.56654, lng: 126.97846, desc: "서울의 심장부, 행정과 역사의 교차로입니다." },
+        { name: "강남역",     emoji: "🏙️", lat: 37.49794, lng: 127.02762, desc: "대한민국 최대 규모의 랜드마크 번화가입니다." },
+        { name: "홍대입구역", emoji: "🎨", lat: 37.55736, lng: 126.92364, desc: "문화와 트렌드가 살아 숨쉬는 홍대입구역입니다." },
+        { name: "여의도역",   emoji: "🏢", lat: 37.52156, lng: 126.92429, desc: "금융과 정치의 거점 중심지입니다." }
+      ],
       incheon: [
         { name: "계양구청", emoji: "🏛️", lat: 37.53727, lng: 126.73768, desc: "인천 계양구의 행정 중심지입니다." },
         { name: "계산역",   emoji: "🚇", lat: 37.5432,   lng: 126.7378,  desc: "인천1호선 계산역 일대 역세권 중심지입니다." },
         { name: "부평구청", emoji: "🏢", lat: 37.50739, lng: 126.72182, desc: "부평의 주요 행정 거점 구청입니다." },
-        { name: "부평역",   emoji: "🛍️", lat: 37.4894,   lng: 126.7247,  desc: "부평의 핵심 상권이자 초역세권입니다." }
+        { name: "부평역",   emoji: "🛍️", lat: 37.4894,   lng: 126.7247,  desc: "부평의 핵심 상권이자 초역세권입니다." },
+        { name: "송도센트럴파크", emoji: "🌳", lat: 37.39276, lng: 126.6346, desc: "미래형 국제도시 송도의 대표 공원입니다." }
       ],
-      seoul: [
-        { name: "서울시청",   emoji: "🏛️", lat: 37.56654, lng: 126.97846, desc: "서울의 심장부, 행정과 역사의 교차로입니다." },
-        { name: "강남역",     emoji: "🏙️", lat: 37.49794, lng: 127.02762, desc: "대한민국 최대 규모의 랜드마크 번화가입니다." },
-        { name: "홍대입구역", emoji: "🎨", lat: 37.55736, lng: 126.92364, desc: "문화와 트렌드가 살아 숨쉬는 홍대입구역입니다." }
+      gyeonggi: [
+        { name: "경기도청 (수원)", emoji: "🏛️", lat: 37.27506, lng: 127.02894, desc: "수원 광교에 위치한 경기도 행정 핵심입니다." },
+        { name: "판교역", emoji: "💻", lat: 37.39476, lng: 127.11122, desc: "IT 테크 기업들이 밀집한 판교 테크노밸리입니다." },
+        { name: "일산호수공원", emoji: "⛲", lat: 37.65825, lng: 126.76442, desc: "고양 일산 동구의 아시아 최대 인공 호수공원입니다." }
+      ],
+      busan: [
+        { name: "부산시청", emoji: "🏢", lat: 35.17978, lng: 129.07499, desc: "부산광역시 행정 중심지입니다." },
+        { name: "서면역", emoji: "🛍️", lat: 35.1583, lng: 129.05984, desc: "부산 교통과 상업의 최대 번화 거점입니다." },
+        { name: "해운대해수욕장", emoji: "🏖️", lat: 35.1587, lng: 129.16038, desc: "부산을 대표하는 세계적인 해양 관광 명소입니다." }
+      ],
+      daegu: [
+        { name: "대구시청 (동인청사)", emoji: "🏛️", lat: 35.8711, lng: 128.6014, desc: "대구의 행정 역사와 함께한 시청입니다." },
+        { name: "반월당역", emoji: "🚇", lat: 35.8647, lng: 128.593, desc: "대구 메트로의 핵심 환승 번화 지구입니다." }
+      ],
+      daejeon: [
+        { name: "대전시청", emoji: "🏢", lat: 36.35041, lng: 127.38482, desc: "중부권 핵심 도시 대전의 시청입니다." },
+        { name: "대전역", emoji: "🚄", lat: 36.3323, lng: 127.4342, desc: "교통의 요충지이자 철도의 허브인 대전역입니다." }
+      ],
+      gwangju: [
+        { name: "광주시청", emoji: "🏢", lat: 35.15954, lng: 126.8526, desc: "빛고을 광주의 행정 컨트롤타워입니다." },
+        { name: "금남로4가역", emoji: "🚇", lat: 35.1506, lng: 126.9152, desc: "역사와 문화가 살아 숨 쉬는 광주 중심지입니다." }
+      ],
+      ulsan: [
+        { name: "울산시청", emoji: "🏢", lat: 35.5396, lng: 129.3115, desc: "산업 수도 울산의 행정 심장부입니다." },
+        { name: "태화강국가정원", emoji: "🎋", lat: 35.5488, lng: 129.2995, desc: "십리대숲과 아름다운 정원이 펼쳐진 울산의 명소입니다." }
+      ],
+      sejong: [
+        { name: "세종정부청사", emoji: "🏛️", lat: 36.5058, lng: 127.2618, desc: "대한민국 행정부처들이 모인 핵심 행정 타운입니다." }
+      ],
+      gangwon: [
+        { name: "강원특별자치도청 (춘천)", emoji: "🏢", lat: 37.8853, lng: 127.7298, desc: "춘천에 자리 잡은 강원도의 도청 본사입니다." },
+        { name: "강릉역", emoji: "🚄", lat: 37.7638, lng: 128.8984, desc: "동해바다 관광의 관문인 강릉 KTX 철도역입니다." }
+      ],
+      chungcheong: [
+        { name: "충북도청 (청주)", emoji: "🏢", lat: 36.6358, lng: 127.4914, desc: "청주 중심가에 위치한 충청북도청입니다." },
+        { name: "충남도청 (홍성)", emoji: "🏛️", lat: 36.6575, lng: 126.6728, desc: "홍성 내포신도시에 신축 건립된 충청남도청입니다." }
+      ],
+      jeolla: [
+        { name: "전북도청 (전주)", emoji: "🏢", lat: 35.8202, lng: 127.1089, desc: "맛과 멋의 고장, 전라북도의 중심 행정 도청입니다." },
+        { name: "전남도청 (무안)", emoji: "🏛️", lat: 34.8161, lng: 126.4628, desc: "무안 남악신도시에 자리한 전라남도 도청입니다." }
+      ],
+      gyeongsang: [
+        { name: "경북도청 (안동)", emoji: "🏛️", lat: 36.576, lng: 128.4716, desc: "안동의 한옥 양식으로 지어진 아름다운 경상북도청입니다." },
+        { name: "경남도청 (창원)", emoji: "🏢", lat: 35.2378, lng: 128.692, desc: "창원에 위치한 남해안 경제 벨트 중심 도청입니다." }
+      ],
+      jeju: [
+        { name: "제주특별자치도청", emoji: "🏛️", lat: 33.4897, lng: 126.4983, desc: "평화의 섬 제주의 행정 자치 본부입니다." },
+        { name: "제주국제공항", emoji: "✈️", lat: 33.5113, lng: 126.493, desc: "제주도 여행의 출발점이자 하늘길 관문입니다." }
       ]
     };
 
@@ -584,7 +647,7 @@
 
     let map;
     let placeServices;
-    let selectedPlace = ZONES_DATA.incheon[0]; // 기본 중심: 계양구청
+    let selectedPlace = ZONES_DATA.seoul[0]; // 기본 중심: 서울시청
     let activeSearchKeyword = "";
 
     // 지도 리소스 관리용 변수
@@ -881,10 +944,10 @@
       listContainer.innerHTML = '🔍 실시간으로 지도를 검색하고 있습니다...';
       document.getElementById("btn-clear").classList.remove("hidden");
 
-      // 현재 기준 중심점의 1.5km 반경 설정
+      // 현재 기준 중심점의 2km 반경 설정
       const searchOptions = {
         location: new kakao.maps.LatLng(selectedPlace.lat, selectedPlace.lng),
-        radius: 1500,
+        radius: 2000,
         sort: kakao.maps.services.SortBy.ACCURACY
       };
 
@@ -894,7 +957,7 @@
         if (status === kakao.maps.services.Status.OK) {
           renderSearchResults(data);
         } else if (status === kakao.maps.services.Status.ZERO_RESULT) {
-          listContainer.innerHTML = `<div class="empty-state">😅 1.5km 반경 내에 '${activeSearchKeyword}' 결과가 없습니다.</div>`;
+          listContainer.innerHTML = `<div class="empty-state">😅 2km 반경 내에 '${activeSearchKeyword}' 결과가 없습니다.</div>`;
           document.getElementById("result-count").textContent = "0";
         } else {
           listContainer.innerHTML = '<div class="empty-state">❌ 검색 처리 도중 에러가 발생했습니다.</div>';
