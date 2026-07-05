@@ -136,6 +136,10 @@
       cursor: pointer;
       border-radius: var(--radius-sm);
       transition: all 0.2s ease;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      gap: 4px;
     }
 
     .zone-tab.active {
@@ -474,8 +478,9 @@
           <span>1. 지역(권역) 선택</span>
         </div>
         <div class="zone-tabs" id="zone-tabs">
-          <button class="zone-tab active" onclick="switchZone('incheon')">인천 권역</button>
-          <button class="zone-tab" onclick="switchZone('seoul')">서울 권역</button>
+          <button class="zone-tab active" id="tab-incheon" onclick="switchZone('incheon')">인천 권역</button>
+          <button class="zone-tab" id="tab-seoul" onclick="switchZone('seoul')">서울 권역</button>
+          <button class="zone-tab" id="tab-mylocation" onclick="getMyLocation()">📍 내 위치</button>
         </div>
         <div class="place-grid" id="place-grid">
           <!-- 스크립트로 버튼 렌더링 -->
@@ -535,9 +540,9 @@
     const ZONES_DATA = {
       incheon: [
         { name: "계양구청", emoji: "🏛️", lat: 37.53727, lng: 126.73768, desc: "인천 계양구의 행정 중심지입니다." },
-        { name: "계산역",   emoji: "🚇", lat: 37.54320, lng: 126.73780, desc: "인천1호선 계산역 일대 역세권 중심지입니다." },
+        { name: "계산역",   emoji: "🚇", lat: 37.5432,   lng: 126.7378,  desc: "인천1호선 계산역 일대 역세권 중심지입니다." },
         { name: "부평구청", emoji: "🏢", lat: 37.50739, lng: 126.72182, desc: "부평의 주요 행정 거점 구청입니다." },
-        { name: "부평역",   emoji: "🛍️", lat: 37.48940, lng: 126.72470, desc: "부평의 핵심 상권이자 초역세권입니다." }
+        { name: "부평역",   emoji: "🛍️", lat: 37.4894,   lng: 126.7247,  desc: "부평의 핵심 상권이자 초역세권입니다." }
       ],
       seoul: [
         { name: "서울시청",   emoji: "🏛️", lat: 37.56654, lng: 126.97846, desc: "서울의 심장부, 행정과 역사의 교차로입니다." },
@@ -598,16 +603,107 @@
       // 렌더링 시작
       renderPlaces();
       renderCategories();
-      updateCenterMarker();
+      
+      // 앱 구동 시 자동으로 사용자 실제 위치 수신 시도
+      tryAutoDetectLocation();
     }
 
-    // 권역 탭 토글
+    // 초기 자동 사용자 위치 조회 시도
+    function tryAutoDetectLocation() {
+      if (navigator.geolocation) {
+        navigator.geolocation.getCurrentPosition(
+          (position) => {
+            // 위치 수신 성공 시 내 위치 활성화
+            document.querySelectorAll('.zone-tab').forEach(tab => tab.classList.remove('active'));
+            document.getElementById('tab-mylocation').classList.add('active');
+            document.querySelectorAll('.place-btn').forEach(b => b.classList.remove('active'));
+
+            selectedPlace = {
+              name: "내 현재 위치",
+              emoji: "📍",
+              lat: position.coords.latitude,
+              lng: position.coords.longitude,
+              desc: "브라우저 GPS 기반의 사용자 실제 접속 위치입니다."
+            };
+            
+            // 지도 이동 및 핀 적용
+            focusOnPlace();
+
+            document.getElementById("results-list").innerHTML = 
+              '<div class="empty-state">🎉 내 현재 위치를 감지했습니다!<br>아래 카테고리를 눌러 주변을 실시간 조회하세요.</div>';
+          },
+          (error) => {
+            // 실패 또는 권한 거부 시 기본 계양구청 유지
+            console.log("자동 위치 수신 실패(기본값 유지):", error.message);
+            updateCenterMarker();
+          },
+          { timeout: 4000 }
+        );
+      } else {
+        updateCenterMarker();
+      }
+    }
+
+    // 수동 내 위치 탭 클릭 핸들러
+    function getMyLocation() {
+      // 탭 활성화 처리
+      document.querySelectorAll('.zone-tab').forEach(tab => tab.classList.remove('active'));
+      document.getElementById('tab-mylocation').classList.add('active');
+
+      // 세부 장소 버튼 및 검색 결과 초기화
+      document.querySelectorAll('.place-btn').forEach(b => b.classList.remove('active'));
+      clearSearch();
+
+      const listContainer = document.getElementById("results-list");
+      listContainer.innerHTML = '<div class="empty-state">📡 실시간으로 사용자 위치 정보를 수신하고 있습니다...</div>';
+
+      if (!navigator.geolocation) {
+        alert("이 브라우저 환경에서는 GPS 위치 정보 획득을 지원하지 않습니다.");
+        fallbackToDefault();
+        return;
+      }
+
+      navigator.geolocation.getCurrentPosition(
+        (position) => {
+          selectedPlace = {
+            name: "내 현재 위치",
+            emoji: "📍",
+            lat: position.coords.latitude,
+            lng: position.coords.longitude,
+            desc: "브라우저 GPS 기반의 사용자 실제 접속 위치입니다."
+          };
+          focusOnPlace();
+          listContainer.innerHTML = '<div class="empty-state">내 현재 위치 조회에 성공했습니다!<br>원하는 카테고리를 아래에서 눌러 검색해 보세요.</div>';
+        },
+        (error) => {
+          console.error(error);
+          let msg = "위치 정보를 가져오는 데 실패했습니다. ";
+          if (error.code === error.PERMISSION_DENIED) {
+            msg += "브라우저의 위치 서비스 권한이 차단되었습니다. 주소창의 자물쇠/권한 설정을 허용으로 변경해 주세요.";
+          } else if (error.code === error.POSITION_UNAVAILABLE) {
+            msg += "위치 디바이스 센서 정보를 수신할 수 없습니다.";
+          } else if (error.code === error.TIMEOUT) {
+            msg += "위치 정보 수신 시간이 초과되었습니다.";
+          }
+          alert(msg);
+          fallbackToDefault();
+        },
+        { enableHighAccuracy: true, timeout: 8000, maximumAge: 0 }
+      );
+    }
+
+    // 위치 획득 실패 시 Fallback 처리
+    function fallbackToDefault() {
+      switchZone('incheon');
+    }
+
+    // 권역 탭 토글 (인천 / 서울)
     function switchZone(zoneKey) {
       currentZoneKey = zoneKey;
       document.querySelectorAll('.zone-tab').forEach(tab => {
         tab.classList.remove('active');
       });
-      event.target.classList.add('active');
+      document.getElementById(`tab-${zoneKey}`).classList.add('active');
 
       // 선택된 권역의 첫 번째 장소를 기본값으로 설정
       selectedPlace = ZONES_DATA[zoneKey][0];
@@ -622,6 +718,12 @@
     function renderPlaces() {
       const container = document.getElementById("place-grid");
       container.innerHTML = "";
+
+      // 내 위치 상태일 때는 세부 장소 버튼을 렌더링하지 않거나 비워둠
+      const activeTab = document.querySelector('.zone-tab.active');
+      if (activeTab && activeTab.id === 'tab-mylocation') {
+        return;
+      }
 
       ZONES_DATA[currentZoneKey].forEach(place => {
         const btn = document.createElement("button");
@@ -684,9 +786,15 @@
       const pos = new kakao.maps.LatLng(selectedPlace.lat, selectedPlace.lng);
       map.panTo(pos);
       updateCenterMarker();
+      
+      // 내 위치 탭이 활성화된 경우 세부 장소 버튼 컨테이너 비우기
+      const activeTab = document.querySelector('.zone-tab.active');
+      if (activeTab && activeTab.id === 'tab-mylocation') {
+        document.getElementById("place-grid").innerHTML = "";
+      }
     }
 
-    // 중심 마커 업데이트
+    // 중심 마커 업데이트 (내 위치와 일반 중심점 마커 구분)
     function updateCenterMarker() {
       if (centerMarker) {
         centerMarker.setMap(null);
@@ -694,13 +802,20 @@
 
       const pos = new kakao.maps.LatLng(selectedPlace.lat, selectedPlace.lng);
       
-      // 중심 마커는 빨간색 또는 다른 구별용 마커 이미지 지정 가능
-      // 여기서는 기본 마커를 사용하되 타이틀 지정
-      centerMarker = new kakao.maps.Marker({
+      let markerOptions = {
         position: pos,
         title: selectedPlace.name,
         zIndex: 5
-      });
+      };
+
+      // 내 위치일 경우 카카오맵 SDK 공식 '별 모양 마커'로 차별화된 이미지 적용
+      if (selectedPlace.name === "내 현재 위치") {
+        const imageSrc = 'https://t1.daumcdn.net/localimg/localimages/07/mapapidoc/markerStar.png';
+        const imageSize = new kakao.maps.Size(24, 35);
+        markerOptions.image = new kakao.maps.MarkerImage(imageSrc, imageSize);
+      }
+
+      centerMarker = new kakao.maps.Marker(markerOptions);
       centerMarker.setMap(map);
 
       // 중심지 커스텀 정보창 띄우기
@@ -776,8 +891,8 @@
 
         // 미터/킬로미터 단위 변환
         let distStr = "";
-        const rawDist = parseInt(place.distance);
-        if (!isNaN(rawDist)) {
+        const rawDist = Number.parseInt(place.distance, 10);
+        if (!Number.isNaN(rawDist)) {
           distStr = rawDist >= 1000 ? `${(rawDist / 1000).toFixed(1)}km` : `${rawDist}m`;
         }
 
