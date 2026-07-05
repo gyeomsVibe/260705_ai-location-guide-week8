@@ -663,8 +663,14 @@
     function handleZoneChange() {
       const zoneSelect = document.getElementById("select-zone");
       const zoneKey = zoneSelect.value;
+      const inputVal = document.getElementById("search-input").value.trim();
       
-      clearSearch();
+      if (inputVal) {
+        clearSearchMarkers();
+        activeSearchKeyword = inputVal;
+      } else {
+        clearSearch();
+      }
 
       if (zoneKey === "mylocation") {
         // 내 위치의 경우 상세지점 셀렉트 박스 숨김
@@ -678,6 +684,11 @@
         // 해당 권역의 첫 번째 지점을 기본값으로 선정
         selectedPlace = ZONES_DATA[zoneKey][0];
         focusOnPlace();
+
+        // 검색어가 있었다면 즉시 해당 지역 기준으로 자동 재검색
+        if (inputVal) {
+          searchPlaces();
+        }
       }
     }
 
@@ -702,15 +713,29 @@
     function handlePlaceChange() {
       const zoneKey = document.getElementById("select-zone").value;
       const placeIndex = document.getElementById("select-place").value;
+      const inputVal = document.getElementById("search-input").value.trim();
+
+      if (inputVal) {
+        clearSearchMarkers();
+        activeSearchKeyword = inputVal;
+      } else {
+        clearSearch();
+      }
 
       selectedPlace = ZONES_DATA[zoneKey][placeIndex];
-      clearSearch();
       focusOnPlace();
+
+      // 검색어가 있었다면 새로운 상세 지점 기준으로 즉시 자동 재검색
+      if (inputVal) {
+        searchPlaces();
+      }
     }
 
     // Geolocation 연동 수동 위치 획득
     function getMyLocation() {
       const listContainer = document.getElementById("results-list");
+      const inputVal = document.getElementById("search-input").value.trim();
+      
       listContainer.innerHTML = '<div class="empty-state">📡 현재 위치 정보(GPS)를 조회하고 있습니다...</div>';
 
       if (!navigator.geolocation) {
@@ -729,7 +754,14 @@
             desc: "브라우저 GPS 기기로 획득한 현재 사용자 실제 위치입니다."
           };
           focusOnPlace();
-          listContainer.innerHTML = '<div class="empty-state">내 현재 위치 조회에 성공했습니다!<br>주변에서 찾고 싶은 키워드를 검색해 보세요.</div>';
+
+          if (inputVal) {
+            // 기존 검색어가 있었을 경우 내 위치 중심 검색으로 자동 갱신
+            activeSearchKeyword = inputVal;
+            searchPlaces();
+          } else {
+            listContainer.innerHTML = '<div class="empty-state">내 현재 위치 조회에 성공했습니다!<br>주변에서 찾고 싶은 키워드를 검색해 보세요.</div>';
+          }
         },
         (error) => {
           console.error(error);
