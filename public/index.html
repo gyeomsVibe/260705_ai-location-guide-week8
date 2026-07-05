@@ -3,62 +3,390 @@
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>나만의 위치 안내 서비스</title>
+  <title>📍 나만의 위치 안내 서비스</title>
+  <!-- 프리미엄 폰트 및 아이콘 불러오기 -->
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Noto+Sans+KR:wght@300;400;500;700&family=Outfit:wght@300;400;600;800&display=swap" rel="stylesheet">
+  
   <style>
-    /* 단순하고 글자가 큰 디자인 */
-    body {
+    /* 디자인 시스템 토큰 및 초기화 */
+    :root {
+      --bg-gradient: linear-gradient(135deg, #0f172a 0%, #1e293b 100%);
+      --card-bg: rgba(30, 41, 59, 0.7);
+      --card-border: rgba(255, 255, 255, 0.08);
+      --text-main: #f8fafc;
+      --text-sub: #94a3b8;
+      --primary-color: #3b82f6;
+      --primary-hover: #60a5fa;
+      --accent-color: #10b981;
+      --shadow: 0 10px 30px -10px rgba(0, 0, 0, 0.5);
+    }
+
+    * {
+      box-sizing: border-box;
       margin: 0;
-      font-family: "Malgun Gothic", "맑은 고딕", sans-serif;
-      background-color: #f5f7fa;
-      color: #222;
+      padding: 0;
+    }
+
+    body {
+      font-family: 'Outfit', 'Noto Sans KR', sans-serif;
+      background: var(--bg-gradient);
+      color: var(--text-main);
+      min-height: 100vh;
       display: flex;
       justify-content: center;
       align-items: center;
-      min-height: 100vh;
+      padding: 20px;
+    }
+
+    /* 메인 컨테이너 */
+    .container {
+      background: var(--card-bg);
+      backdrop-filter: blur(16px);
+      -webkit-backdrop-filter: blur(16px);
+      border: 1px solid var(--card-border);
+      border-radius: 24px;
+      padding: 40px;
+      max-width: 900px;
+      width: 100%;
+      box-shadow: var(--shadow);
+      display: flex;
+      flex-direction: column;
+      gap: 30px;
+    }
+
+    /* 상단 헤더 */
+    header {
       text-align: center;
     }
 
-    .container {
-      background-color: #ffffff;
-      border-radius: 16px;
-      box-shadow: 0 4px 12px rgba(0, 0, 0, 0.08);
-      padding: 60px 40px;
-      max-width: 700px;
-      margin: 20px;
-    }
-
     h1 {
-      font-size: 48px;
-      margin: 0 0 24px 0;
-      color: #1a73e8;
+      font-size: 2.5rem;
+      font-weight: 800;
+      background: linear-gradient(to right, #60a5fa, #a78bfa);
+      -webkit-background-clip: text;
+      -webkit-text-fill-color: transparent;
+      margin-bottom: 12px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      gap: 10px;
     }
 
-    p.description {
-      font-size: 26px;
+    .description {
+      font-size: 1.1rem;
+      color: var(--text-sub);
       line-height: 1.6;
-      margin: 0 0 40px 0;
     }
 
-    .map-notice {
-      font-size: 24px;
-      background-color: #fff8e1;
-      border: 2px dashed #f0b429;
+    /* 지도 영역 */
+    .map-container {
+      position: relative;
+      width: 100%;
+      height: 400px;
+      border-radius: 16px;
+      overflow: hidden;
+      border: 1px solid rgba(255, 255, 255, 0.1);
+      box-shadow: inset 0 2px 4px rgba(0, 0, 0, 0.2);
+    }
+
+    #map {
+      width: 100%;
+      height: 100%;
+    }
+
+    /* 지도 임시 대기 상태 UI */
+    .map-placeholder {
+      position: absolute;
+      top: 0;
+      left: 0;
+      width: 100%;
+      height: 100%;
+      background: #1e293b;
+      display: flex;
+      flex-direction: column;
+      justify-content: center;
+      align-items: center;
+      gap: 15px;
+      z-index: 10;
+      color: var(--text-main);
+      padding: 20px;
+      text-align: center;
+    }
+
+    .placeholder-title {
+      font-size: 1.4rem;
+      font-weight: 600;
+      color: #3b82f6;
+    }
+
+    .placeholder-desc {
+      color: var(--text-sub);
+      font-size: 0.95rem;
+      line-height: 1.5;
+    }
+
+    /* 버튼 컨트롤 영역 */
+    .controls {
+      display: flex;
+      flex-direction: column;
+      gap: 20px;
+    }
+
+    .nav-label {
+      font-size: 0.9rem;
+      font-weight: 600;
+      text-transform: uppercase;
+      letter-spacing: 0.05em;
+      color: var(--text-sub);
+      border-bottom: 1px solid rgba(255, 255, 255, 0.05);
+      padding-bottom: 8px;
+    }
+
+    .button-group {
+      display: grid;
+      grid-template-columns: repeat(3, 1fr);
+      gap: 12px;
+    }
+
+    .btn {
+      background: rgba(255, 255, 255, 0.03);
+      border: 1px solid rgba(255, 255, 255, 0.08);
       border-radius: 12px;
-      padding: 30px 20px;
-      color: #8a6d1a;
+      color: var(--text-main);
+      padding: 16px;
+      font-size: 1rem;
+      font-weight: 500;
+      cursor: pointer;
+      transition: all 0.25s ease;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      gap: 6px;
+    }
+
+    .btn:hover {
+      background: rgba(255, 255, 255, 0.08);
+      border-color: var(--primary-hover);
+      transform: translateY(-2px);
+    }
+
+    .btn.active {
+      background: rgba(59, 130, 246, 0.15);
+      border-color: var(--primary-color);
+      box-shadow: 0 0 15px rgba(59, 130, 246, 0.3);
+    }
+
+    .btn-emoji {
+      font-size: 1.5rem;
+    }
+
+    /* 상세 설명 카드 */
+    .info-card {
+      background: rgba(15, 23, 42, 0.4);
+      border: 1px solid rgba(255, 255, 255, 0.05);
+      border-radius: 14px;
+      padding: 20px;
+      display: flex;
+      flex-direction: column;
+      gap: 8px;
+    }
+
+    .info-title {
+      font-size: 1.2rem;
+      font-weight: 700;
+      color: var(--primary-hover);
+    }
+
+    .info-desc {
+      font-size: 0.95rem;
+      color: var(--text-sub);
+      line-height: 1.6;
+    }
+
+    /* 하단 가이드 문구 */
+    .guide-tip {
+      font-size: 0.85rem;
+      color: var(--text-sub);
+      text-align: center;
+      opacity: 0.8;
+    }
+
+    /* 모바일 반응형 처리 */
+    @media (max-width: 640px) {
+      .container {
+        padding: 24px;
+      }
+      h1 {
+        font-size: 2rem;
+      }
+      .button-group {
+        grid-template-columns: 1fr;
+      }
+      .map-container {
+        height: 300px;
+      }
     }
   </style>
 </head>
 <body>
+
   <main class="container">
-    <h1>📍 나만의 위치 안내 서비스</h1>
-    <p class="description">
-      우리 가게, 우리 모임 장소를<br />
-      쉽게 안내해 주는 웹 서비스입니다.
-    </p>
-    <div class="map-notice">
-      🗺️ 지도는 배포 후 연결합니다
+    <header>
+      <h1>📍 나만의 위치 안내 서비스</h1>
+      <p class="description">우리 가게, 모임 장소를 쉽게 찾아오실 수 있도록 안내해 드립니다.</p>
+    </header>
+
+    <!-- 지도 및 플레이스홀더 영역 -->
+    <div class="map-container">
+      <div id="map"></div>
+      
+      <!-- ⚠️ 카카오 JavaScript 키가 입력되기 전에는 이 안내 상자가 지도를 덮고 있게 됩니다 -->
+      <div class="map-placeholder" id="map-notice">
+        <span class="placeholder-title">🗺️ 지도 준비 중</span>
+        <p class="placeholder-desc">
+          윤겸스 님! 아래 안내 가이드에 따라 <strong>카카오 JavaScript 키</strong>를 발급받아 등록하시면<br />
+          이 자리에 멋진 지도가 나타납니다.
+        </p>
+      </div>
+    </div>
+
+    <!-- 장소 조작용 컨트롤러 -->
+    <div class="controls">
+      <div class="nav-label">🗺️ 안내 장소 선택</div>
+      
+      <div class="button-group">
+        <button class="btn active" onclick="changeLocation('seoul', this)">
+          <span class="btn-emoji">🏛️</span>
+          <span>서울시청</span>
+        </button>
+        <button class="btn" onclick="changeLocation('gangnam', this)">
+          <span class="btn-emoji">🏙️</span>
+          <span>강남역</span>
+        </button>
+        <button class="btn" onclick="changeLocation('hongdae', this)">
+          <span class="btn-emoji">🎨</span>
+          <span>홍대입구역</span>
+        </button>
+      </div>
+    </div>
+
+    <!-- 상세 안내 설명 카드 -->
+    <div class="info-card">
+      <div class="info-title" id="place-title">🏛️ 서울시청</div>
+      <p class="info-desc" id="place-desc">서울의 중심이자 위치 안내 실습의 기본 장소인 서울시청입니다.</p>
+    </div>
+
+    <div class="guide-tip">
+      💡 장소 버튼을 누르면 해당 위치로 지도가 부드럽게 이동하고 마커가 바뀝니다.
     </div>
   </main>
+
+  <!-- 
+    ==================================================================
+    [필독] 카카오 지도 SDK 연결 코드
+    YOUR_JAVASCRIPT_KEY 자리에 발급받은 JavaScript 키를 넣어주세요.
+    ==================================================================
+  -->
+  <!-- <script type="text/javascript" src="//dapi.kakao.com/v2/maps/sdk.js?appkey=YOUR_JAVASCRIPT_KEY"></script> -->
+  
+  <script>
+    // 카카오맵 연동 스크립트 작성부
+    let map = null;
+    let marker = null;
+    let infowindow = null;
+
+    // 장소 데이터 사전정의 (위도 Lat, 경도 Lng)
+    const places = {
+      seoul: {
+        title: "🏛️ 서울시청",
+        lat: 37.566826,
+        lng: 126.9786567,
+        desc: "서울의 중심이자 위치 안내 실습의 기본 장소인 서울시청입니다. 지하철 1, 2호선 시청역과 바로 연결됩니다."
+      },
+      gangnam: {
+        title: "🏙️ 강남역",
+        lat: 37.497942,
+        lng: 127.027621,
+        desc: "유동인구가 가장 많고 번화한 강남의 핵심 랜드마크입니다. 지하철 2호선 및 신분당선 강남역 부근입니다."
+      },
+      hongdae: {
+        title: "🎨 홍대입구역",
+        lat: 37.557527,
+        lng: 126.9244669,
+        desc: "젊음과 예술의 거리, 트렌디한 문화가 가득한 홍대입구역입니다. 경의중앙선, 공항철도, 2호선 환승 구간입니다."
+      }
+    };
+
+    // 지도가 성공적으로 로드된 후 실행할 초기화 함수
+    function initMap() {
+      // 키가 입력되어 kakao 객체가 존재할 때만 실행
+      if (typeof kakao !== 'undefined' && kakao.maps) {
+        // 임시 placeholder 상자 가리기
+        document.getElementById('map-notice').style.display = 'none';
+
+        const container = document.getElementById('map');
+        const defaultPlace = places.seoul;
+        const options = {
+          center: new kakao.maps.LatLng(defaultPlace.lat, defaultPlace.lng),
+          level: 3 // 확대 축소 레벨
+        };
+
+        map = new kakao.maps.Map(container, options);
+
+        // 기본 위치에 마커 생성
+        const markerPosition = new kakao.maps.LatLng(defaultPlace.lat, defaultPlace.lng);
+        marker = new kakao.maps.Marker({
+          position: markerPosition
+        });
+        marker.setMap(map);
+
+        // 마커 클릭 시 나타날 정보창 생성
+        infowindow = new kakao.maps.InfoWindow({
+          content: `<div style="padding:10px;font-size:13px;color:#222;font-weight:bold;text-align:center;">오늘의 위치 안내 장소</div>`,
+          removable: true
+        });
+
+        // 마커 클릭 이벤트 연결
+        kakao.maps.event.addListener(marker, 'click', function() {
+          infowindow.open(map, marker);
+        });
+      }
+    }
+
+    // 장소 변경 버튼 클릭 이벤트 함수
+    function changeLocation(placeKey, element) {
+      const place = places[placeKey];
+      if (!place) return;
+
+      // 1. 활성 버튼 스타일 변경
+      const buttons = document.querySelectorAll('.btn');
+      buttons.forEach(btn => btn.classList.remove('active'));
+      if (element) {
+        element.classList.add('active');
+      }
+
+      // 2. 설명 카드 텍스트 업데이트
+      document.getElementById('place-title').innerText = place.title;
+      document.getElementById('place-desc').innerText = place.desc;
+
+      // 3. 지도가 준비되어 있으면 마커 이동 및 중심 좌표 부드럽게 이동
+      if (map && marker) {
+        const targetLatLng = new kakao.maps.LatLng(place.lat, place.lng);
+        map.panTo(targetLatLng);
+        marker.setPosition(targetLatLng);
+        
+        // 정보창 열기
+        infowindow.setContent(`<div style="padding:10px;font-size:13px;color:#222;font-weight:bold;text-align:center;">${place.title}</div>`);
+        infowindow.open(map, marker);
+      }
+    }
+
+    // 페이지 로드 시 카카오맵 초기화 시도
+    window.onload = function() {
+      initMap();
+    };
+  </script>
 </body>
 </html>
