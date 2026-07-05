@@ -5,7 +5,7 @@ const express = require("express");
 const path = require("path");
 
 const app = express();
-const PORT = 3000; // 브라우저에서 접속할 포트 번호
+const PORT = process.env.PORT || 3000; // Cloud Run 등 환경 변수의 포트를 사용하거나 없으면 3000 포트를 사용합니다.
 
 // public 폴더 안의 파일(index.html 등)을 그대로 보여줍니다.
 app.use(express.static(path.join(__dirname, "public")));
