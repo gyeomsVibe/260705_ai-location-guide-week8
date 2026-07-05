@@ -1,0 +1,13 @@
+# Render 배포 설정 파일 (Blueprint)
+# Render 대시보드에서 이 저장소를 연결하면 아래 설정대로 자동 배포됩니다.
+services:
+  - type: web              # 웹 서비스 (외부에서 접속 가능한 서버)
+    name: ai-location-guide-week8
+    runtime: node          # Node.js 앱
+    plan: free             # 무료 요금제 (신용카드 불필요)
+    region: singapore      # 한국에서 가장 가까운 무료 리전
+    buildCommand: npm install   # 배포 시 패키지 설치
+    startCommand: npm start     # 서버 실행 (node server.js)
+    envVars:
+      - key: NODE_VERSION
+        value: "20"        # Node.js 버전 고정
