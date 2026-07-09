@@ -11,3 +11,4 @@ npm-debug.log*
 # OS 생성 파일
 Thumbs.db
 .DS_Store
+.vibe-diagnosis/config.json

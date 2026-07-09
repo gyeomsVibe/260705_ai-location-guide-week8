@@ -12,20 +12,69 @@
 
   <style>
     :root {
-      --bg-gradient: linear-gradient(135deg, #f8fafc 0%, #f1f5f9 100%);
-      --card-bg: rgba(255, 255, 255, 0.98);
+      --bg-gradient: linear-gradient(135deg, #f8fafc 0%, #e2e8f0 100%);
+      --card-bg: rgba(255, 255, 255, 0.95);
       --text-main: #0f172a;
       --text-sub: #475569;
       --primary: #4f46e5;
       --primary-light: #eef2ff;
       --primary-hover: #4338ca;
-      --border-color: #e2e8f0;
+      --border-color: #cbd5e1;
       --shadow-sm: 0 1px 2px 0 rgba(0, 0, 0, 0.05);
       --shadow-md: 0 4px 6px -1px rgba(0, 0, 0, 0.05), 0 2px 4px -2px rgba(0, 0, 0, 0.05);
       --shadow-lg: 0 10px 15px -3px rgba(0, 0, 0, 0.05), 0 4px 6px -4px rgba(0, 0, 0, 0.05);
       --radius-lg: 16px;
       --radius-md: 10px;
       --radius-sm: 6px;
+      --input-bg: #ffffff;
+      --select-bg: #ffffff;
+      --chip-bg: #f1f5f9;
+      --chip-text: #475569;
+      --card-active-bg: #eef2ff;
+      --overlay-border: #4f46e5;
+    }
+
+    :root[data-theme="dark"] {
+      --bg-gradient: linear-gradient(135deg, #090d16 0%, #0f172a 100%);
+      --card-bg: rgba(15, 23, 42, 0.95);
+      --text-main: #f8fafc;
+      --text-sub: #94a3b8;
+      --primary: #818cf8;
+      --primary-light: rgba(129, 140, 248, 0.15);
+      --primary-hover: #6366f1;
+      --border-color: #334155;
+      --shadow-sm: 0 1px 2px 0 rgba(0, 0, 0, 0.5);
+      --shadow-md: 0 4px 6px -1px rgba(0, 0, 0, 0.3), 0 2px 4px -2px rgba(0, 0, 0, 0.3);
+      --shadow-lg: 0 10px 15px -3px rgba(0, 0, 0, 0.4), 0 4px 6px -4px rgba(0, 0, 0, 0.4);
+      --input-bg: #1e293b;
+      --select-bg: #1e293b;
+      --chip-bg: #1e293b;
+      --chip-text: #94a3b8;
+      --card-active-bg: rgba(129, 140, 248, 0.12);
+      --overlay-border: #818cf8;
+    }
+
+    /* System preference dark-mode detection mapping */
+    @media (prefers-color-scheme: dark) {
+      :root:not([data-theme="light"]) {
+        --bg-gradient: linear-gradient(135deg, #090d16 0%, #0f172a 100%);
+        --card-bg: rgba(15, 23, 42, 0.95);
+        --text-main: #f8fafc;
+        --text-sub: #94a3b8;
+        --primary: #818cf8;
+        --primary-light: rgba(129, 140, 248, 0.15);
+        --primary-hover: #6366f1;
+        --border-color: #334155;
+        --shadow-sm: 0 1px 2px 0 rgba(0, 0, 0, 0.5);
+        --shadow-md: 0 4px 6px -1px rgba(0, 0, 0, 0.3), 0 2px 4px -2px rgba(0, 0, 0, 0.3);
+        --shadow-lg: 0 10px 15px -3px rgba(0, 0, 0, 0.4), 0 4px 6px -4px rgba(0, 0, 0, 0.4);
+        --input-bg: #1e293b;
+        --select-bg: #1e293b;
+        --chip-bg: #1e293b;
+        --chip-text: #94a3b8;
+        --card-active-bg: rgba(129, 140, 248, 0.12);
+        --overlay-border: #818cf8;
+      }
     }
 
     * { box-sizing: border-box; margin: 0; padding: 0; }
@@ -39,6 +88,23 @@
       justify-content: center;
       align-items: center;
       padding: 20px;
+      transition: background 0.3s ease, color 0.3s ease;
+    }
+
+    /* Custom styled scrollbars for sidebar and results list */
+    ::-webkit-scrollbar {
+      width: 6px;
+      height: 6px;
+    }
+    ::-webkit-scrollbar-track {
+      background: transparent;
+    }
+    ::-webkit-scrollbar-thumb {
+      background: var(--border-color);
+      border-radius: 999px;
+    }
+    ::-webkit-scrollbar-thumb:hover {
+      background: var(--primary);
     }
 
     /* 전체 앱 레이아웃 (반응형 2분할 구조) */
@@ -54,6 +120,8 @@
       grid-template-columns: 480px 1fr;
       overflow: hidden;
       border: 1px solid var(--border-color);
+      backdrop-filter: blur(10px);
+      transition: background 0.3s ease, border-color 0.3s ease, box-shadow 0.3s ease;
     }
 
     /* 좌측 사이드바 패널 (스크롤 가능) */
@@ -64,20 +132,54 @@
       border-right: 1px solid var(--border-color);
       height: 100%;
       overflow-y: auto;
+      transition: border-color 0.3s ease;
     }
 
     header {
       margin-bottom: 12px;
     }
 
+    .header-top {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      margin-bottom: 4px;
+    }
+
     h1 {
       font-family: 'Outfit', 'Noto Sans KR', sans-serif;
-      font-size: 1.65rem;
+      font-size: 1.55rem;
       font-weight: 800;
       color: var(--primary);
       display: flex;
       align-items: center;
       gap: 6px;
+      transition: color 0.3s ease;
+    }
+
+    /* 다크모드 토글 버튼 */
+    .theme-toggle-btn {
+      background: var(--primary-light);
+      border: 1px solid var(--border-color);
+      border-radius: 50%;
+      width: 36px;
+      height: 36px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      cursor: pointer;
+      transition: all 0.2s cubic-bezier(0.4, 0, 0.2, 1);
+    }
+
+    .theme-toggle-btn:hover {
+      transform: scale(1.1) rotate(15deg);
+      background: var(--primary);
+      color: #ffffff;
+      box-shadow: 0 0 10px var(--primary);
+    }
+
+    .theme-icon {
+      font-size: 1.1rem;
     }
 
     .subtitle {
@@ -85,6 +187,7 @@
       color: var(--text-sub);
       margin-top: 4px;
       line-height: 1.4;
+      transition: color 0.3s ease;
     }
 
     /* 공통 섹션 스타일 */
@@ -96,12 +199,14 @@
       display: flex;
       align-items: center;
       justify-content: space-between;
+      transition: color 0.3s ease;
     }
 
     .section {
       margin-bottom: 14px;
       padding-bottom: 12px;
       border-bottom: 1px solid var(--border-color);
+      transition: border-color 0.3s ease;
     }
 
     .section:last-of-type {
@@ -127,6 +232,7 @@
       font-size: 0.75rem;
       font-weight: 700;
       color: var(--text-sub);
+      transition: color 0.3s ease;
     }
 
     /* Shadcn UI 미니멀 셀렉트 드롭다운 디자인 */
@@ -137,7 +243,7 @@
       font-weight: 500;
       border: 1px solid var(--border-color);
       border-radius: var(--radius-sm);
-      background-color: #fff;
+      background-color: var(--select-bg);
       color: var(--text-main);
       cursor: pointer;
       appearance: none; /* 브라우저 기본 화살표 숨김 */
@@ -145,8 +251,12 @@
       background-position: right 12px center;
       background-repeat: no-repeat;
       background-size: 1.2rem;
-      transition: all 0.15s ease;
+      transition: all 0.2s ease;
       box-shadow: var(--shadow-sm);
+    }
+
+    :root[data-theme="dark"] .shadcn-select {
+      background-image: url("data:image/svg+xml,%3csvg xmlns='http://www.w3.org/2000/svg' fill='none' viewBox='0 0 20 20'%3e%3cpath stroke='%2394a3b8' stroke-linecap='round' stroke-linejoin='round' stroke-width='1.5' d='M6 8l4 4 4-4'/%3e%3c/svg%3e");
     }
 
     .shadcn-select:focus {
@@ -175,9 +285,9 @@
       font-size: 0.875rem;
       border: 1px solid var(--border-color);
       border-radius: var(--radius-sm);
-      background-color: #fff;
+      background-color: var(--input-bg);
       color: var(--text-main);
-      transition: all 0.15s ease;
+      transition: all 0.2s ease;
       box-shadow: var(--shadow-sm);
     }
 
@@ -197,7 +307,7 @@
       font-size: 0.875rem;
       font-weight: 600;
       cursor: pointer;
-      transition: background-color 0.15s ease;
+      transition: background-color 0.2s ease, transform 0.1s ease;
       white-space: nowrap;
       display: flex;
       align-items: center;
@@ -208,6 +318,10 @@
       background-color: var(--primary-hover);
     }
 
+    .shadcn-btn:active {
+      transform: scale(0.97);
+    }
+
     /* 추천 검색어 칩 그룹 */
     .recommend-title {
       font-size: 0.75rem;
@@ -216,6 +330,7 @@
       margin-bottom: 6px;
       text-transform: uppercase;
       letter-spacing: 0.05em;
+      transition: color 0.3s ease;
     }
 
     .chip-container {
@@ -225,25 +340,25 @@
     }
 
     .chip {
-      background-color: #f1f5f9;
+      background-color: var(--chip-bg);
       border: 1px solid var(--border-color);
       border-radius: 999px;
       padding: 6px 12px;
       font-size: 0.75rem;
       font-weight: 600;
-      color: var(--text-sub);
+      color: var(--chip-text);
       cursor: pointer;
       display: flex;
       align-items: center;
       gap: 3px;
-      transition: all 0.15s ease;
+      transition: all 0.2s cubic-bezier(0.4, 0, 0.2, 1);
     }
 
     .chip:hover {
       background-color: var(--primary-light);
       border-color: var(--primary);
       color: var(--primary);
-      transform: translateY(-0.5px);
+      transform: translateY(-1px);
     }
 
     .chip.active {
@@ -268,12 +383,13 @@
     }
 
     .badge-count {
-      background: #f1f5f9;
+      background: var(--chip-bg);
       color: var(--text-sub);
       font-size: 0.75rem;
       padding: 2px 8px;
       border-radius: 999px;
       font-weight: 700;
+      transition: background 0.3s ease, color 0.3s ease;
     }
 
     .btn-clear-search {
@@ -283,6 +399,7 @@
       font-size: 0.8rem;
       cursor: pointer;
       text-decoration: underline;
+      transition: color 0.2s ease;
     }
 
     .btn-clear-search:hover {
@@ -306,16 +423,17 @@
       font-size: 0.85rem;
       border: 1.5px dashed var(--border-color);
       border-radius: var(--radius-md);
-      background: #f8fafc;
+      background: var(--primary-light);
+      transition: all 0.3s ease;
     }
 
     /* 결과 카드 디자인 */
     .result-card {
-      background: #fff;
+      background: var(--card-bg);
       border: 1px solid var(--border-color);
       border-radius: var(--radius-md);
       padding: 10px 12px;
-      transition: all 0.2s ease;
+      transition: all 0.2s cubic-bezier(0.4, 0, 0.2, 1);
       cursor: pointer;
       display: flex;
       flex-direction: column;
@@ -330,7 +448,7 @@
 
     .result-card.active {
       border-color: var(--primary);
-      background: var(--primary-light);
+      background: var(--card-active-bg);
     }
 
     .rc-title {
@@ -340,22 +458,25 @@
       display: flex;
       align-items: center;
       justify-content: space-between;
+      transition: color 0.3s ease;
     }
 
     .rc-distance {
       font-size: 0.75rem;
       font-weight: 700;
       color: var(--primary);
-      background: #fff;
+      background: var(--card-bg);
       padding: 2px 6px;
       border: 1px solid var(--primary);
       border-radius: 999px;
+      transition: background 0.3s ease, border-color 0.3s ease, color 0.3s ease;
     }
 
     .rc-address {
       font-size: 0.8rem;
       color: var(--text-sub);
       line-height: 1.4;
+      transition: color 0.3s ease;
     }
 
     .rc-actions {
@@ -372,7 +493,7 @@
       border-radius: var(--radius-sm);
       text-decoration: none;
       font-weight: 700;
-      transition: background 0.15s ease;
+      transition: background 0.2s ease, transform 0.1s ease;
       display: flex;
       align-items: center;
       gap: 4px;
@@ -380,6 +501,10 @@
 
     .rc-link:hover {
       background: var(--primary-hover);
+    }
+
+    .rc-link:active {
+      transform: scale(0.97);
     }
 
     /* 우측 지도 컨테이너 */
@@ -392,6 +517,12 @@
     #map {
       width: 100%;
       height: 100%;
+      transition: filter 0.5s ease;
+    }
+
+    /* Dark Mode Map Filtering */
+    :root[data-theme="dark"] #map {
+      filter: invert(90%) hue-rotate(180deg) brightness(85%) contrast(90%);
     }
 
     .map-loading {
@@ -400,11 +531,12 @@
       display: flex;
       justify-content: center;
       align-items: center;
-      background: #f1f5f9;
+      background: var(--chip-bg);
       color: var(--text-sub);
       font-size: 1rem;
       z-index: 10;
       font-weight: 500;
+      transition: background 0.3s ease, color 0.3s ease;
     }
 
     .map-loading.hidden {
@@ -415,10 +547,10 @@
 
     /* 지도 커스텀 오버레이 윈도우 스타일 */
     .custom-overlay {
-      background: #fff;
+      background: var(--card-bg);
       border-radius: var(--radius-sm);
       box-shadow: var(--shadow-md);
-      border: 1px solid var(--primary);
+      border: 1px solid var(--overlay-border);
       padding: 10px 14px;
       position: relative;
       bottom: 50px;
@@ -427,6 +559,7 @@
       display: flex;
       flex-direction: column;
       gap: 4px;
+      transition: background 0.3s ease, border-color 0.3s ease;
     }
 
     .custom-overlay::after {
@@ -437,7 +570,7 @@
       transform: translateX(-50%);
       border-width: 6px 6px 0;
       border-style: solid;
-      border-color: var(--primary) transparent;
+      border-color: var(--overlay-border) transparent;
       display: block;
       width: 0;
     }
@@ -446,11 +579,13 @@
       font-size: 0.85rem;
       font-weight: 700;
       color: var(--text-main);
+      transition: color 0.3s ease;
     }
 
     .co-desc {
       font-size: 0.75rem;
       color: var(--text-sub);
+      transition: color 0.3s ease;
     }
 
     /* 반응형 레이아웃 (모바일 대응) */
@@ -479,7 +614,12 @@
     <!-- 좌측 검색 & 리스트 사이드바 -->
     <aside class="sidebar">
       <header>
-        <h1>📍 나만의 위치 안내 서비스</h1>
+        <div class="header-top">
+          <h1>📍 나만의 위치 안내 서비스</h1>
+          <button id="theme-toggle" class="theme-toggle-btn" aria-label="테마 전환" onclick="toggleTheme()">
+            <span class="theme-icon">🌙</span>
+          </button>
+        </div>
         <p class="subtitle">내 위치 또는 지정 지역 주변을 실시간 키워드 검색으로 자유롭게 탐색해 보세요.</p>
       </header>
 
@@ -566,6 +706,31 @@
   <script src="https://dapi.kakao.com/v2/maps/sdk.js?appkey=012385551d235007080d46ee9ad59cb0&libraries=services&autoload=false"></script>
   
   <script>
+    // 테마 토글 및 로컬 스토리지 연동
+    function toggleTheme() {
+      const html = document.documentElement;
+      const currentTheme = html.dataset.theme || "light";
+      const newTheme = currentTheme === "dark" ? "light" : "dark";
+      html.dataset.theme = newTheme;
+      localStorage.setItem("theme", newTheme);
+      
+      const themeIcon = document.querySelector(".theme-icon");
+      if (themeIcon) {
+        themeIcon.textContent = newTheme === "dark" ? "☀️" : "🌙";
+      }
+    }
+    
+    (function() {
+      const savedTheme = localStorage.getItem("theme") || "light";
+      if (savedTheme === "dark") {
+        document.documentElement.dataset.theme = "dark";
+        window.addEventListener("DOMContentLoaded", () => {
+          const themeIcon = document.querySelector(".theme-icon");
+          if (themeIcon) themeIcon.textContent = "☀️";
+        });
+      }
+    })();
+
     // 지역 데이터 구성 (전국 17개 지자체 광역 거점망 수록, 마지막 0 배제)
     const ZONES_DATA = {
       seoul: [
