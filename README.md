@@ -5,7 +5,7 @@
 전국 17개 시·도의 주요 거점(총 **89개 상세 지점**)과 **내 현재 위치(GPS)** 를 기준으로, 그 주변의 생활 편의 시설과 모임 장소를 **카카오맵으로 실시간 검색**해 주는 웹 서비스입니다.
 단순한 정적 위치 안내를 넘어, 카카오맵 Services API를 연동한 동적 검색과 반응형 UI를 제공합니다.
 
-🔗 **배포 주소**: [https://ai-location-guide-week8-09pz.onrender.com/](https://ai-location-guide-week8-09pz.onrender.com/)
+🔗 **배포 주소**: [https://ai-location-guide-week8-nyug.onrender.com/](https://ai-location-guide-week8-nyug.onrender.com/)
 
 ---
 
@@ -185,13 +185,13 @@ Render가 내 저장소를 "보이게" 하려면 GitHub 앱 권한을 줘야 합
 
 - 서비스 페이지 상단에 `https://<서비스이름>.onrender.com` 형태의 주소가 생성됩니다.
 - **주의**: 같은 이름이 이미 사용 중이면 뒤에 **임의 문자**가 붙습니다.
-  - 예) `ai-location-guide-week8` 이 이미 있으면 → `ai-location-guide-week8-09pz.onrender.com`
+  - 예) `ai-location-guide-week8` 이 이미 있으면 → `ai-location-guide-week8-nyug.onrender.com`
 - 화면에 표시된 **실제 주소**를 사용하세요.
 
 ### 7. (지도 앱인 경우) 카카오맵 도메인 등록
 
 - 카카오 지도를 쓰는 프로젝트라면, **배포 주소가 새로 생길 때마다** 그 주소를 카카오에 등록해야 지도가 보입니다.
-- 카카오 개발자 콘솔 → **플랫폼 키 → JavaScript 키 → JavaScript SDK 도메인** 에 배포 URL(예: `https://ai-location-guide-week8-09pz.onrender.com`)을 추가 → 저장.
+- 카카오 개발자 콘솔 → **플랫폼 키 → JavaScript 키 → JavaScript SDK 도메인** 에 배포 URL(예: `https://ai-location-guide-week8-nyug.onrender.com`)을 추가 → 저장.
 
 ### 8. 이후 수정 사항 반영 (자동 재배포)
 

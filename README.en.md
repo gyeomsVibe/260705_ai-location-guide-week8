@@ -5,7 +5,7 @@
 This web application helps users easily search for local amenities and gathering spots within a **2km radius** from either **89 detailed locations** across 17 provinces in South Korea, or from the user's **current GPS location**, utilizing the Kakao Maps Services API.
 It offers interactive maps, responsive designs, and advanced styling built with vanilla technologies.
 
-🔗 **Deployed URL**: [https://ai-location-guide-week8.onrender.com/](https://ai-location-guide-week8.onrender.com/)
+🔗 **Deployed URL**: [https://ai-location-guide-week8-nyug.onrender.com/](https://ai-location-guide-week8-nyug.onrender.com/)
 
 ---
 
