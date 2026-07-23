@@ -1,4 +1,4 @@
-# 📍 My Location Guide & Nearby Search Service (Week 8)
+# 📍 My Location Guide & Nearby Search Service (Week 8-9)
 
 [English Version](./README.en.md) | [한국어](./README.md)
 

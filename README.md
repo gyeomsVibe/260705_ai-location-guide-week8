@@ -1,4 +1,4 @@
-# 📍 나만의 위치 안내 & 주변 검색 서비스 (Week 8)
+# 📍 나만의 위치 안내 & 주변 검색 서비스 (Week 8-9)
 
 [English Version](./README.en.md) | [한국어](./README.md)
 

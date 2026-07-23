@@ -55,16 +55,16 @@
 - `frontend/` 폴더를 생성하고 `public/` 디렉토리를 통째로 이동시킵니다.
   - `public/` ➡️ `frontend/public/`
 
-### 2. [MODIFY] [render.yaml](file:///d:/D_Workspace_NB/-google-workspace/-antigravity-workspace/260705_ai-location-guide-week8/render.yaml)
+### 2. [MODIFY] [render.yaml](file:///d:/D_Workspace_NB/-google-workspace/-antigravity-workspace/260705_ai-location-guide-week8-9/render.yaml)
 - Render 배포 환경에서 서비스 빌드 및 실행 시, `backend/` 폴더를 기준으로 동작하도록 변경합니다.
 - `buildCommand` 및 `startCommand` 경로 수정 필요.
 
-### 3. [MODIFY] [project.diag.js](file:///d:/D_Workspace_NB/-google-workspace/-antigravity-workspace/260705_ai-location-guide-week8/.vibe-diagnosis/diagnostics/project.diag.js) & [ui-ux.diag.js](file:///d:/D_Workspace_NB/-google-workspace/-antigravity-workspace/260705_ai-location-guide-week8/.vibe-diagnosis/diagnostics/ui-ux.diag.js)
+### 3. [MODIFY] [project.diag.js](file:///d:/D_Workspace_NB/-google-workspace/-antigravity-workspace/260705_ai-location-guide-week8-9/.vibe-diagnosis/diagnostics/project.diag.js) & [ui-ux.diag.js](file:///d:/D_Workspace_NB/-google-workspace/-antigravity-workspace/260705_ai-location-guide-week8-9/.vibe-diagnosis/diagnostics/ui-ux.diag.js)
 - 진단 엔진이 소스 코드의 위치를 제대로 탐색할 수 있도록, 기존 루트 기준 경로를 파티셔닝된 경로로 교정합니다.
   - `server.js` 탐색 경로 ➡️ `backend/server.js`
   - `public/index.html` 탐색 경로 ➡️ `frontend/public/index.html`
 
-### 4. [MODIFY] [server.js](file:///d:/D_Workspace_NB/-google-workspace/-antigravity-workspace/260705_ai-location-guide-week8/server.js) (이동 후 수정)
+### 4. [MODIFY] [server.js](file:///d:/D_Workspace_NB/-google-workspace/-antigravity-workspace/260705_ai-location-guide-week8-9/server.js) (이동 후 수정)
 - 프론트엔드 정적 리소스를 서빙하는 경로가 `path.join(__dirname, 'public')`에서 `path.join(__dirname, '../frontend/public')` 또는 `backend` 내부에 static 폴더가 없을 경우의 상대 경로로 적절히 수정되어야 합니다.
 - (현재 `server.js`에서는 `path.join(__dirname, 'public')`을 지정하고 있습니다. 만약 `server.js`가 `backend/`로 가고 `public`이 `frontend/`로 가면, 상위 폴더로 나갔다가 들어가도록 `path.join(__dirname, "../frontend/public")`로 코드를 수정해 주어야 서빙이 제대로 동작합니다.)
 
