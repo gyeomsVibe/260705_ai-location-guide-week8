@@ -2,6 +2,12 @@
 
 This document manages state isolation and tracks project status for the `vibe-check` diagnostic run.
 
+## Canonical Identity
+
+- **Integrated Project**: AI Location Guide — Week 8–9
+- **Local Workspace**: `260705_ai-location-guide-week8-9`
+- **GitHub Repository**: `gyeomsVibe/260705_ai-location-guide-week8-9` (`main`)
+- **Naming Policy**: The local workspace and GitHub repository share the integrated Week 8–9 identifier.
 ## Component States
 
 - **Source Code (Workspace)**: Local files in `d:\D_Workspace_NB\-google-workspace\-antigravity-workspace\260705_ai-location-guide-week8-9\`

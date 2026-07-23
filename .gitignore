@@ -15,3 +15,6 @@ Thumbs.db
 .vibe-clinic/config.json
 *.zip
 
+
+# Vibe Diagnosis 실행 시 생성되는 로컬 포트 상태
+.vibe-diagnosis/active_port.json

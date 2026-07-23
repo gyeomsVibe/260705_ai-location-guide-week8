@@ -4,10 +4,10 @@
   "private": true,
   "description": "통합 워크스페이스 및 자가진단 관리",
   "scripts": {
-    "diag": "vibe-diagnosis run",
-    "diag:ui": "vibe-diagnosis run --filter ui-ux-diagnostic",
-    "diag:sys": "vibe-diagnosis run --filter project-diagnostic",
-    "dashboard": "vibe-diagnosis dashboard"
+    "diag": "vibe-diag run",
+    "diag:ui": "vibe-diag run --filter ui-ux-diagnostic",
+    "diag:sys": "vibe-diag run --filter project-diagnostic",
+    "dashboard": "vibe-diag dashboard"
   },
   "devDependencies": {
     "vibe-diagnosis": "^1.0.6"

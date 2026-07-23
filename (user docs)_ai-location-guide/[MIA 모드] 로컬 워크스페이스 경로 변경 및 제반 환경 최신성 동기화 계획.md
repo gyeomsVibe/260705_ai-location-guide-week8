@@ -10,7 +10,7 @@
 
 ## Open Questions
 
-- 현재 원격 깃허브 리포지토리는 `git@github.com:gyeomsVibe/260705_ai-location-guide-week9.git`로 매핑되어 있습니다. 로컬 폴더 명칭 `260705_ai-location-guide-week8-9`와 정상 연동되어 있습니다. 추가적인 원격 저장소 URL 변경이 필요하지 않으시다면 그대로 유지합니다.
+- 현재 원격 깃허브 리포지토리는 `git@github.com:gyeomsVibe/260705_ai-location-guide-week8-9.git`로 매핑되어 있습니다. 로컬 폴더 명칭 `260705_ai-location-guide-week8-9`와 정상 연동되어 있습니다. 추가적인 원격 저장소 URL 변경이 필요하지 않으시다면 그대로 유지합니다.
 
 ---
 
