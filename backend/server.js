@@ -6,7 +6,10 @@ const { BenefitApiError, fetchBenefits } = require("./services/mois-benefits");
 const { createDataSourceMonitor } = require("./services/data-source-status");
 
 // 인증키는 로컬 루트의 .env 또는 Render 환경변수에서만 읽습니다.
-dotenv.config({ path: path.join(__dirname, "../.env") });
+// 테스트에서는 process.env만 주입해 로컬 비밀 파일을 읽지 않습니다.
+if (process.env.NODE_ENV !== "test") {
+  dotenv.config({ path: path.join(__dirname, "../.env") });
+}
 
 const app = express();
 app.disable("x-powered-by");
@@ -66,13 +69,17 @@ app.get("/api/benefits", async (req, res) => {
   }
 });
 
-app.get("/api/data-source-status", (req, res) => {
+function sendDataSourceStatus(req, res) {
   res.setHeader("Cache-Control", "no-store");
   return res.status(200).json({
     items: monitor.snapshot(),
     checkedAt: new Date().toISOString()
   });
-});
+}
+
+// 공개 프론트엔드 계약을 정식 경로로 유지하고, 기존 API 소비자는 별칭으로 지원합니다.
+app.get("/api/data-sources", sendDataSourceStatus);
+app.get("/api/data-source-status", sendDataSourceStatus);
 
 // HTML은 캐시를 끄고, 정적 자원은 짧게 캐시해 이전 버전 오버랩을 방지합니다.
 app.use(
@@ -87,7 +94,11 @@ app.use(
   })
 );
 
-app.listen(PORT, () => {
-  console.log("서버가 실행되었습니다!");
-  console.log(`서버 주소: http://localhost:${PORT}`);
-});
+if (require.main === module) {
+  app.listen(PORT, () => {
+    console.log("서버가 실행되었습니다!");
+    console.log(`서버 주소: http://localhost:${PORT}`);
+  });
+}
+
+module.exports = { app };
