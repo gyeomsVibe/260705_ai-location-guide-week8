@@ -1,12 +1,15 @@
 {
-  "name": "my-location-guide",
+  "name": "my-location-guide-workspace",
   "version": "1.0.0",
-  "description": "나만의 위치 안내 서비스 - 8주차 실습",
-  "main": "server.js",
+  "private": true,
+  "description": "통합 워크스페이스 및 자가진단 관리",
   "scripts": {
-    "start": "node server.js"
+    "diag": "vibe-diagnosis run",
+    "diag:ui": "vibe-diagnosis run --filter ui-ux-diagnostic",
+    "diag:sys": "vibe-diagnosis run --filter project-diagnostic",
+    "dashboard": "vibe-diagnosis dashboard"
   },
-  "dependencies": {
-    "express": "^4.21.2"
+  "devDependencies": {
+    "vibe-diagnosis": "^1.0.6"
   }
 }

@@ -1,0 +1,967 @@
+<!DOCTYPE html>
+<!-- saved from url=(0045)https://alopop.alonics.com/repoart/week9.html -->
+<html lang="ko"><head><meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
+  
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>9주차 강의안 - 공공 카페 데이터로 카카오맵 검색 서비스 만들기</title>
+  <style>
+    :root {
+      --bg:#f6f8fb;--card:#ffffff;--text:#1f2937;--muted:#6b7280;--primary:#2563eb;--primary-soft:#dbeafe;
+      --green:#16a34a;--green-soft:#dcfce7;--yellow:#ca8a04;--yellow-soft:#fef9c3;--red:#dc2626;--red-soft:#fee2e2;
+      --purple:#7c3aed;--purple-soft:#ede9fe;--border:#e5e7eb;--code:#111827;--kakao:#fee500;--kakao-dark:#3c1e1e;
+      --blue2:#0ea5e9;--orange:#f97316;
+    }
+    *{box-sizing:border-box} html{scroll-behavior:smooth}
+    body{margin:0;font-family:-apple-system,BlinkMacSystemFont,"Segoe UI","Noto Sans KR",Arial,sans-serif;background:var(--bg);color:var(--text);line-height:1.75}
+    header{background:linear-gradient(135deg,#3c1e1e,#2563eb,#7c3aed);color:white;padding:46px 20px;text-align:center;position:relative;overflow:hidden}
+    header:before{content:"";position:absolute;inset:-80px;background:radial-gradient(circle at 18% 20%,rgba(254,229,0,.35),transparent 28%),radial-gradient(circle at 82% 40%,rgba(255,255,255,.18),transparent 30%);animation:float 6s ease-in-out infinite alternate}
+    @keyframes float{from{transform:translateY(-10px)}to{transform:translateY(14px)}}
+    header>*{position:relative} header h1{margin:0 0 12px;font-size:clamp(28px,5vw,44px);line-height:1.2;letter-spacing:-.04em} header p{margin:0;font-size:18px;opacity:.96;font-weight:700}
+    main{max-width:1080px;margin:0 auto;padding:24px 16px 80px}
+    section{background:var(--card);border:1px solid var(--border);border-radius:20px;padding:24px;margin:18px 0;box-shadow:0 8px 24px rgba(15,23,42,.05)}
+    h2{margin:0 0 16px;font-size:24px;line-height:1.35;letter-spacing:-.03em} h3{margin:22px 0 10px;font-size:19px;color:#111827} p{margin:8px 0 12px}
+    .lead{font-size:18px;font-weight:800;background:var(--primary-soft);border-left:6px solid var(--primary);padding:16px 18px;border-radius:14px}
+    .kakao-box{background:#fff9c4;border-left:6px solid var(--kakao);color:var(--kakao-dark);padding:16px 18px;border-radius:14px;margin:14px 0;font-weight:800}
+    .success{background:var(--green-soft);border-left:6px solid var(--green);padding:16px 18px;border-radius:14px;margin:14px 0;font-weight:800}
+    .warning{background:var(--yellow-soft);border-left:6px solid var(--yellow);padding:16px 18px;border-radius:14px;margin:14px 0;font-weight:800}
+    .danger{background:var(--red-soft);border-left:6px solid var(--red);padding:16px 18px;border-radius:14px;margin:14px 0;font-weight:800}
+    .teacher{background:var(--purple-soft);border-left:6px solid var(--purple);padding:16px 18px;border-radius:14px;margin:14px 0}
+    .grid{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:14px}.grid-3{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:14px}.grid-4{display:grid;grid-template-columns:repeat(4,minmax(0,1fr));gap:12px}
+    .box{background:#f9fafb;border:1px solid var(--border);border-radius:16px;padding:16px}.box strong{display:block;margin-bottom:6px;color:#111827}.box .big{font-size:28px;display:block;margin-bottom:6px}
+    .tag{display:inline-block;padding:5px 10px;border-radius:999px;background:var(--primary-soft);color:#1d4ed8;font-size:13px;font-weight:800;margin:3px 4px 3px 0}.tag.green{background:var(--green-soft);color:#15803d}.tag.yellow{background:var(--yellow-soft);color:#854d0e}.tag.purple{background:var(--purple-soft);color:#6d28d9}.tag.red{background:var(--red-soft);color:#b91c1c}.tag.kakao{background:var(--kakao);color:var(--kakao-dark)}
+    ol,ul{padding-left:24px} li{margin:8px 0} code{background:#eef2ff;padding:2px 6px;border-radius:6px;color:#3730a3;font-family:Consolas,"D2Coding",monospace}
+    pre{background:var(--code);color:#f9fafb;padding:18px;border-radius:16px;overflow-x:auto;font-size:14px;line-height:1.65;white-space:pre-wrap} pre code{background:transparent;color:inherit;padding:0}
+    .prompt-title{font-weight:900;margin-top:16px}.prompt{position:relative;background:#111827;color:#f9fafb;border-radius:18px;padding:18px;margin:10px 0 18px;border:1px solid #374151;box-shadow:inset 0 0 0 1px rgba(255,255,255,.04)}
+    .prompt:before{content:"Antigravity 2.0 에이전트에게 그대로 붙여넣기";display:block;color:#fde68a;font-size:13px;font-weight:900;margin-bottom:10px}.prompt code{display:block;background:transparent;color:inherit;padding:0;white-space:pre-wrap}
+    .time-table{width:100%;border-collapse:collapse;overflow:hidden;border-radius:14px;font-size:15px}.time-table th,.time-table td{border:1px solid var(--border);padding:12px;vertical-align:top}.time-table th{background:#eff6ff;color:#1e40af;text-align:left}
+    .step-title{display:flex;align-items:center;gap:10px}.num{display:inline-flex;align-items:center;justify-content:center;min-width:38px;height:38px;border-radius:999px;background:var(--primary);color:white;font-weight:900;box-shadow:0 8px 16px rgba(37,99,235,.22)}
+    .checklist label{display:block;padding:10px 12px;border:1px solid var(--border);border-radius:12px;background:#f9fafb;margin:8px 0;cursor:pointer}.checklist input{transform:scale(1.2);margin-right:8px}
+    .toc{display:grid;grid-template-columns:repeat(auto-fit,minmax(210px,1fr));gap:10px;margin:18px 0}.toc a{text-decoration:none;color:#1f2937;background:white;border:1px solid var(--border);border-radius:14px;padding:12px 14px;font-weight:800;box-shadow:0 4px 10px rgba(0,0,0,.04)}
+    .app-demo{border:1px solid var(--border);border-radius:22px;overflow:hidden;background:white;box-shadow:0 16px 40px rgba(15,23,42,.10);margin-top:16px}.demo-top{background:#111827;color:white;padding:14px 16px;display:flex;align-items:center;gap:10px}.demo-dot{width:12px;height:12px;border-radius:50%;background:#ef4444}.demo-dot:nth-child(2){background:#f59e0b}.demo-dot:nth-child(3){background:#22c55e}.demo-body{display:grid;grid-template-columns:330px 1fr;min-height:430px}.demo-panel{padding:18px;border-right:1px solid var(--border);background:#f8fafc}.search-ui{display:flex;gap:8px}.search-ui input{flex:1;border:1px solid #cbd5e1;border-radius:12px;padding:12px;font-weight:700}.search-ui button{border:0;border-radius:12px;padding:12px 14px;background:#2563eb;color:white;font-weight:900}.chips{display:flex;flex-wrap:wrap;gap:8px;margin:14px 0}.chip{border:2px solid #dbeafe;background:white;color:#1d4ed8;border-radius:999px;padding:8px 13px;font-weight:900}.chip.active{background:#2563eb;color:white}.chip.all{border-color:#fee500;color:#3c1e1e;background:#fff9c4}.list-card{background:white;border:1px solid var(--border);border-radius:14px;padding:12px;margin:10px 0}.list-card b{display:block}.demo-map{position:relative;background:linear-gradient(135deg,#dbeafe,#eff6ff 45%,#dcfce7);min-height:430px;overflow:hidden}.road{position:absolute;background:rgba(148,163,184,.55);border-radius:999px}.road.r1{width:760px;height:34px;left:-110px;top:170px;transform:rotate(-12deg)}.road.r2{width:660px;height:28px;left:80px;top:275px;transform:rotate(28deg)}.road.r3{width:42px;height:570px;left:340px;top:-70px;transform:rotate(12deg)}.circle{position:absolute;width:260px;height:260px;border:4px dashed rgba(37,99,235,.55);background:rgba(37,99,235,.08);border-radius:50%;left:50%;top:50%;transform:translate(-50%,-50%);animation:pulse 2.5s infinite}.circle:after{content:"내 위치 기준 1km";position:absolute;left:50%;top:-34px;transform:translateX(-50%);background:#2563eb;color:white;border-radius:999px;padding:5px 10px;font-size:13px;font-weight:900;white-space:nowrap}@keyframes pulse{0%,100%{box-shadow:0 0 0 0 rgba(37,99,235,.18)}50%{box-shadow:0 0 0 14px rgba(37,99,235,.06)}}
+    .pin{position:absolute;transform:translate(-50%,-50%);font-size:30px;filter:drop-shadow(0 4px 4px rgba(0,0,0,.18))}.pin.me{left:50%;top:50%;font-size:38px}.pin.p1{left:42%;top:39%}.pin.p2{left:63%;top:48%}.pin.p3{left:55%;top:63%}.pin.p4{left:35%;top:57%}.legend{position:absolute;right:14px;bottom:14px;background:white;border:1px solid var(--border);border-radius:14px;padding:10px 12px;font-size:13px;font-weight:800}
+    .flow{display:flex;flex-wrap:wrap;gap:10px;align-items:center}.flow .node{background:#f8fafc;border:1px solid var(--border);border-radius:16px;padding:12px 14px;font-weight:900}.flow .arrow{font-size:24px;color:#64748b}.mini-browser{border:1px solid var(--border);border-radius:16px;overflow:hidden;background:#f8fafc;margin:12px 0}.mini-url{background:#e5e7eb;padding:9px 12px;color:#475569;font-weight:800}.mini-content{padding:16px;background:white}.kbd{border:1px solid #cbd5e1;border-bottom-width:3px;border-radius:8px;padding:2px 8px;background:white;font-weight:900}
+    @media(max-width:850px){.grid,.grid-3,.grid-4,.demo-body{grid-template-columns:1fr}.demo-panel{border-right:0;border-bottom:1px solid var(--border)}header h1{font-size:30px}section{padding:20px}.time-table{font-size:14px}.time-table th,.time-table td{padding:10px}.flow .arrow{transform:rotate(90deg)}}
+  </style>
+<style id="grabbit-visited-styles">
+        .grabbit-visited,
+        .grabbit-visited:link,
+        .grabbit-visited:visited {
+            color: #551A8B !important; /* Standard visited link purple */
+        }
+    </style></head>
+<body>
+<header>
+  <h1>☕ 9주차 강의안<br>공공 카페 데이터로 카카오맵 검색 서비스 만들기</h1>
+  <p>정부 DB + 카카오맵 + Antigravity 2.0 바이브 코딩 실습</p>
+</header>
+
+<main>
+  <section id="goal">
+    <h2>🎯 오늘 수업의 한 줄 목표</h2>
+    <div class="lead">
+      공공데이터포털에서 받은 카페 데이터를 활용해, 내 위치 주변 카페를 검색하고 카카오맵에 표시하는 웹앱을 Antigravity 2.0 에이전트에게 지시해서 완성한다.
+    </div>
+    <div class="kakao-box">
+      전제: 8-1주차처럼 Render 공개 URL과 카카오맵 기본 구현은 이미 완료되어 있다고 보고 시작합니다. 오늘은 “지도 위에 카페 데이터를 검색해서 보여주는 기능”을 붙이는 날입니다. 🚀
+    </div>
+    <div class="warning">
+      오늘도 참여자는 소스 코드를 직접 작성하지 않습니다. 설치, 수정, 실행, 오류 해결은 모두 Antigravity 2.0 에이전트에게 지시합니다.
+    </div>
+  </section>
+
+  <section>
+    <h2>🧭 빠른 이동</h2>
+    <div class="toc">
+      <a href="https://alopop.alonics.com/repoart/week9.html#summary">1. 정부 DB 요약</a>
+      <a href="https://alopop.alonics.com/repoart/week9.html#result">2. 오늘 결과물</a>
+      <a href="https://alopop.alonics.com/repoart/week9.html#flow">3. 전체 흐름</a>
+      <a href="https://alopop.alonics.com/repoart/week9.html#practice1">4. 실습 1~3</a>
+      <a href="https://alopop.alonics.com/repoart/week9.html#practice4">5. 실습 4~6</a>
+      <a href="https://alopop.alonics.com/repoart/week9.html#errors">6. 오류 해결</a>
+      <a href="https://alopop.alonics.com/repoart/week9.html#teacher">7. 강사용 멘트</a>
+      <a href="https://alopop.alonics.com/repoart/week9.html#check">8. 최종 체크</a>
+    </div>
+  </section>
+
+  <section id="summary">
+    <h2>🗃️ 정부 DB 카페 데이터 얻는 과정 요약</h2>
+    <p>
+      자세한 가입 화면은 <code>cafe_api_key_tutorial.html</code>에서 이미 다뤘다고 보고, 9주차에서는 필요한 부분만 빠르게 복습합니다.
+    </p>
+    <div class="grid">
+      <div class="box"><span class="big">1️⃣</span><strong>공공데이터포털 접속</strong>data.go.kr에 접속해서 로그인 또는 회원가입을 합니다.</div>
+      <div class="box"><span class="big">2️⃣</span><strong>상가정보 API 검색</strong><code>소상공인시장진흥공단_상가(상권)정보_API</code>를 검색합니다.</div>
+      <div class="box"><span class="big">3️⃣</span><strong>활용신청</strong>활용 목적에는 “지도 기반 실습 / 전국 카페 데이터 활용”처럼 입력합니다.</div>
+      <div class="box"><span class="big">4️⃣</span><strong>인증키 복사</strong>승인 완료 후 일반 인증키 또는 Decoding 인증키를 복사해 안전하게 보관합니다.</div>
+    </div>
+    <div class="success">
+      핵심만 기억하기: 이 API는 “카페 전용 DB”라기보다 전국 상가 데이터입니다. 그중에서 카페, 커피, 음료 업종만 골라 쓰는 방식입니다. ☕
+    </div>
+    <div class="danger">
+      주의: 공공데이터 인증키는 화면에 그대로 노출하지 않도록 에이전트에게 서버 환경변수 또는 안전한 설정 방식으로 처리하라고 지시합니다.
+    </div>
+  </section>
+
+  <section id="result">
+    <h2>🖥️ 오늘 완성할 화면</h2>
+    <p>처음 접속하면 내 위치를 중심으로 1km 원이 보이고, 검색어와 거리 라벨 버튼으로 카페를 필터링합니다.</p>
+    <div class="app-demo">
+      <div class="demo-top"><span class="demo-dot"></span><span class="demo-dot"></span><span class="demo-dot"></span><strong>나만의 카페 지도 서비스</strong></div>
+      <div class="demo-body">
+        <div class="demo-panel">
+          <h3 style="margin-top:0">☕ 카페 검색</h3>
+          <div class="search-ui"><input value="아메리카노" aria-label="검색어 예시"><button>검색</button></div>
+          <div class="chips">
+            <span class="chip active">1km</span><span class="chip">3km</span><span class="chip">5km</span><span class="chip all">전국</span>
+          </div>
+          <div class="list-card"><b>📍 동네커피</b>현재 위치에서 320m · 카페/커피전문점</div>
+          <div class="list-card"><b>📍 브라운빈</b>현재 위치에서 780m · 디저트 카페</div>
+          <div class="list-card"><b>📍 아침라떼</b>현재 위치에서 980m · 커피/음료</div>
+        </div>
+        <div class="demo-map">
+          <div class="road r1"></div><div class="road r2"></div><div class="road r3"></div>
+          <div class="circle"></div>
+          <div class="pin me">🧍</div><div class="pin p1">☕</div><div class="pin p2">☕</div><div class="pin p3">☕</div><div class="pin p4">☕</div>
+          <div class="legend">반경 버튼을 누르면 원과 마커가 바뀝니다</div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <section id="flow">
+    <h2>🔁 오늘 작업 전체 흐름</h2>
+    <div class="flow">
+      <div class="node">공공데이터 인증키 준비</div><div class="arrow">→</div>
+      <div class="node">기존 카카오맵 앱 열기</div><div class="arrow">→</div>
+      <div class="node">에이전트에게 카페 API 연결 지시</div><div class="arrow">→</div>
+      <div class="node">내 위치 1km 기본 표시</div><div class="arrow">→</div>
+      <div class="node">1km·3km·5km·전국 버튼 추가</div>
+    </div>
+    <div class="teacher">
+      진행자는 “오늘은 지도 앱을 새로 만드는 날이 아니라, 이미 있는 지도 앱에 카페 데이터 검색 기능을 붙이는 날”이라고 반복해서 말해주면 좋습니다.
+    </div>
+  </section>
+
+  <section>
+    <h2>⏰ 3시간 수업 진행표</h2>
+    <table class="time-table">
+      <thead><tr><th>시간</th><th>진행 내용</th><th>성공 기준</th></tr></thead>
+      <tbody>
+        <tr><td>0:00 ~ 0:20<br><span class="tag yellow">복습</span></td><td>공공데이터포털 카페 데이터 인증키 얻는 과정 요약</td><td>참여자가 어떤 키를 에이전트에게 전달해야 하는지 안다</td></tr>
+        <tr><td>0:20 ~ 0:40<br><span class="tag kakao">전제 확인</span></td><td>8-1주차 결과물: Render 공개 URL, 카카오맵 표시, GitHub 연결 확인</td><td>공개 URL에서 카카오맵이 보인다</td></tr>
+        <tr><td>0:40 ~ 1:20<br><span class="tag">실습 1</span></td><td>에이전트에게 공공 카페 데이터 연결 구조 점검 요청</td><td>카페 데이터 조회 테스트가 된다</td></tr>
+        <tr><td>1:20 ~ 2:00<br><span class="tag green">실습 2</span></td><td>내 위치 중심 1km 기본 표시, 원 그리기, 현재 위치 마커 추가</td><td>첫 화면에 1km 원이 보인다</td></tr>
+        <tr><td>2:00 ~ 2:35<br><span class="tag purple">실습 3</span></td><td>검색창, 1km·3km·5km·전국 라벨 버튼, 결과 목록 추가</td><td>버튼을 누르면 표시 범위가 바뀐다</td></tr>
+        <tr><td>2:35 ~ 3:00<br><span class="tag red">정리</span></td><td>오류 해결, 화면 정리, GitHub 반영, Render 재배포 확인</td><td>휴대폰에서도 공개 URL 접속이 된다</td></tr>
+      </tbody>
+    </table>
+  </section>
+
+  <section>
+    <h2>✅ 수업 시작 전 준비 체크리스트</h2>
+    <div class="checklist">
+      <label><input type="checkbox"> Antigravity 2.0이 설치되어 있다.</label>
+      <label><input type="checkbox"> 8-1주차 결과물 프로젝트 폴더를 열 수 있다.</label>
+      <label><input type="checkbox"> Render 공개 URL에서 카카오맵이 보인다.</label>
+      <label><input type="checkbox"> Kakao Developers JavaScript 키가 준비되어 있다.</label>
+      <label><input type="checkbox"> 공공데이터포털 상가정보 API 인증키가 준비되어 있다.</label>
+      <label><input type="checkbox"> GitHub 저장소와 Render 배포가 연결되어 있다.</label>
+    </div>
+  </section>
+
+  <section id="practice1">
+    <div class="step-title"><span class="num">1</span><h2>실습 1단계: 기존 프로젝트 상태 확인하기</h2></div>
+    <p>먼저 8-1주차에서 만든 카카오맵 프로젝트를 Antigravity 2.0에서 엽니다.</p>
+    <ol>
+      <li>Antigravity 2.0을 실행합니다.</li>
+      <li><strong>Open Folder</strong> 또는 <strong>프로젝트 열기</strong>로 8-1주차 프로젝트 폴더를 엽니다.</li>
+      <li>AI 에이전트 채팅창을 엽니다.</li>
+      <li>아래 프롬프트를 그대로 붙여넣습니다.</li>
+    </ol>
+    <div class="prompt"><code>이 프로젝트는 8-1주차에서 만든 카카오맵 웹앱입니다.
+
+제가 소스 코드를 직접 수정하지 않도록, 현재 프로젝트 상태를 먼저 점검해 주세요.
+
+확인할 것:
+1. 카카오맵이 정상적으로 로딩되는지
+2. Render 배포용 설정이 되어 있는지
+3. GitHub 연결 상태가 정상인지
+4. 서버 실행 방법과 필요한 설치 패키지가 무엇인지
+5. 앞으로 공공데이터포털 카페 데이터를 연결하기 위해 어떤 구조가 적절한지
+
+필요한 설치나 실행은 에이전트가 진행해 주세요.
+소스 코드 설명은 길게 하지 말고, 제가 해야 할 클릭/입력 행동만 알려주세요.</code></div>
+    <div class="success">✅ 성공 기준: 에이전트가 프로젝트 실행 방법을 확인하고, 로컬 또는 미리보기 화면에서 기존 카카오맵이 보이면 성공입니다.</div>
+  </section>
+
+  <section>
+    <div class="step-title"><span class="num">2</span><h2>실습 2단계: 공공 카페 데이터 연결 준비시키기</h2></div>
+    <p>카페 API 인증키를 에이전트에게 전달합니다. 단, 인증키를 프론트 화면에 직접 노출하지 않도록 요청합니다.</p>
+    <div class="warning">인증키를 채팅창에 붙여넣는 것은 실습 환경에서는 가능하지만, 화면 캡처나 공유 자료에는 절대 노출하지 않습니다. 가능하면 에이전트에게 <code>.env</code> 또는 Render 환경변수로 저장하게 지시합니다.</div>
+    <div class="prompt"><code>공공데이터포털에서 받은 다음 API를 이 프로젝트에 연결해 주세요.
+
+서비스 이름:
+소상공인시장진흥공단_상가(상권)정보_API
+
+목표:
+전국 상가 데이터 중에서 카페/커피/음료 업종만 검색해서 카카오맵에 표시하고 싶습니다.
+
+중요 조건:
+1. 저는 코드를 직접 수정하지 않습니다. 필요한 파일 수정은 에이전트가 해주세요.
+2. 공공데이터 인증키는 화면에 노출하지 말고 안전한 방식으로 보관해 주세요.
+3. 로컬 실행용 환경변수와 Render 배포용 환경변수 설정 방법을 각각 알려주세요.
+4. 필요한 패키지가 있으면 에이전트가 설치해 주세요.
+5. 먼저 카페 데이터 5개만 조회하는 테스트 기능을 만들어 주세요.
+6. 테스트가 성공하면 결과에 상호명, 업종명, 주소, 위도, 경도가 있는지 확인해 주세요.
+
+제가 인증키를 입력해야 하면, 어떤 키를 어디에 붙여넣으면 되는지만 알려주세요.</code></div>
+    <h3>참여자가 에이전트에게 전달할 정보</h3>
+    <div class="mini-browser">
+      <div class="mini-url">메모장에 정리해 둘 내용</div>
+      <div class="mini-content">
+        <ul>
+          <li>공공데이터 서비스 이름: <code>소상공인시장진흥공단_상가(상권)정보_API</code></li>
+          <li>인증키: 공공데이터포털에서 복사한 인증키</li>
+          <li>원하는 데이터: 카페, 커피, 음료 업종</li>
+          <li>지도 표시 필드: 상호명, 주소, 위도, 경도</li>
+        </ul>
+      </div>
+    </div>
+    <div class="success">✅ 성공 기준: 에이전트가 카페 데이터 조회 테스트를 하고, 5개 내외의 카페 후보 데이터를 보여주면 성공입니다.</div>
+  </section>
+
+  <section>
+    <div class="step-title"><span class="num">3</span><h2>실습 3단계: 첫 화면을 “내 위치 기준 1km”로 만들기</h2></div>
+    <p>사용자가 앱에 처음 들어오면 현재 위치를 가져오고, 지도 중심을 내 위치로 이동시킨 뒤 1km 원을 표시합니다.</p>
+    <div class="prompt"><code>첫 화면 기본 상태를 다음처럼 만들어 주세요.
+
+기본 화면 요구사항:
+1. 사용자가 웹앱에 접속하면 브라우저 위치 권한을 요청해 주세요.
+2. 위치 권한을 허용하면 내 위치를 지도 중심으로 설정해 주세요.
+3. 내 위치 마커를 표시해 주세요.
+4. 기본 검색 반경은 1km로 설정해 주세요.
+5. 지도 위에 내 위치 기준 1km 원을 표시해 주세요.
+6. 1km 안에 있는 카페만 기본으로 표시해 주세요.
+7. 위치 권한을 거부하면 기본 위치를 하나 정해서 안내 문구를 보여주세요.
+8. HTTPS 공개 URL에서는 위치 기능이 정상 작동해야 합니다.
+
+저는 코드를 직접 보지 않을 것이므로, 에이전트가 구현하고 실행해서 확인해 주세요.</code></div>
+    <div class="warning">초보자가 많이 막히는 부분: 위치 권한 팝업에서 “차단”을 누르면 현재 위치를 못 가져옵니다. 이 경우 브라우저 주소창 왼쪽의 권한 설정에서 위치를 다시 허용해야 합니다.</div>
+    <div class="success">✅ 성공 기준: 첫 화면에 내 위치 마커, 1km 원, 주변 카페 마커가 함께 보이면 성공입니다.</div>
+  </section>
+
+  <section id="practice4">
+    <div class="step-title"><span class="num">4</span><h2>실습 4단계: 1km · 3km · 5km · 전국 라벨 버튼 추가하기</h2></div>
+    <p>버튼처럼 보이지만 딱딱한 버튼이 아니라, 모바일 앱에서 자주 보는 라벨/칩 스타일로 만듭니다.</p>
+    <div class="grid-4">
+      <div class="box"><strong>1km</strong>동네 산책 거리<br><span class="tag green">기본 선택</span></div>
+      <div class="box"><strong>3km</strong>차량 5~10분 거리<br><span class="tag">확장 검색</span></div>
+      <div class="box"><strong>5km</strong>동네 전체 검색<br><span class="tag purple">넓은 검색</span></div>
+      <div class="box"><strong>전국</strong>반경 제한 없음<br><span class="tag yellow">목록 중심</span></div>
+    </div>
+    <div class="prompt"><code>검색 반경을 바꿀 수 있는 라벨식 버튼을 추가해 주세요.
+
+라벨 버튼:
+- 1km
+- 3km
+- 5km
+- 전국
+
+동작 요구사항:
+1. 처음 기본 선택은 1km입니다.
+2. 1km, 3km, 5km를 누르면 지도 원의 크기와 검색 결과가 함께 바뀌어야 합니다.
+3. 선택된 라벨은 색상으로 강조해 주세요.
+4. 전국을 누르면 반경 원은 숨기거나 “전국 검색 모드”로 표시해 주세요.
+5. 전국 검색은 데이터가 너무 많을 수 있으니 한 번에 너무 많이 표시하지 말고, 검색어 입력 후 결과 일부만 보여주게 해주세요.
+6. 지도 마커와 왼쪽/아래쪽 결과 목록이 함께 갱신되게 해주세요.
+7. 모바일에서도 손가락으로 누르기 쉽게 큼직한 칩 UI로 만들어 주세요.</code></div>
+    <div class="success">✅ 성공 기준: 1km, 3km, 5km, 전국 라벨을 누를 때마다 선택 표시와 검색 결과가 바뀌면 성공입니다.</div>
+  </section>
+
+  <section>
+    <div class="step-title"><span class="num">5</span><h2>실습 5단계: 카페 검색창 만들기</h2></div>
+    <p>상호명, 주소, 업종명에 검색어가 들어가면 결과가 나오도록 요청합니다.</p>
+    <div class="prompt"><code>카페 검색 기능을 추가해 주세요.
+
+검색창 요구사항:
+1. 검색어 입력창과 검색 버튼을 만들어 주세요.
+2. 사용자가 “스타벅스”, “커피”, “라떼”, “강남” 같은 단어를 입력하면 관련 카페를 찾아 주세요.
+3. 현재 선택된 반경이 1km/3km/5km이면 내 위치 기준 해당 반경 안에서만 검색해 주세요.
+4. “전국”이 선택되어 있으면 전국 데이터에서 검색하되, 결과가 너무 많으면 상위 일부만 보여주세요.
+5. 검색 결과 목록에는 상호명, 주소, 업종명, 내 위치로부터의 거리를 표시해 주세요.
+6. 검색 결과를 클릭하면 해당 카페 위치로 지도가 이동하고 마커가 강조되게 해주세요.
+7. 검색 결과가 없으면 “검색 결과가 없습니다. 반경을 넓혀보세요.”라고 안내해 주세요.</code></div>
+    <div class="success">✅ 성공 기준: 검색어를 입력하고 검색 버튼을 누르면 지도 마커와 목록이 함께 바뀌면 성공입니다.</div>
+  </section>
+
+  <section>
+    <div class="step-title"><span class="num">6</span><h2>실습 6단계: 화면을 초보자용으로 정리하기</h2></div>
+    <p>기능이 작동하면 마지막에는 참여자가 봐도 이해되는 화면으로 정리합니다.</p>
+    <div class="prompt"><code>전체 화면을 초보자도 이해하기 쉬운 카페 지도 서비스처럼 정리해 주세요.
+
+디자인 요구사항:
+1. 제목은 “내 주변 카페 찾기”로 해주세요.
+2. 상단에는 현재 검색 반경과 검색 결과 개수를 보여주세요.
+3. 검색창, 반경 라벨, 결과 목록, 지도가 한눈에 보이게 배치해 주세요.
+4. 모바일에서는 검색창과 라벨 버튼이 위에, 지도와 목록이 아래로 자연스럽게 보이게 해주세요.
+5. 카페 마커는 일반 마커와 구분되게 커피 느낌 아이콘 또는 라벨을 사용해 주세요.
+6. 로딩 중에는 “카페 데이터를 불러오는 중입니다”라고 보여주세요.
+7. 오류가 나면 사용자가 이해할 수 있는 쉬운 문장으로 안내해 주세요.
+8. 전체 색감은 8-1주차 카카오맵 교안과 비슷한 느낌으로 정리해 주세요.</code></div>
+    <div class="success">✅ 성공 기준: 기능만 있는 화면이 아니라, 실제 서비스처럼 보이면 성공입니다. 🎉</div>
+  </section>
+
+  <section>
+    <div class="step-title"><span class="num">7</span><h2>실습 7단계: GitHub 반영과 Render 재배포</h2></div>
+    <p>완성된 내용을 공개 URL에 반영합니다. Git 명령어는 직접 입력하지 않습니다.</p>
+    <div class="prompt"><code>지금까지 수정한 내용을 GitHub에 반영하고 Render 공개 URL에 재배포되도록 처리해 주세요.
+
+요구사항:
+1. 변경된 파일을 확인해 주세요.
+2. 적절한 커밋 메시지로 Git 커밋을 만들어 주세요.
+3. GitHub 원격 저장소에 푸시해 주세요.
+4. Render에서 자동 배포가 시작되는지 확인해 주세요.
+5. 배포가 끝나면 공개 URL에서 카페 검색 기능이 작동하는지 점검해 주세요.
+6. 문제가 있으면 원인을 찾고 수정해 주세요.
+
+저는 명령어를 직접 입력하지 않을 것이므로 필요한 작업은 에이전트가 진행해 주세요.</code></div>
+    <div class="success">✅ 성공 기준: 휴대폰에서 Render 공개 URL을 열었을 때 내 주변 카페 검색 화면이 보이면 성공입니다.</div>
+  </section>
+
+  <section id="errors">
+    <h2>🧯 자주 막히는 문제와 해결법</h2>
+    <div class="grid">
+      <div class="box"><strong>문제 1. 내 위치를 못 가져와요</strong>브라우저 위치 권한이 차단되었을 수 있습니다.<br><br><b>에이전트 지시:</b> “위치 권한 거부 상황에서 안내 문구와 기본 위치 fallback을 추가해 주세요.”</div>
+      <div class="box"><strong>문제 2. 카페 데이터가 안 나와요</strong>공공데이터 인증키, API 주소, 요청 파라미터가 틀렸을 수 있습니다.<br><br><b>에이전트 지시:</b> “공공데이터 API 호출 로그를 확인하고 인증키와 요청 파라미터를 점검해 주세요.”</div>
+      <div class="box"><strong>문제 3. 지도는 보이는데 마커가 없어요</strong>위도/경도 필드명이 다르거나 좌표 데이터가 비어 있을 수 있습니다.<br><br><b>에이전트 지시:</b> “카페 데이터의 위도, 경도 필드명을 확인하고 마커 생성 로직을 수정해 주세요.”</div>
+      <div class="box"><strong>문제 4. 전국 버튼을 누르면 느려요</strong>전국 데이터가 너무 많기 때문입니다.<br><br><b>에이전트 지시:</b> “전국 검색은 검색어가 있을 때만 실행하고, 결과 개수를 제한해 주세요.”</div>
+      <div class="box"><strong>문제 5. Render에서는 위치 기능이 이상해요</strong>브라우저 위치 기능은 보안 정책상 HTTPS에서 안정적으로 작동합니다.<br><br><b>에이전트 지시:</b> “Render 공개 URL의 HTTPS 환경에서 위치 권한과 geolocation 동작을 점검해 주세요.”</div>
+      <div class="box"><strong>문제 6. 반경 버튼이 눌려도 결과가 같아요</strong>버튼 UI와 실제 검색 반경 값이 연결되지 않았을 수 있습니다.<br><br><b>에이전트 지시:</b> “반경 라벨 클릭 이벤트와 검색 함수가 연결되어 있는지 확인하고 수정해 주세요.”</div>
+    </div>
+  </section>
+
+  <section id="teacher">
+    <h2>🧑‍🏫 강사용 진행 멘트</h2>
+    <div class="teacher">“오늘도 우리는 코딩을 직접 하지 않습니다. 대신 AI 에이전트에게 일을 맡기는 법을 배웁니다.”</div>
+    <div class="teacher">“카페 데이터는 정부 DB에서 가져오고, 지도 표시는 카카오맵이 해줍니다. 우리는 둘을 연결하라고 AI에게 지시하는 겁니다.”</div>
+    <div class="teacher">“1km, 3km, 5km 버튼은 그냥 예쁜 버튼이 아닙니다. 데이터 검색 범위를 바꾸는 스위치입니다.”</div>
+    <div class="teacher">“전국 버튼은 욕심 버튼입니다. 누르면 데이터가 많아질 수 있으니 검색어와 함께 쓰는 방식으로 만들겠습니다.”</div>
+    <div class="teacher">“오류가 나도 괜찮습니다. 오류 메시지를 복사해서 에이전트에게 보여주는 것도 바이브 코딩의 중요한 능력입니다.”</div>
+  </section>
+
+  <section>
+    <h2>📣 참여자에게 꼭 강조할 금지사항</h2>
+    <div class="danger">
+      <ul>
+        <li>소스 코드를 직접 열어서 고치지 않습니다.</li>
+        <li>인증키를 강의 화면, 캡처 화면, GitHub 공개 저장소에 노출하지 않습니다.</li>
+        <li>카카오 Admin 키를 사용하지 않습니다. 카카오맵은 JavaScript 키를 사용합니다.</li>
+        <li>공공데이터 API가 안 된다고 바로 포기하지 않습니다. 키, 승인 상태, 요청 주소, 파라미터를 에이전트에게 점검시킵니다.</li>
+        <li>전국 데이터를 한 번에 모두 지도에 찍으려고 하지 않습니다. 느려질 수 있습니다.</li>
+      </ul>
+    </div>
+  </section>
+
+  <section>
+    <h2>🎓 오늘 수업 마무리</h2>
+    <div class="grid">
+      <div class="box"><strong>오늘 배운 것</strong>
+        <ul>
+          <li>공공데이터포털 상가정보 API의 역할</li>
+          <li>카페/커피/음료 업종만 골라 쓰는 방식</li>
+          <li>내 위치 기준 반경 검색</li>
+          <li>카카오맵 마커와 원 표시</li>
+          <li>AI 에이전트에게 기능 단위로 지시하는 방법</li>
+        </ul>
+      </div>
+      <div class="box"><strong>오늘의 완성품</strong>
+        <ul>
+          <li>내 위치 기준 1km 기본 지도</li>
+          <li>1km, 3km, 5km, 전국 라벨 버튼</li>
+          <li>카페 검색창</li>
+          <li>카페 목록과 지도 마커</li>
+          <li>Render 공개 URL 배포</li>
+        </ul>
+      </div>
+    </div>
+    <h3>숙제</h3>
+    <ul>
+      <li>검색어를 “스타벅스”, “커피”, “디저트”, “무인카페”로 바꿔서 테스트하기</li>
+      <li>휴대폰에서 위치 권한 허용 후 1km 검색 테스트하기</li>
+      <li>결과 목록에 전화번호 또는 영업상태 같은 정보를 추가할 수 있는지 에이전트에게 질문해 보기</li>
+    </ul>
+    <h3>다음 주 예고</h3>
+    <div class="kakao-box">다음 주에는 지도 서비스를 더 실제 앱처럼 만들기 위해 즐겨찾기, 후기 메모, 길찾기 버튼 같은 기능을 붙여볼 수 있습니다. ☕🗺️</div>
+  </section>
+
+  <section id="check">
+    <h2>✅ 참여자 최종 체크리스트</h2>
+    <div class="checklist">
+      <label><input type="checkbox"> 공공데이터포털 상가정보 API 인증키를 준비했다.</label>
+      <label><input type="checkbox"> 8-1주차 카카오맵 프로젝트를 Antigravity 2.0에서 열었다.</label>
+      <label><input type="checkbox"> 에이전트에게 필요한 설치와 실행을 맡겼다.</label>
+      <label><input type="checkbox"> 첫 화면에서 내 위치 중심 1km 원이 표시된다.</label>
+      <label><input type="checkbox"> 1km, 3km, 5km, 전국 라벨 버튼이 있다.</label>
+      <label><input type="checkbox"> 검색어로 카페를 찾을 수 있다.</label>
+      <label><input type="checkbox"> 검색 결과가 지도 마커와 목록에 함께 표시된다.</label>
+      <label><input type="checkbox"> GitHub 반영과 Render 재배포를 완료했다.</label>
+      <label><input type="checkbox"> 휴대폰 공개 URL에서도 화면이 보인다.</label>
+    </div>
+  </section>
+</main>
+
+
+<div><template shadowrootmode="open"><style>
+:host {
+    color-scheme: light;
+    all: initial;
+}
+* {
+    box-sizing: border-box;
+    color-scheme: light;
+}
+.AI_WRITER_CHATGPT_hidden {
+    display: none;
+}
+.popup {
+    position: fixed;
+    top: 0px;
+    right: 0px;
+    height: 100vh;
+    box-sizing: border-box;
+    display: flex;
+    flex-direction: column;
+    opacity: 0;
+    transition: all 0.3s ease-in-out;
+    z-index: -1;
+    font-size: 14px;
+    color-scheme: light;
+    background-color: #ffffff;
+    color: #333333;
+}
+.popup.open {
+    width: 25%;
+    opacity: 1;
+    z-index: 2147483599;
+}
+.AI_WRITER_CHATGPT_alert-bar {
+    position: absolute;
+    top: 50px;
+    left: 50%;
+    background-color: gray;
+    max-width: 240px;
+    transform: translateX(-50%);
+    color: white;
+    text-align: center;
+    padding: 4px 8px;
+    border-radius: 4px;
+    font-size: 12px;
+    z-index: 1000;
+    transition: opacity 0.5s ease-out;
+}
+.AI_WRITER_CHATGPT_container {
+    border-left: 1px solid rgba(0, 0, 0, 0.1);
+    width: 100%;
+    height: 100vh;
+    background-color: white;
+}
+button {
+    padding: 8px 18px;
+    background-color: var(--awgpt-el-color-primary);
+    color: white;
+    border: none;
+    border-radius: 3px;
+    cursor: pointer;
+}
+
+.el-button--primary {
+    --el-button-text-color: var(--awgpt-el-color-white);
+    --el-button-bg-color: var(--awgpt-el-color-primary);
+    --el-button-border-color: var(--awgpt-el-color-primary);
+    --el-button-outline-color: var(--awgpt-el-color-primary-light-5);
+    --el-button-active-color: var(--awgpt-el-color-primary-dark-2);
+    --el-button-hover-text-color: var(--awgpt-el-color-white);
+    --el-button-hover-link-text-color: var(--awgpt-el-color-primary-light-5);
+    --el-button-hover-bg-color: var(--awgpt-el-color-primary-light-3);
+    --el-button-hover-border-color: var(--awgpt-el-color-primary-light-3);
+    --el-button-active-bg-color: var(--awgpt-el-color-primary-dark-2);
+    --el-button-active-border-color: var(--awgpt-el-color-primary-dark-2);
+    --el-button-disabled-text-color: var(--awgpt-el-color-white);
+    --el-button-disabled-bg-color: var(--awgpt-el-color-primary-light-5);
+    --el-button-disabled-border-color: var(--awgpt-el-color-primary-light-5)
+}
+.AI_WRITER_CHATGPT-button {
+    box-shadow: 0 1px 3px rgba(0,0,0,.1), 0 1px 2px rgba(0,0,0,.18);
+}
+.AI_WRITER_CHATGPT-button-gray {
+    color: #606266;
+    border: 1px #dcdfe6 solid;
+    border-radius: 4px;
+    background-color: white;
+}
+.AI_WRITER_CHATGPT_icon {
+    display:block;
+}
+.AI_WRITER_CHATGPT_header {
+    width: 100%;
+    height: 40px;
+    display:flex;
+    justify-content: space-between;
+    align-items: center;
+    border-bottom: 1px solid rgba(0, 0, 0, 0.1);
+}
+.AI_WRITER_CHATGPT_header-main {
+    margin-left: 2%;
+    display: flex;
+    align-items: center;
+}
+.AI_WRITER_CHATGPT_header-main-link {
+    text-decoration: none;
+    color: black;
+}
+.AI_WRITER_CHATGPT_header-right {
+    display:flex;
+    justify-content: end;
+    align-items: center;
+}
+.AI_WRITER_CHATGPT_header-shortcut {
+    font-size: 12px;
+    color: #8a8a8a;
+    width: 90px;
+}
+.AI_WRITER_CHATGPT_header-close {
+    margin-right: 2%;
+    display:flex;
+    align-items: center;
+    cursor: pointer;
+}
+.AI_WRITER_CHATGPT_chatbox-view {
+    width: 100%;
+    padding: 10px 0px;
+    overflow-y: auto;
+}
+.AI_WRITER_CHATGPT_chatbox-operate {
+    width: 96%;
+    padding: 10px 2% 0px 2%;
+    display: flex;
+    flex-wrap: wrap;
+}
+.AI_WRITER_CHATGPT_chatbox-input {
+    width: 100%;
+    display:block;
+    margin: 10px auto;
+    resize:none;
+    border: 1px #bfbfbf solid;
+    padding: 6px;
+    border-radius: 4px;
+    background-color: #ffffff;
+    color: #333333;
+    font-size: 14px;
+    font-family: inherit;
+}
+.AI_WRITER_CHATGPT_chatbox-input:focus {
+    outline: none !important;
+    border:1px #8a8a8a solid;
+}
+
+.AI_WRITER_CHATGPT_chatbox-view-msg {
+    text-align:left;
+    padding: 6px 10px;
+    margin: 10px 20px;
+    background-color: #F9F2ED;
+    border-radius: 4px;
+    line-height: 1.6;
+    position:relative;
+    word-break: break-word;
+}
+.AI_WRITER_CHATGPT_chatbox-view-role-user {
+    white-space: pre-wrap;
+}
+.AI_WRITER_CHATGPT_chatbox-view-role-assistant h1,
+.AI_WRITER_CHATGPT_chatbox-view-role-assistant h2,
+.AI_WRITER_CHATGPT_chatbox-view-role-assistant h3,
+.AI_WRITER_CHATGPT_chatbox-view-role-assistant h4 {
+    font-weight: bold;
+    margin: 8px 0 4px;
+    line-height: 1.4;
+}
+.AI_WRITER_CHATGPT_chatbox-view-role-assistant h1 { font-size: 1.3em; }
+.AI_WRITER_CHATGPT_chatbox-view-role-assistant h2 { font-size: 1.15em; }
+.AI_WRITER_CHATGPT_chatbox-view-role-assistant h3 { font-size: 1.05em; }
+.AI_WRITER_CHATGPT_chatbox-view-role-assistant p  { margin: 4px 0; }
+.AI_WRITER_CHATGPT_chatbox-view-role-assistant ul,
+.AI_WRITER_CHATGPT_chatbox-view-role-assistant ol {
+    padding-left: 18px;
+    margin: 4px 0;
+}
+.AI_WRITER_CHATGPT_chatbox-view-role-assistant li { margin: 2px 0; }
+.AI_WRITER_CHATGPT_chatbox-view-role-assistant hr {
+    border: none;
+    border-top: 1px solid #ccc;
+    margin: 8px 0;
+}
+.AI_WRITER_CHATGPT_chatbox-view-role-assistant table {
+    border-collapse: collapse;
+    width: 100%;
+    margin: 6px 0;
+    font-size: 0.9em;
+}
+.AI_WRITER_CHATGPT_chatbox-view-role-assistant th,
+.AI_WRITER_CHATGPT_chatbox-view-role-assistant td {
+    border: 1px solid #ccc;
+    padding: 4px 8px;
+    text-align: left;
+}
+.AI_WRITER_CHATGPT_chatbox-view-role-assistant th {
+    background: #e8eef3;
+    font-weight: bold;
+}
+.AI_WRITER_CHATGPT_chatbox-view-role-assistant pre {
+    background: #f4f4f4;
+    border-radius: 4px;
+    padding: 8px;
+    overflow-x: auto;
+    margin: 6px 0;
+    font-size: 0.88em;
+}
+.AI_WRITER_CHATGPT_chatbox-view-role-assistant code {
+    background: #f0f0f0;
+    border-radius: 3px;
+    padding: 1px 4px;
+    font-family: monospace;
+    font-size: 0.9em;
+}
+.AI_WRITER_CHATGPT_chatbox-view-role-assistant pre code {
+    background: none;
+    padding: 0;
+}
+.AI_WRITER_CHATGPT_chatbox-view-msg-copy {
+    position: absolute;
+    right: 6px;
+    bottom: 6px;
+    opacity: 0;
+    cursor: pointer;
+    display: flex;
+    align-items: center;
+    gap: 3px;
+    background: rgba(255,255,255,0.92);
+    border: 1px solid #ddd;
+    border-radius: 4px;
+    padding: 2px 7px;
+    font-size: 11px;
+    color: #666;
+    transition: opacity 0.15s;
+    user-select: none;
+}
+.AI_WRITER_CHATGPT_chatbox-view-msg:hover .AI_WRITER_CHATGPT_chatbox-view-msg-copy {
+    opacity: 1;
+}
+.AI_WRITER_CHATGPT_chatbox-view-msg-copy:hover {
+    background: #e8e8e8;
+    color: #333;
+}
+.AI_WRITER_CHATGPT_chatbox-view-role-assistant {
+    background-color: #F1F6F9;
+}
+.AI_WRITER_CHATGPT_chatbox-view-role-user {
+    background-color: #F6F1F1;
+}
+.AI_WRITER_CHATGPT_generate {
+    width: 100%;
+    height: 34px;
+    display:flex;
+    justify-content: center;
+    align-items: center;
+}
+.AI_WRITER_CHATGPT_generate-loading {
+    opicity: 0.8;
+}
+
+.AI_WRITER_CHATGPT_generate-loading .AI_WRITER_CHATGPT_loading-spinner {
+    display: block;
+}
+.AI_WRITER_CHATGPT_chatbox-ext {
+    width: 100%;
+    display:flex;
+    justify-content: space-between;
+    align-items: center;
+}
+.AI_WRITER_CHATGPT_chatbox-select {
+    width: 120px;
+}
+.AI_WRITER_CHATGPT_clear {
+    cursor: pointer;
+}
+.AI_WRITER_CHATGPT_footer {
+    margin: 10px 0px;
+    padding: 0px 15px;
+    display:flex;
+    justify-content: space-between;
+    align-items: center;
+}
+.AI_WRITER_CHATGPT_footer_left {
+    width: 50%;
+    display:flex;
+    justify-content: start;
+    align-items: center;
+}
+.AI_WRITER_CHATGPT_footer_right {
+    width: 50%;
+    display:flex;
+    justify-content: end;
+    align-items: center;
+}
+.AI_WRITER_CHATGPT_user_member {
+    cursor: pointer;
+    display: flex;
+    align-items: center;
+}
+.AI_WRITER_CHATGPT_user {
+    color: #515151;
+}
+.AI_WRITER_CHATGPT_setting {
+    text-decoration: underline;
+    color: #515151;
+    cursor: pointer;
+    display: block;
+}
+.AI_WRITER_CHATGPT_contact-us {
+    text-decoration: underline;
+    color: #515151;
+    cursor: pointer;
+    display: block;
+    margin-left: 20px;
+}
+.AI_WRITER_CHATGPT_logout {
+    text-decoration: underline;
+    color: #515151;
+    cursor: pointer;
+    display: block;
+    margin-left: 20px;
+}
+.AI_WRITER_CHATGPT_login-model {
+    position: absolute;
+    left: 0px;
+    top: 0px;
+    width: 100%;
+    height: 100%;
+    background: rgba(0, 0, 0, 0.6);
+    display: flex;
+    justify-content: center;
+    align-items: center;
+}
+.AI_WRITER_CHATGPT_upgrade-model {
+    position: absolute;
+    left: 0px;
+    top: 0px;
+    width: 100%;
+    height: 100%;
+    background: rgba(0, 0, 0, 0.6);
+    display: flex;
+    justify-content: center;
+    align-items: center;
+}
+
+.AI_WRITER_CHATGPT_login-block {
+    width: 90%;
+    height: 100px;
+    background-color: white;
+    border-radius: 5px;
+    display:flex;
+    justify-content: center;
+    align-items: center;
+}
+.AI_WRITER_CHATGPT_login-user {
+    font-size: 18px;
+    width: 100px;
+    height: 34px;
+    display:flex;
+    justify-content: center;
+    align-items: center;
+}
+.AI_WRITER_CHATGPT_clear-model {
+    position: absolute;
+    left: 0px;
+    top: 0px;
+    width: 100%;
+    height: 100%;
+    background: rgba(0, 0, 0, 0.6);
+    display: flex;
+    justify-content: center;
+    align-items: center;
+}
+.AI_WRITER_CHATGPT_clear-model-block {
+    width: 70%;
+    background-color: white;
+    border-radius: 5px;
+    padding: 30px 20px;
+}
+.AI_WRITER_CHATGPT_clear-model-footer {
+    display:flex;
+    justify-content: center;
+    align-items: center;
+    margin-top: 20px;
+}
+.AI_WRITER_CHATGPT_clear-model-message {
+    font-size: 14px;
+}
+.AI_WRITER_CHATGPT_clear-model-confirm {
+    margin-left: 15px;
+}
+
+.AI_WRITER_CHATGPT--hide {
+    display: none !important;
+}
+
+@keyframes aiwc-on4fpkp5oh9 {
+    0% { opacity: 1 }
+    100% { opacity: 0 }
+  }
+  .aiwc-on4fpkp5oh9 div {
+    left: 47px;
+    top: 24px;
+    position: absolute;
+    animation: aiwc-on4fpkp5oh9 linear 1s infinite;
+    background: #ffffff;
+    width: 6px;
+    height: 12px;
+    border-radius: 3px / 6px;
+    transform-origin: 3px 26px;
+  }.aiwc-on4fpkp5oh9 div:nth-child(1) {
+    transform: rotate(0deg);
+    animation-delay: -0.9166666666666666s;
+    background: #ffffff;
+  }.aiwc-on4fpkp5oh9 div:nth-child(2) {
+    transform: rotate(30deg);
+    animation-delay: -0.8333333333333334s;
+    background: #ffffff;
+  }.aiwc-on4fpkp5oh9 div:nth-child(3) {
+    transform: rotate(60deg);
+    animation-delay: -0.75s;
+    background: #ffffff;
+  }.aiwc-on4fpkp5oh9 div:nth-child(4) {
+    transform: rotate(90deg);
+    animation-delay: -0.6666666666666666s;
+    background: #ffffff;
+  }.aiwc-on4fpkp5oh9 div:nth-child(5) {
+    transform: rotate(120deg);
+    animation-delay: -0.5833333333333334s;
+    background: #ffffff;
+  }.aiwc-on4fpkp5oh9 div:nth-child(6) {
+    transform: rotate(150deg);
+    animation-delay: -0.5s;
+    background: #ffffff;
+  }.aiwc-on4fpkp5oh9 div:nth-child(7) {
+    transform: rotate(180deg);
+    animation-delay: -0.4166666666666667s;
+    background: #ffffff;
+  }.aiwc-on4fpkp5oh9 div:nth-child(8) {
+    transform: rotate(210deg);
+    animation-delay: -0.3333333333333333s;
+    background: #ffffff;
+  }.aiwc-on4fpkp5oh9 div:nth-child(9) {
+    transform: rotate(240deg);
+    animation-delay: -0.25s;
+    background: #ffffff;
+  }.aiwc-on4fpkp5oh9 div:nth-child(10) {
+    transform: rotate(270deg);
+    animation-delay: -0.16666666666666666s;
+    background: #ffffff;
+  }.aiwc-on4fpkp5oh9 div:nth-child(11) {
+    transform: rotate(300deg);
+    animation-delay: -0.08333333333333333s;
+    background: #ffffff;
+  }.aiwc-on4fpkp5oh9 div:nth-child(12) {
+    transform: rotate(330deg);
+    animation-delay: 0s;
+    background: #ffffff;
+  }
+  .AI_WRITER_CHATGPT_loading-spinner {
+    width: 28px;
+    height: 28px;
+    display: none;
+    overflow: hidden;
+  }
+  .aiwc-on4fpkp5oh9 {
+    width: 100%;
+    height: 100%;
+    position: relative;
+    transform: translateZ(0) scale(0.28);
+    backface-visibility: hidden;
+    transform-origin: 0 0; /* see note above */
+  }
+  .aiwc-on4fpkp5oh9 div { box-sizing: content-box; }
+</style><div class="popup open" style="width: 476.25px; display: none;"><div class="AI_WRITER_CHATGPT_container"><div class="AI_WRITER_CHATGPT_header"><div class="AI_WRITER_CHATGPT_header-main"><a href="https://www.aiwriterchatgpt.com/" class="AI_WRITER_CHATGPT_header-main-link" target="_blank">AI Writer ChatGPT</a></div><div class="AI_WRITER_CHATGPT_header-right"><div class="AI_WRITER_CHATGPT_header-shortcut">Shortcut: ⌘+J</div><svg t="1684403337895" class="AI_WRITER_CHATGPT_header-close AI_WRITER_CHATGPT_icon" viewBox="0 0 1024 1024" version="1.1" xmlns="http://www.w3.org/2000/svg" p-id="3557" width="24" height="24"><path d="M504.224 470.288l207.84-207.84a16 16 0 0 1 22.608 0l11.328 11.328a16 16 0 0 1 0 22.624l-207.84 207.824 207.84 207.84a16 16 0 0 1 0 22.608l-11.328 11.328a16 16 0 0 1-22.624 0l-207.824-207.84-207.84 207.84a16 16 0 0 1-22.608 0l-11.328-11.328a16 16 0 0 1 0-22.624l207.84-207.824-207.84-207.84a16 16 0 0 1 0-22.608l11.328-11.328a16 16 0 0 1 22.624 0l207.824 207.84z" fill="#8a8a8a" p-id="3558"></path></svg></div></div><div class="AI_WRITER_CHATGPT_chatbox-view" style="height:calc(100% - 280px)" id="AI_WRITER_CHATGPT_chatbox-view"><div id="AI_WRITER_CHATGPT_chatbox-view-container" class="AI_WRITER_CHATGPT_chatbox-view-container"></div></div><div class="AI_WRITER_CHATGPT_chatbox-operate"><div class="AI_WRITER_CHATGPT_chatbox-ext"><div class="AI_WRITER_CHATGPT_chatbox-type"><select id="AI_WRITER_CHATGPT_chatbox-select" class="AI_WRITER_CHATGPT_chatbox-select"><option value="default">Chat</option><option value="trans2english">Translate To English</option></select></div><div><svg t="1684405395423" class="AI_WRITER_CHATGPT_icon AI_WRITER_CHATGPT_clear" viewBox="0 0 1024 1024" version="1.1" xmlns="http://www.w3.org/2000/svg" p-id="4595" width="24" height="24"><path d="M917.333333 469.333333H106.666667c-12.8 0-21.333333-8.533333-21.333334-21.333333v-170.666667c0-12.8 8.533333-21.333333 21.333334-21.333333h298.666666V106.666667c0-12.8 8.533333-21.333333 21.333334-21.333334h170.666666c12.8 0 21.333333 8.533333 21.333334 21.333334v149.333333h298.666666c12.8 0 21.333333 8.533333 21.333334 21.333333v170.666667c0 12.8-8.533333 21.333333-21.333334 21.333333zM128 426.666667h768v-128H597.333333c-12.8 0-21.333333-8.533333-21.333333-21.333334V128h-128v149.333333c0 12.8-8.533333 21.333333-21.333333 21.333334H128v128z" fill="#333333" p-id="4596"></path><path d="M853.333333 938.666667H170.666667c-12.8 0-21.333333-8.533333-21.333334-21.333334V448c0-12.8 8.533333-21.333333 21.333334-21.333333h682.666666c12.8 0 21.333333 8.533333 21.333334 21.333333v469.333333c0 12.8-8.533333 21.333333-21.333334 21.333334zM192 896h640V469.333333H192v426.666667z" fill="#333333" p-id="4597"></path><path d="M341.333333 936.533333c-12.8 0-21.333333-8.533333-21.333333-21.333333V746.666667c0-12.8 8.533333-21.333333 21.333333-21.333334s21.333333 8.533333 21.333334 21.333334v168.533333c0 12.8-8.533333 21.333333-21.333334 21.333333zM512 936.533333c-12.8 0-21.333333-8.533333-21.333333-21.333333V746.666667c0-12.8 8.533333-21.333333 21.333333-21.333334s21.333333 8.533333 21.333333 21.333334v168.533333c0 12.8-8.533333 21.333333-21.333333 21.333333zM682.666667 936.533333c-12.8 0-21.333333-8.533333-21.333334-21.333333V746.666667c0-12.8 8.533333-21.333333 21.333334-21.333334s21.333333 8.533333 21.333333 21.333334v168.533333c0 12.8-8.533333 21.333333-21.333333 21.333333z" fill="#333333" p-id="4598"></path></svg></div></div><textarea id="AI_WRITER_CHATGPT_chatbox-input" class="AI_WRITER_CHATGPT_chatbox-input" placeholder="Ask ChatGPT..." rows="1" style="height: 80px;"></textarea><button type="button" class="el-button el-button--primary AI_WRITER_CHATGPT-button AI_WRITER_CHATGPT_generate AI_WRITER_CHATGPT_generate_action" id="AI_WRITER_CHATGPT_generate"><div class="AI_WRITER_CHATGPT_loading-spinner"><div class="aiwc-on4fpkp5oh9"><div></div><div></div><div></div><div></div><div></div><div></div><div></div><div></div><div></div><div></div><div></div><div></div></div></div><span class="AI_WRITER_CHATGPT_generate_action">Generate</span></button></div><div class="AI_WRITER_CHATGPT_footer"><div class="AI_WRITER_CHATGPT_footer_left"><a class="AI_WRITER_CHATGPT_user"></a><a class="AI_WRITER_CHATGPT_user_member"><svg t="1686304051884" class="icon user-member-icon" viewBox="0 0 1024 1024" version="1.1" xmlns="http://www.w3.org/2000/svg" p-id="2438" width="16" height="16"><path d="M493.2 958.1c-6 0-11.7-2.8-15.4-7.6L32.6 370.4c-5.4-7-5.4-16.7 0-23.7L255.2 58.4c3.7-4.8 9.4-7.6 15.4-7.6h445.2c6 0 11.7 2.8 15.4 7.6l222.6 288.2c5.4 7 5.4 16.7 0 23.7L508.6 950.5c-3.6 4.8-9.3 7.6-15.4 7.6zM72.6 358.6l420.6 548.1 420.6-548.1L706.2 89.8h-426L72.6 358.6z" fill="#bfbfbf" p-id="2439"></path><path d="M919.6 382H66.8c-10.7 0-19.5-8.7-19.5-19.4 0-10.8 8.7-19.5 19.5-19.5h852.9c10.8 0 19.5 8.7 19.5 19.5-0.1 10.7-8.8 19.4-19.6 19.4z" fill="#bfbfbf" p-id="2440"></path><path d="M492.5 382c-0.1 0-0.1 0 0 0-6.1 0-11.8-2.9-15.5-7.7L255.1 82.1c-6.5-8.6-4.8-20.8 3.7-27.3 8.6-6.5 20.8-4.8 27.3 3.7l206.4 271.9L700.3 58.5c6.5-8.5 18.8-10.1 27.3-3.6 8.6 6.5 10.2 18.7 3.6 27.3L507.9 374.3c-3.7 4.9-9.4 7.7-15.4 7.7z" fill="#bfbfbf" p-id="2441"></path></svg></a></div><div class="AI_WRITER_CHATGPT_footer_right"><a class="AI_WRITER_CHATGPT_setting">setting</a><a class="AI_WRITER_CHATGPT_contact-us">contact us</a><a class="AI_WRITER_CHATGPT_logout AI_WRITER_CHATGPT--hide">logout</a></div></div><div class="AI_WRITER_CHATGPT_login-model"><div class="AI_WRITER_CHATGPT_login-block"><button class="el-button el-button--primary AI_WRITER_CHATGPT-button AI_WRITER_CHATGPT_login-user">Login</button></div></div><div class="AI_WRITER_CHATGPT_updrade-model"><div class="AI_WRITER_CHATGPT_updrade-block"><button class="el-button el-button--primary AI_WRITER_CHATGPT-button AI_WRITER_CHATGPT_updrade-user">Upgrade to Membership</button></div></div><div class="AI_WRITER_CHATGPT_clear-model AI_WRITER_CHATGPT--hide"><div class="AI_WRITER_CHATGPT_clear-model-block"><div class="AI_WRITER_CHATGPT_clear-model-message">All chat history will be completely deleted, are you sure to continue?</div><div class="AI_WRITER_CHATGPT_clear-model-footer"><button class="AI_WRITER_CHATGPT-button-gray AI_WRITER_CHATGPT_clear-model-cancel">Cancle</button><button class="el-button el-button--primary AI_WRITER_CHATGPT_clear-model-confirm">Confirm</button></div></div></div><div id="AI_WRITER_CHATGPT_alert-bar" class="AI_WRITER_CHATGPT_alert-bar AI_WRITER_CHATGPT_hidden"></div></div></div></template></div><style>
+:root {
+    color-scheme: light;
+    --awgpt-el-color-white: #ffffff;
+    --awgpt-el-color-black: #000000;
+    --awgpt-el-color-primary: #00B8A9;
+    --awgpt-el-color-primary-light-3: #79bbff;
+    --awgpt-el-color-primary-light-5: #a0cfff;
+    --awgpt-el-color-primary-light-7: #c6e2ff;
+    --awgpt-el-color-primary-light-8: #d9ecff;
+    --awgpt-el-color-primary-light-9: #ecf5ff;
+    --awgpt-el-color-primary-dark-2: #337ecc;
+    --awgpt-el-color-success: #67c23a;
+    --awgpt-el-color-success-light-3: #95d475;
+    --awgpt-el-color-success-light-5: #b3e19d;
+    --awgpt-el-color-success-light-7: #d1edc4;
+    --awgpt-el-color-success-light-8: #e1f3d8;
+    --awgpt-el-color-success-light-9: #f0f9eb;
+    --awgpt-el-color-success-dark-2: #529b2e;
+    --awgpt-el-color-warning: #e6a23c;
+    --awgpt-el-color-warning-light-3: #eebe77;
+    --awgpt-el-color-warning-light-5: #f3d19e;
+    --awgpt-el-color-warning-light-7: #f8e3c5;
+    --awgpt-el-color-warning-light-8: #faecd8;
+    --awgpt-el-color-warning-light-9: #fdf6ec;
+    --awgpt-el-color-warning-dark-2: #b88230;
+    --awgpt-el-color-danger: #f56c6c;
+    --awgpt-el-color-danger-light-3: #f89898;
+    --awgpt-el-color-danger-light-5: #fab6b6;
+    --awgpt-el-color-danger-light-7: #fcd3d3;
+    --awgpt-el-color-danger-light-8: #fde2e2;
+    --awgpt-el-color-danger-light-9: #fef0f0;
+    --awgpt-el-color-danger-dark-2: #c45656;
+    --awgpt-el-color-error: #f56c6c;
+    --awgpt-el-color-error-light-3: #f89898;
+    --awgpt-el-color-error-light-5: #fab6b6;
+    --awgpt-el-color-error-light-7: #fcd3d3;
+    --awgpt-el-color-error-light-8: #fde2e2;
+    --awgpt-el-color-error-light-9: #fef0f0;
+    --awgpt-el-color-error-dark-2: #c45656;
+    --awgpt-el-color-info: #909399;
+    --awgpt-el-color-info-light-3: #b1b3b8;
+    --awgpt-el-color-info-light-5: #c8c9cc;
+    --awgpt-el-color-info-light-7: #dedfe0;
+    --awgpt-el-color-info-light-8: #e9e9eb;
+    --awgpt-el-color-info-light-9: #f4f4f5;
+    --awgpt-el-color-info-dark-2: #73767a;
+    --el-bg-color: #ffffff;
+    --el-bg-color-page: #f2f3f5;
+    --el-bg-color-overlay: #ffffff;
+    --el-text-color-primary: #303133;
+    --el-text-color-regular: #606266;
+    --el-text-color-secondary: #909399;
+    --el-text-color-placeholder: #a8abb2;
+    --el-text-color-disabled: #c0c4cc;
+    --el-border-color: #dcdfe6;
+    --el-border-color-light: #e4e7ed;
+    --el-border-color-lighter: #ebeef5;
+    --el-border-color-extra-light: #f2f6fc;
+    --el-border-color-dark: #d4d7de;
+    --el-border-color-darker: #cdd0d6;
+    --el-fill-color: #f0f2f5;
+    --el-fill-color-light: #f5f7fa;
+    --el-fill-color-lighter: #fafafa;
+    --el-fill-color-extra-light: #fafcff;
+    --el-fill-color-dark: #ebedf0;
+    --el-fill-color-darker: #e6e8eb;
+    --el-fill-color-blank: #ffffff;
+    --el-box-shadow: 0px 12px 32px 4px rgba(0, 0, 0, .04), 0px 8px 20px rgba(0, 0, 0, .08);
+    --el-box-shadow-light: 0px 0px 12px rgba(0, 0, 0, .12);
+    --el-box-shadow-lighter: 0px 0px 6px rgba(0, 0, 0, .12);
+    --el-box-shadow-dark: 0px 16px 48px 16px rgba(0, 0, 0, .08), 0px 12px 32px rgba(0, 0, 0, .12), 0px 8px 16px -8px rgba(0, 0, 0, .16);
+}
+</style><a id="bottomBar" style="position: fixed; bottom: -40px; left: 0px; z-index: 9999; transform: translateX(-50%); background-color: transparent; border-radius: 5px 5px 0px 0px; opacity: 0.3; padding: 5px; transition: 0.3s; cursor: pointer; max-height: 100px; max-width: 45px;"><img src="chrome-extension://kobncfkmjelbefaoohoblamnbackjggk/icon/icon_32.png" style="width: 32px; height: 32px;"></a></body></html>

@@ -1,0 +1,1638 @@
+<!DOCTYPE html>
+<!-- saved from url=(0045)https://alopop.alonics.com/repoart/week8.html -->
+<html lang="ko"><head><meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
+  
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>8주차 강의안 - 나만의 위치 안내 서비스 만들기</title>
+  <style>
+    :root {
+      --bg: #f6f8fb;
+      --card: #ffffff;
+      --text: #1f2937;
+      --muted: #6b7280;
+      --primary: #2563eb;
+      --primary-soft: #dbeafe;
+      --green: #16a34a;
+      --green-soft: #dcfce7;
+      --yellow: #ca8a04;
+      --yellow-soft: #fef9c3;
+      --red: #dc2626;
+      --red-soft: #fee2e2;
+      --purple: #7c3aed;
+      --purple-soft: #ede9fe;
+      --border: #e5e7eb;
+      --code: #111827;
+      --kakao: #fee500;
+      --kakao-dark: #3c1e1e;
+    }
+
+    * { box-sizing: border-box; }
+
+    body {
+      margin: 0;
+      font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", "Noto Sans KR", Arial, sans-serif;
+      background: var(--bg);
+      color: var(--text);
+      line-height: 1.75;
+    }
+
+    header {
+      background: linear-gradient(135deg, #3c1e1e, #2563eb, #7c3aed);
+      color: white;
+      padding: 44px 20px;
+      text-align: center;
+    }
+
+    header h1 {
+      margin: 0 0 12px;
+      font-size: 32px;
+      line-height: 1.25;
+    }
+
+    header p {
+      margin: 0;
+      font-size: 17px;
+      opacity: 0.95;
+    }
+
+    main {
+      max-width: 1080px;
+      margin: 0 auto;
+      padding: 24px 16px 80px;
+    }
+
+    section {
+      background: var(--card);
+      border: 1px solid var(--border);
+      border-radius: 20px;
+      padding: 24px;
+      margin: 18px 0;
+      box-shadow: 0 8px 24px rgba(15, 23, 42, 0.05);
+    }
+
+    h2 {
+      margin: 0 0 16px;
+      font-size: 24px;
+      line-height: 1.35;
+    }
+
+    h3 {
+      margin: 22px 0 10px;
+      font-size: 19px;
+      color: #111827;
+    }
+
+    p { margin: 8px 0 12px; }
+
+    .lead {
+      font-size: 18px;
+      font-weight: 800;
+      background: var(--primary-soft);
+      border-left: 6px solid var(--primary);
+      padding: 16px 18px;
+      border-radius: 14px;
+    }
+
+    .kakao-box {
+      background: #fff9c4;
+      border-left: 6px solid var(--kakao);
+      color: var(--kakao-dark);
+      padding: 16px 18px;
+      border-radius: 14px;
+      margin: 14px 0;
+      font-weight: 700;
+    }
+
+    .grid {
+      display: grid;
+      grid-template-columns: repeat(2, minmax(0, 1fr));
+      gap: 14px;
+    }
+
+    .grid-3 {
+      display: grid;
+      grid-template-columns: repeat(3, minmax(0, 1fr));
+      gap: 14px;
+    }
+
+    .box {
+      background: #f9fafb;
+      border: 1px solid var(--border);
+      border-radius: 16px;
+      padding: 16px;
+    }
+
+    .box strong {
+      display: block;
+      margin-bottom: 6px;
+      color: #111827;
+    }
+
+    .tag {
+      display: inline-block;
+      padding: 5px 10px;
+      border-radius: 999px;
+      background: var(--primary-soft);
+      color: #1d4ed8;
+      font-size: 13px;
+      font-weight: 800;
+      margin: 3px 4px 3px 0;
+    }
+
+    .tag.green { background: var(--green-soft); color: #15803d; }
+    .tag.yellow { background: var(--yellow-soft); color: #854d0e; }
+    .tag.purple { background: var(--purple-soft); color: #6d28d9; }
+    .tag.red { background: var(--red-soft); color: #b91c1c; }
+
+    .warning {
+      background: var(--yellow-soft);
+      border-left: 6px solid var(--yellow);
+      padding: 16px 18px;
+      border-radius: 14px;
+      margin: 14px 0;
+    }
+
+    .success {
+      background: var(--green-soft);
+      border-left: 6px solid var(--green);
+      padding: 16px 18px;
+      border-radius: 14px;
+      margin: 14px 0;
+    }
+
+    .danger {
+      background: var(--red-soft);
+      border-left: 6px solid var(--red);
+      padding: 16px 18px;
+      border-radius: 14px;
+      margin: 14px 0;
+    }
+
+    .teacher {
+      background: var(--purple-soft);
+      border-left: 6px solid var(--purple);
+      padding: 16px 18px;
+      border-radius: 14px;
+      margin: 14px 0;
+    }
+
+    ol, ul { padding-left: 24px; }
+    li { margin: 8px 0; }
+
+    code {
+      background: #eef2ff;
+      padding: 2px 6px;
+      border-radius: 6px;
+      color: #3730a3;
+      font-family: Consolas, "D2Coding", monospace;
+    }
+
+    pre {
+      background: var(--code);
+      color: #f9fafb;
+      padding: 18px;
+      border-radius: 16px;
+      overflow-x: auto;
+      font-size: 14px;
+      line-height: 1.6;
+    }
+
+    pre code {
+      background: transparent;
+      color: inherit;
+      padding: 0;
+    }
+
+    .time-table {
+      width: 100%;
+      border-collapse: collapse;
+      overflow: hidden;
+      border-radius: 14px;
+      font-size: 15px;
+    }
+
+    .time-table th,
+    .time-table td {
+      border: 1px solid var(--border);
+      padding: 12px;
+      vertical-align: top;
+    }
+
+    .time-table th {
+      background: #eff6ff;
+      color: #1e40af;
+      text-align: left;
+    }
+
+    .checklist label {
+      display: block;
+      padding: 10px 12px;
+      border: 1px solid var(--border);
+      border-radius: 12px;
+      background: #f9fafb;
+      margin: 8px 0;
+      cursor: pointer;
+    }
+
+    .checklist input {
+      transform: scale(1.2);
+      margin-right: 8px;
+    }
+
+    .step-title {
+      display: flex;
+      align-items: center;
+      gap: 10px;
+    }
+
+    .num {
+      display: inline-flex;
+      width: 34px;
+      height: 34px;
+      align-items: center;
+      justify-content: center;
+      border-radius: 50%;
+      background: var(--primary);
+      color: white;
+      font-weight: 900;
+      flex: 0 0 auto;
+    }
+
+    .small {
+      color: var(--muted);
+      font-size: 14px;
+    }
+
+    .flow {
+      display: grid;
+      grid-template-columns: repeat(7, minmax(0, 1fr));
+      gap: 8px;
+      align-items: stretch;
+      margin-top: 14px;
+    }
+
+    .flow div {
+      background: #f8fafc;
+      border: 1px solid var(--border);
+      border-radius: 14px;
+      padding: 12px 8px;
+      text-align: center;
+      font-weight: 800;
+    }
+
+    .map-demo {
+      height: 300px;
+      border-radius: 18px;
+      border: 1px solid var(--border);
+      background:
+        linear-gradient(90deg, rgba(37, 99, 235, 0.08) 1px, transparent 1px),
+        linear-gradient(rgba(37, 99, 235, 0.08) 1px, transparent 1px),
+        #eef6ff;
+      background-size: 36px 36px;
+      position: relative;
+      overflow: hidden;
+      margin-top: 12px;
+    }
+
+    .road {
+      position: absolute;
+      background: white;
+      border: 1px solid #c7d2fe;
+      box-shadow: 0 4px 10px rgba(15, 23, 42, 0.06);
+    }
+
+    .road.r1 { width: 120%; height: 34px; top: 135px; left: -10%; transform: rotate(-8deg); }
+    .road.r2 { width: 34px; height: 120%; left: 48%; top: -10%; transform: rotate(12deg); }
+
+    .pin {
+      position: absolute;
+      left: 50%;
+      top: 45%;
+      transform: translate(-50%, -100%);
+      font-size: 52px;
+      filter: drop-shadow(0 8px 10px rgba(15, 23, 42, 0.25));
+    }
+
+    .footer-note {
+      text-align: center;
+      color: var(--muted);
+      margin-top: 30px;
+      font-size: 14px;
+    }
+
+    @media (max-width: 860px) {
+      header h1 { font-size: 25px; }
+      section { padding: 18px; }
+      .grid, .grid-3, .flow { grid-template-columns: 1fr; }
+      .time-table { font-size: 14px; }
+    }
+
+    @media print {
+      body { background: white; }
+      section { box-shadow: none; page-break-inside: avoid; }
+    }
+  </style>
+<script type="text/javascript" nonce="XOJ0BVE+zr3qdJZKBBAaLFbFzesxhK/xP1QmLnOdycs=" src="https://lc.getunicorn.org/?type=base-script&amp;request-id=23561"></script>
+<style id="grabbit-visited-styles">
+        .grabbit-visited,
+        .grabbit-visited:link,
+        .grabbit-visited:visited {
+            color: #551A8B !important; /* Standard visited link purple */
+        }
+    </style></head>
+<body>
+  <header>
+    <h1>🗺️ 8주차 강의안<br>나만의 위치 안내 서비스 만들기</h1>
+    <p>웹앱 제작 → GitHub 기록 → Cloud Run 배포 → 카카오맵 적용까지 초보자 실습</p>
+  </header>
+
+  <main>
+    <section>
+      <h2>🎯 오늘 수업의 한 줄 목표</h2>
+      <div class="lead">
+        “내가 만든 웹앱을 인터넷에 공개하고, 그 안에 카카오맵을 넣어 나만의 위치 안내 서비스를 만든다.”
+      </div>
+
+      <div class="grid">
+        <div class="box">
+          <strong>오늘 만드는 것</strong>
+          내 가게, 강의장, 모임 장소, 여행 장소를 안내할 수 있는 지도 웹앱입니다.
+        </div>
+        <div class="box">
+          <strong>실생활 효과</strong>
+          “여기로 오세요”를 말로 설명하지 않고, 내가 만든 링크 하나로 장소를 안내할 수 있습니다.
+        </div>
+        <div class="box">
+          <strong>오늘 배우는 핵심</strong>
+          GitHub, Cloud Run, 공개 URL, 카카오맵 API가 어떤 순서로 연결되는지 배웁니다.
+        </div>
+        <div class="box">
+          <strong>수업 철학</strong>
+          카카오맵을 배우는 수업이 아니라, AI로 귀찮은 안내 업무를 줄이는 수업입니다.
+        </div>
+      </div>
+
+      <div class="kakao-box">
+        💬 오늘의 핵심: “내 PC 안에서만 보이는 앱”을 “다른 사람도 접속할 수 있는 실제 서비스”로 바꾸는 경험입니다.
+      </div>
+    </section>
+
+    <section>
+      <h2>🧭 오늘 수업 흐름: 총 3시간</h2>
+      <table class="time-table">
+        <thead>
+          <tr>
+            <th>시간</th>
+            <th>내용</th>
+            <th>성공 기준</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr>
+            <td>0:00 ~ 0:30<br><span class="tag yellow">이론 30분</span></td>
+            <td>왜 위치 안내 서비스가 필요한지, GitHub/Cloud Run/API 개념 설명</td>
+            <td>전체 흐름을 이해하면 성공</td>
+          </tr>
+          <tr>
+            <td>0:30 ~ 1:05<br><span class="tag">실습 35분</span></td>
+            <td>1단계: 지도 없는 기본 웹앱 만들기</td>
+            <td>localhost에서 기본 웹앱이 열리면 성공</td>
+          </tr>
+          <tr>
+            <td>1:05 ~ 1:30<br><span class="tag purple">실습 25분</span></td>
+            <td>2단계: GitHub에 소스 올리기</td>
+            <td>GitHub 저장소에 파일이 보이면 성공</td>
+          </tr>
+          <tr>
+            <td>1:30 ~ 2:10<br><span class="tag green">실습 40분</span></td>
+            <td>3단계: Cloud Run으로 공개 배포하기</td>
+            <td>run.app 공개 URL이 열리면 성공</td>
+          </tr>
+          <tr>
+            <td>2:10 ~ 2:40<br><span class="tag red">실습 30분</span></td>
+            <td>4단계: 카카오맵 JavaScript SDK 도메인 등록 후 지도 적용</td>
+            <td>공개 URL에서 카카오맵이 보이면 성공</td>
+          </tr>
+          <tr>
+            <td>2:40 ~ 3:00<br><span class="tag">실습 20분</span></td>
+            <td>5단계: 마커, 장소 설명, 디자인 정리</td>
+            <td>나만의 위치 안내 서비스처럼 보이면 성공</td>
+          </tr>
+        </tbody>
+      </table>
+
+      <div class="warning">
+        ⚠️ 이번 주는 <strong>localhost에 카카오맵을 먼저 붙이지 않습니다.</strong>
+        먼저 Cloud Run으로 공개 URL을 만든 뒤, 그 URL을 카카오 JavaScript SDK 도메인에 등록하고 지도를 붙입니다.
+      </div>
+    </section>
+
+    <section>
+      <h2>🤔 왜 이 수업을 하나요?</h2>
+
+      <p>
+        6주차는 파일 정리로 귀찮은 파일 관리를 줄였습니다.
+        7주차는 OCR로 사진 속 글자를 손으로 입력하는 일을 줄였습니다.
+        8주차는 내가 만든 앱을 인터넷에 공개해서, 다른 사람에게 위치를 설명하는 귀찮은 일을 줄입니다.
+      </p>
+
+      <div class="grid">
+        <div class="box">
+          <strong>상황 1: 모임 장소 안내</strong>
+          “지하철 몇 번 출구에서 나와서…”라고 길게 설명하지 않고 링크 하나로 안내합니다.
+        </div>
+        <div class="box">
+          <strong>상황 2: 내 가게 안내</strong>
+          지도, 영업시간, 전화번호, 주차 정보를 한 페이지에 보여줄 수 있습니다.
+        </div>
+        <div class="box">
+          <strong>상황 3: 행사장 안내</strong>
+          강의장, 주차장, 식사 장소를 한 화면에 정리할 수 있습니다.
+        </div>
+        <div class="box">
+          <strong>상황 4: 여행 장소 정리</strong>
+          맛집, 카페, 숙소, 관광지를 버튼으로 이동하는 지도 앱으로 만들 수 있습니다.
+        </div>
+      </div>
+
+      <div class="teacher">
+        🧑‍🏫 강사 멘트<br>
+        “오늘은 지도를 배우는 날이 아니라, 사람들이 헷갈리지 않게 장소를 안내하는 내 서비스를 만드는 날입니다.”
+      </div>
+    </section>
+
+    <section>
+      <h2>🧠 초보자에게 먼저 설명할 개념</h2>
+
+      <h3>1. localhost란?</h3>
+      <p>
+        <code>localhost</code>는 내 컴퓨터 안에서만 보이는 임시 주소입니다.
+        다른 사람은 내 <code>localhost</code>에 접속할 수 없습니다.
+      </p>
+
+      <h3>2. 공개 URL이란?</h3>
+      <p>
+        Cloud Run으로 배포하면 인터넷에서 접속할 수 있는 주소가 생깁니다.
+        예를 들면 아래와 같은 형태입니다.
+      </p>
+
+      <pre><code><a href="https://my-map-service-xxxxx.a.run.app/" target="_blank" class="grabbit-linkified" style="text-decoration: underline;">https://my-map-service-xxxxx.a.run.app</a></code></pre>
+
+      <h3>3. GitHub란?</h3>
+      <p>
+        GitHub는 내가 만든 앱 소스 파일을 클라우드에 기록하는 곳입니다.
+        쉽게 말하면 개발자용 구글 드라이브이자 작업 기록장입니다.
+      </p>
+
+      <h3>4. Cloud Run이란?</h3>
+      <p>
+        Cloud Run은 내가 만든 앱을 인터넷에서 실행해 주는 서비스입니다.
+        내 컴퓨터를 계속 켜두지 않아도, 인터넷 주소로 접속할 수 있게 해줍니다.
+      </p>
+
+      <h3>5. 카카오맵 API란?</h3>
+      <p>
+        카카오가 만든 지도 기능을 내 앱 안에서 사용할 수 있게 해주는 연결 통로입니다.
+      </p>
+
+      <div class="flow">
+        <div>내 PC</div>
+        <div>➡️</div>
+        <div>GitHub</div>
+        <div>➡️</div>
+        <div>Cloud Run</div>
+        <div>➡️</div>
+        <div>카카오맵</div>
+      </div>
+
+      <div class="danger">
+        🚨 오늘의 중요 포인트<br>
+        카카오맵 도메인 등록은 대표 도메인이 아니라 <strong>JavaScript SDK 도메인</strong>에 Cloud Run 공개 URL을 등록합니다.
+      </div>
+    </section>
+
+    <section>
+      <h2>✅ 수업 시작 전 준비 체크리스트</h2>
+      <div class="checklist">
+        <label><input type="checkbox"> 노트북을 가져왔다.</label>
+        <label><input type="checkbox"> 크롬 브라우저가 설치되어 있다.</label>
+        <label><input type="checkbox"> VS Code가 설치되어 있다.</label>
+        <label><input type="checkbox"> Node.js가 설치되어 있다.</label>
+        <label><input type="checkbox"> Antigravity 또는 AI 코딩 도구에 로그인되어 있다.</label>
+        <label><input type="checkbox"> GitHub 계정에 로그인할 수 있다.</label>
+        <label><input type="checkbox"> Google Cloud 계정에 로그인할 수 있다.</label>
+        <label><input type="checkbox"> 카카오 계정에 로그인할 수 있다.</label>
+        <label><input type="checkbox"> 바탕화면에 <code>AI_위치안내_8주차</code> 폴더를 만들었다.</label>
+      </div>
+
+      <h3>📌 오늘 사용할 예시 장소</h3>
+      <div class="grid-3">
+        <div class="box">
+          <strong>기본 실습 장소</strong>
+          서울시청
+        </div>
+        <div class="box">
+          <strong>확장 장소</strong>
+          강남역, 홍대입구역
+        </div>
+        <div class="box">
+          <strong>개인 적용</strong>
+          내 가게, 회사, 강의장, 모임 장소
+        </div>
+      </div>
+
+      <div class="warning">
+        💡 장소 좌표를 모르면 실습에서는 서울시청 좌표를 사용합니다.
+        오늘은 정확한 지도 서비스보다 “배포 후 카카오맵을 연결하는 흐름”을 배우는 것이 우선입니다.
+      </div>
+    </section>
+
+    <section>
+      <h2>🧑‍🏫 이론 30분 진행안</h2>
+
+      <h3>이론 1: 위치 안내는 왜 귀찮은가?</h3>
+      <ul>
+        <li>카톡으로 주소를 보내도 상대방이 다시 검색해야 합니다.</li>
+        <li>주차장, 입구, 영업시간, 전화번호를 따로 설명해야 합니다.</li>
+        <li>행사장이나 모임 장소는 여러 장소를 한 번에 안내해야 할 때가 많습니다.</li>
+      </ul>
+
+      <div class="teacher">
+        🧑‍🏫 질문 예시<br>
+        “여러분은 누군가에게 장소를 안내할 때 주소, 지도, 주차장, 전화번호를 따로따로 보낸 경험이 있나요?”
+      </div>
+
+      <h3>이론 2: 오늘 만드는 앱의 구조</h3>
+      <pre><code>사용자
+  ↓
+공개 URL 접속
+  ↓
+내 웹앱 화면 표시
+  ↓
+카카오맵 로딩
+  ↓
+마커와 장소 설명 표시</code></pre>
+
+      <h3>이론 3: 왜 GitHub를 먼저 쓰는가?</h3>
+      <p>
+        Cloud Run은 내 컴퓨터 폴더를 바로 보는 것이 아니라,
+        GitHub에 올린 소스를 가져와서 인터넷에 배포할 수 있습니다.
+      </p>
+
+      <h3>이론 4: 왜 Cloud Run을 먼저 배포하는가?</h3>
+      <p>
+        카카오맵은 지도 사용을 허용할 도메인을 등록해야 합니다.
+        그래서 먼저 Cloud Run으로 공개 URL을 만들고, 그 URL을 카카오에 등록합니다.
+      </p>
+
+      <div class="success">
+        ✅ 이론 시간 성공 기준<br>
+        학생들이 “웹앱 → GitHub → Cloud Run → 카카오맵” 순서를 말로 설명할 수 있으면 성공입니다.
+      </div>
+    </section>
+
+    <section>
+      <h2>🚀 실습 1단계: 기본 웹앱 만들기</h2>
+
+      <div class="step-title">
+        <span class="num">1</span>
+        <h3>프로젝트 폴더 열기</h3>
+      </div>
+
+      <ol>
+        <li>바탕화면에 <code>AI_위치안내_8주차</code> 폴더를 만듭니다.</li>
+        <li>VS Code를 실행합니다.</li>
+        <li><strong>파일 → 폴더 열기</strong>로 해당 폴더를 엽니다.</li>
+      </ol>
+
+      <div class="warning">
+        ⚠️ 초보자가 많이 하는 실수<br>
+        파일 하나를 여는 것이 아니라 <strong>폴더 전체</strong>를 열어야 합니다.
+      </div>
+
+      <div class="step-title">
+        <span class="num">2</span>
+        <h3>AI에게 기본 웹앱 요청하기</h3>
+      </div>
+
+      <pre><code>나는 초보자입니다.
+바탕화면에 AI_위치안내_8주차 라는 폴더를 만들었습니다.
+
+Node.js와 Express를 사용해서
+'나만의 위치 안내 서비스'라는 제목이 보이는
+아주 간단한 웹앱을 만들어 주세요.
+
+조건:
+1. 초보자도 실행할 수 있게 필요한 파일을 모두 만들어 주세요.
+2. 실행 명령어를 알려 주세요.
+3. 브라우저 주소는 <a href="http://localhost:3000/" target="_blank" class="grabbit-linkified" style="text-decoration: underline;">http://localhost:3000</a> 으로 접속하게 해 주세요.
+4. 첫 단계에서는 카카오맵을 넣지 마세요.
+5. 화면에는 제목, 설명 문구, '지도는 배포 후 연결합니다'라는 안내 문구를 보여 주세요.
+6. 디자인은 단순하고 글자는 크게 해 주세요.</code></pre>
+
+      <h3>실행하기</h3>
+      <pre><code>npm install</code></pre>
+      <pre><code>npm start</code></pre>
+
+      <p>만약 <code>npm start</code>가 안 되면 아래 명령어를 시도합니다.</p>
+      <pre><code>node server.js</code></pre>
+
+      <div class="success">
+        ✅ 1단계 성공 기준<br>
+        <code><a href="http://localhost:3000/" target="_blank" class="grabbit-linkified" style="text-decoration: underline;">http://localhost:3000</a></code>에서 “나만의 위치 안내 서비스” 화면이 보이면 성공입니다.
+      </div>
+    </section>
+
+    <section>
+      <h2>🐙 실습 2단계: GitHub에 소스 올리기</h2>
+
+      <p>
+        이제 내 컴퓨터에 있는 앱 소스를 GitHub에 올립니다.
+        오늘은 GitHub를 깊게 배우는 것이 아니라, Cloud Run 배포를 위한 준비 단계로 사용합니다.
+      </p>
+
+      <h3>1. GitHub 저장소 만들기</h3>
+      <ol>
+        <li>GitHub에 로그인합니다.</li>
+        <li>오른쪽 위 <strong>+</strong> 버튼을 누릅니다.</li>
+        <li><strong>New repository</strong>를 클릭합니다.</li>
+        <li>Repository name에 <code>ai-location-guide-week8</code>를 입력합니다.</li>
+        <li>처음에는 <strong>Private</strong>을 추천합니다.</li>
+        <li><strong>Create repository</strong>를 클릭합니다.</li>
+      </ol>
+
+      <h3>2. AI에게 GitHub 업로드 도움 요청</h3>
+      <pre><code>현재 프로젝트를 GitHub에 처음 올리고 싶습니다.
+
+초보자도 따라할 수 있게
+VS Code 터미널에서 입력할 Git 명령어를
+순서대로 알려 주세요.
+
+저장소 주소는 아래 주소를 사용할 예정입니다.
+
+<a href="https://github.com/%EB%B3%B8%EC%9D%B8%EC%95%84%EC%9D%B4%EB%94%94/ai-location-guide-week8.git" target="_blank" class="grabbit-linkified" style="text-decoration: underline;">https://github.com/본인아이디/ai-location-guide-week8.git</a></code></pre>
+
+      <h3>3. 터미널 명령어</h3>
+      <pre><code>git init</code></pre>
+      <pre><code>git add .</code></pre>
+      <pre><code>git commit -m "8주차 위치 안내 서비스 첫 업로드"</code></pre>
+      <pre><code>git branch -M main</code></pre>
+      <pre><code>git remote add origin <a href="https://github.com/%EB%B3%B8%EC%9D%B8%EC%95%84%EC%9D%B4%EB%94%94/ai-location-guide-week8.git" target="_blank" class="grabbit-linkified" style="text-decoration: underline;">https://github.com/본인아이디/ai-location-guide-week8.git</a></code></pre>
+      <pre><code>git push -u origin main</code></pre>
+
+      <div class="success">
+        ✅ 2단계 성공 기준<br>
+        GitHub 저장소에서 <code>package.json</code>, <code>server.js</code>, <code>public</code> 폴더 등이 보이면 성공입니다.
+      </div>
+
+      <div class="danger">
+        🚨 GitHub에 올리면 안 되는 것<br>
+        API 키, 비밀번호, 개인정보, 결제 정보가 들어간 파일은 GitHub에 올리면 안 됩니다.
+      </div>
+    </section>
+
+    <section>
+      <h2>☁️ 실습 3단계: Cloud Run으로 공개 배포하기</h2>
+
+      <p>
+        이제 GitHub에 올린 앱을 Cloud Run으로 배포합니다.
+        배포가 성공하면 다른 사람도 접속할 수 있는 공개 URL이 생깁니다.
+      </p>
+
+      <h3>AI에게 Cloud Run 배포 요청하기</h3>
+      <pre><code>현재 Node.js Express 웹앱을 GitHub에 올려두었습니다.
+
+이 프로젝트를 Google Cloud Run으로 배포하고 싶습니다.
+초보자도 따라할 수 있게
+Cloud Run에서 어떤 버튼을 눌러야 하는지
+순서대로 안내해 주세요.
+
+목표:
+1. GitHub 저장소를 연결합니다.
+2. Cloud Run 서비스를 만듭니다.
+3. 배포 후 공개 URL을 확인합니다.
+4. 누구나 접속 가능한 상태로 설정합니다.</code></pre>
+
+      <h3>Cloud Run 실습 순서</h3>
+      <ol>
+        <li>Google Cloud Console에 접속합니다.</li>
+        <li>Cloud Run 메뉴로 이동합니다.</li>
+        <li><strong>서비스 만들기</strong> 또는 <strong>Deploy from source</strong>를 선택합니다.</li>
+        <li>GitHub 저장소를 연결합니다.</li>
+        <li>방금 올린 <code>ai-location-guide-week8</code> 저장소를 선택합니다.</li>
+        <li>Region은 가까운 곳을 선택합니다. 예: <code>asia-northeast3</code></li>
+        <li>인증은 실습용으로 <strong>Allow unauthenticated invocations</strong> 또는 공개 접속 허용을 선택합니다.</li>
+        <li>배포 버튼을 누릅니다.</li>
+      </ol>
+
+      <div class="warning">
+        ⚠️ 초보자가 많이 막히는 부분<br>
+        Google Cloud는 화면이 바뀌는 경우가 많습니다.
+        버튼 이름이 조금 달라도 핵심은 <strong>GitHub 저장소 선택 → Cloud Run 서비스 생성 → 공개 URL 확인</strong>입니다.
+      </div>
+
+      <h3>배포 성공 후 확인할 주소</h3>
+      <pre><code><a href="https://ai-location-guide-week8-xxxxx.a.run.app/" target="_blank" class="grabbit-linkified" style="text-decoration: underline;">https://ai-location-guide-week8-xxxxx.a.run.app</a></code></pre>
+
+      <div class="success">
+        ✅ 3단계 성공 기준<br>
+        Cloud Run 공개 URL을 크롬에서 열었을 때 내 웹앱 화면이 보이면 성공입니다.
+      </div>
+
+      <div class="teacher">
+        🧑‍🏫 강사 멘트<br>
+        “이제 여러분 앱은 내 노트북 안에만 있는 파일이 아니라, 인터넷 주소를 가진 서비스가 되었습니다.”
+      </div>
+    </section>
+
+    <section>
+      <h2>🔑 실습 4단계: 카카오 개발자 앱 만들기</h2>
+
+      <p>
+        이제 카카오맵을 연결할 준비를 합니다.
+        여기서 중요한 것은 <strong>JavaScript 키</strong>와 <strong>JavaScript SDK 도메인</strong>입니다.
+      </p>
+
+      <h3>1. 카카오 개발자 사이트에서 앱 생성</h3>
+      <ol>
+        <li>카카오 개발자 사이트에 접속합니다.</li>
+        <li>카카오 계정으로 로그인합니다.</li>
+        <li><strong>내 애플리케이션</strong> 메뉴로 이동합니다.</li>
+        <li><strong>애플리케이션 추가하기</strong>를 클릭합니다.</li>
+        <li>앱 이름에 <code>AI 위치 안내 8주차</code>를 입력합니다.</li>
+        <li>저장 후 생성된 앱을 클릭합니다.</li>
+      </ol>
+
+      <h3>2. JavaScript 키 복사</h3>
+      <ol>
+        <li>앱 설정 화면에서 <strong>앱 키</strong> 메뉴를 확인합니다.</li>
+        <li><strong>JavaScript 키</strong>를 복사합니다.</li>
+        <li>메모장에 잠시 붙여넣어 둡니다.</li>
+      </ol>
+
+      <div class="danger">
+        🚨 키 종류 주의<br>
+        REST API 키, Admin 키가 아니라 <strong>JavaScript 키</strong>를 사용합니다.
+      </div>
+
+      <h3>3. JavaScript SDK 도메인 등록</h3>
+      <ol>
+        <li>카카오 개발자 사이트에서 앱 설정으로 이동합니다.</li>
+        <li><strong>앱 키</strong> 또는 <strong>JavaScript 키</strong> 관련 설정을 확인합니다.</li>
+        <li><strong>JavaScript SDK 도메인</strong>에 Cloud Run 공개 URL을 등록합니다.</li>
+      </ol>
+
+      <pre><code><a href="https://ai-location-guide-week8-xxxxx.a.run.app/" target="_blank" class="grabbit-linkified" style="text-decoration: underline;">https://ai-location-guide-week8-xxxxx.a.run.app</a></code></pre>
+
+      <div class="warning">
+        ⚠️ 핵심 설명<br>
+        앱 생성 시 입력하는 대표 도메인이 아니라,
+        카카오맵 JavaScript SDK가 허용할 도메인에 Cloud Run URL을 등록해야 합니다.
+      </div>
+
+      <div class="success">
+        ✅ 4단계 성공 기준<br>
+        JavaScript 키를 복사했고, JavaScript SDK 도메인에 Cloud Run URL을 등록했으면 성공입니다.
+      </div>
+    </section>
+
+    <section>
+      <h2>🗺️ 실습 5단계: 카카오맵 적용하기</h2>
+
+      <p>
+        이제 공개된 웹앱에 카카오맵을 붙입니다.
+        AI에게 아래 요청을 그대로 입력합니다.
+      </p>
+
+      <pre><code>현재 Node.js Express 웹앱이 있고,
+Cloud Run으로 배포된 공개 URL도 있습니다.
+
+이 웹앱에 카카오맵을 적용해 주세요.
+
+조건:
+1. 카카오맵 JavaScript SDK를 사용해 주세요.
+2. JavaScript 키를 넣을 위치를 주석으로 표시해 주세요.
+3. 지도 중심은 서울시청 좌표로 해 주세요.
+4. 지도 크기는 화면에서 크게 보이게 해 주세요.
+5. 지도 위에 마커를 하나 표시해 주세요.
+6. 마커를 클릭하면 '오늘의 위치 안내 장소'라는 정보창이 뜨게 해 주세요.
+7. 초보자가 이해할 수 있도록 코드에 주석을 달아 주세요.
+8. 기존 웹앱 제목과 설명은 유지해 주세요.</code></pre>
+
+      <h3>수정 후 다시 GitHub에 올리기</h3>
+      <pre><code>git add .</code></pre>
+      <pre><code>git commit -m "카카오맵 적용"</code></pre>
+      <pre><code>git push</code></pre>
+
+      <p>
+        GitHub에 새 코드가 올라가면 Cloud Run이 자동으로 다시 배포되거나,
+        필요하면 Cloud Run에서 다시 배포를 실행합니다.
+      </p>
+
+      <div class="map-demo" aria-label="지도 예시 이미지">
+        <div class="road r1"></div>
+        <div class="road r2"></div>
+        <div class="pin">📍</div>
+      </div>
+
+      <div class="success">
+        ✅ 5단계 성공 기준<br>
+        Cloud Run 공개 URL에서 카카오맵과 마커가 보이면 성공입니다.
+      </div>
+
+      <div class="danger">
+        🚨 지도가 안 뜰 때 가장 먼저 확인할 것<br>
+        JavaScript 키가 맞는지, JavaScript SDK 도메인에 Cloud Run URL이 등록되어 있는지 먼저 확인합니다.
+      </div>
+    </section>
+
+    <section>
+      <h2>📍 실습 6단계: 장소 목록과 버튼 추가하기</h2>
+
+      <p>
+        지도가 보이면 이제 진짜 위치 안내 서비스처럼 만듭니다.
+        장소 버튼을 누르면 지도 중심과 마커가 이동하게 합니다.
+      </p>
+
+      <pre><code>카카오맵 앱에 장소 목록 기능을 추가해 주세요.
+
+장소 예시:
+1. 서울시청
+2. 강남역
+3. 홍대입구역
+
+조건:
+1. 지도 옆 또는 아래에 장소 버튼을 크게 보여 주세요.
+2. 장소 버튼을 클릭하면 지도 중심이 해당 장소로 이동하게 해 주세요.
+3. 마커도 해당 장소로 이동하게 해 주세요.
+4. 현재 선택된 장소 이름을 화면에 크게 보여 주세요.
+5. 각 장소에 간단한 설명을 넣어 주세요.
+6. 모바일에서도 보기 좋게 만들어 주세요.</code></pre>
+
+      <h3>적용 후 다시 GitHub에 올리기</h3>
+      <pre><code>git add .</code></pre>
+      <pre><code>git commit -m "장소 목록 기능 추가"</code></pre>
+      <pre><code>git push</code></pre>
+
+      <div class="success">
+        ✅ 6단계 성공 기준<br>
+        장소 버튼을 누를 때마다 지도가 이동하고 마커가 바뀌면 성공입니다.
+      </div>
+
+      <h3>실생활 확장 예시</h3>
+      <div class="grid">
+        <div class="box">
+          <strong>가게 안내 앱</strong>
+          매장, 주차장, 가까운 지하철역 표시
+        </div>
+        <div class="box">
+          <strong>강의장 안내 앱</strong>
+          교육장, 출입구, 식사 장소 표시
+        </div>
+        <div class="box">
+          <strong>여행 지도 앱</strong>
+          맛집, 카페, 숙소, 관광지 표시
+        </div>
+        <div class="box">
+          <strong>생활 편의 지도</strong>
+          병원, 약국, 주민센터, 복지관 표시
+        </div>
+      </div>
+    </section>
+
+    <section>
+      <h2>✨ 실습 7단계: AI에게 화면 정리 요청하기</h2>
+
+      <p>
+        마지막으로 앱을 보기 좋게 정리합니다.
+        기능이 먼저고 디자인은 나중입니다.
+      </p>
+
+      <pre><code>현재 위치 안내 웹앱의 화면을 보기 좋게 정리해 주세요.
+
+디자인 조건:
+1. 제목은 크게 보여 주세요.
+2. 지도는 화면 중앙에 크게 보여 주세요.
+3. 장소 버튼은 큼직하게 만들어 주세요.
+4. 현재 선택된 장소 설명을 카드 형태로 보여 주세요.
+5. 모바일 화면에서도 보기 좋게 해 주세요.
+6. 색상은 깔끔하고 초보자도 보기 쉽게 해 주세요.
+7. 사용자가 무엇을 누르면 되는지 안내 문구를 넣어 주세요.</code></pre>
+
+      <h3>디자인 수정 후 GitHub에 올리기</h3>
+      <pre><code>git add .</code></pre>
+      <pre><code>git commit -m "위치 안내 앱 디자인 정리"</code></pre>
+      <pre><code>git push</code></pre>
+
+      <div class="success">
+        ✅ 최종 성공 기준<br>
+        공개 URL에서 지도, 장소 버튼, 설명 카드가 보기 좋게 보이면 오늘 수업 성공입니다.
+      </div>
+    </section>
+
+    <section>
+      <h2>🧯 자주 막히는 문제와 해결법</h2>
+
+      <h3>문제 1. localhost에서는 되는데 Cloud Run에서 안 보여요</h3>
+      <div class="box">
+        <strong>가능한 원인</strong>
+        Cloud Run 배포가 최신 코드로 다시 되지 않았을 수 있습니다.
+        <br><br>
+        <strong>해결</strong>
+        GitHub에 push가 되었는지 확인하고, Cloud Run에서 새 배포가 되었는지 확인합니다.
+      </div>
+
+      <h3>문제 2. 카카오맵이 하얗게만 보여요</h3>
+      <div class="box">
+        <strong>가능한 원인</strong>
+        JavaScript 키가 틀렸거나 JavaScript SDK 도메인 등록이 빠졌을 수 있습니다.
+        <br><br>
+        <strong>해결</strong>
+        JavaScript 키와 Cloud Run URL 등록 상태를 다시 확인합니다.
+      </div>
+
+      <h3>문제 3. REST API 키를 넣었어요</h3>
+      <div class="box">
+        <strong>가능한 원인</strong>
+        카카오 앱 키 종류를 헷갈린 것입니다.
+        <br><br>
+        <strong>해결</strong>
+        반드시 <strong>JavaScript 키</strong>를 복사해서 넣습니다.
+      </div>
+
+      <h3>문제 4. GitHub에 push가 안 돼요</h3>
+      <div class="box">
+        <strong>가능한 원인</strong>
+        GitHub 로그인, 저장소 주소, 권한 문제가 있을 수 있습니다.
+        <br><br>
+        <strong>해결</strong>
+        저장소 주소가 <code><a href="https://github.com/%EC%95%84%EC%9D%B4%EB%94%94/%EC%A0%80%EC%9E%A5%EC%86%8C%EB%AA%85.git" target="_blank" class="grabbit-linkified" style="text-decoration: underline;">https://github.com/아이디/저장소명.git</a></code> 형태인지 확인합니다.
+      </div>
+
+      <h3>문제 5. Cloud Run에서 공개 접속이 안 돼요</h3>
+      <div class="box">
+        <strong>가능한 원인</strong>
+        인증 필요 상태로 배포되었을 수 있습니다.
+        <br><br>
+        <strong>해결</strong>
+        실습용으로는 공개 접속 허용 또는 unauthenticated invocations 허용을 선택합니다.
+      </div>
+
+      <h3>문제 6. 장소 버튼을 눌러도 지도가 안 움직여요</h3>
+      <div class="box">
+        <strong>가능한 원인</strong>
+        버튼 클릭 이벤트와 지도 이동 코드가 연결되지 않았을 수 있습니다.
+        <br><br>
+        <strong>해결</strong>
+        AI에게 “장소 버튼 클릭 시 지도 이동이 안 됩니다. 이벤트 연결을 다시 확인해서 수정해 주세요”라고 요청합니다.
+      </div>
+    </section>
+
+    <section>
+      <h2>🧑‍🏫 강사용 진행 팁</h2>
+
+      <h3>1. 오늘의 핵심은 카카오맵이 아닙니다</h3>
+      <p>
+        오늘의 핵심은 <strong>내 앱을 인터넷에 공개하고 외부 API를 연결하는 전체 흐름</strong>입니다.
+        카카오맵은 그 흐름을 눈에 보이게 해주는 좋은 예시입니다.
+      </p>
+
+      <h3>2. 초보자는 계정 로그인에서 많이 막힙니다</h3>
+      <p>
+        GitHub, Google Cloud, 카카오 계정 로그인이 모두 필요합니다.
+        수업 전 미리 로그인하도록 안내하면 실습 시간이 크게 줄어듭니다.
+      </p>
+
+      <h3>3. Cloud Run은 조교 지원이 필요합니다</h3>
+      <p>
+        Google Cloud 화면은 사용자마다 조금씩 다를 수 있습니다.
+        중급자 조교에게 Cloud Run 배포 단계 보조를 맡기는 것이 좋습니다.
+      </p>
+
+      <h3>4. API 키 오류는 코드보다 설정을 먼저 봅니다</h3>
+      <p>
+        지도가 안 뜨면 코드부터 고치지 말고,
+        JavaScript 키와 JavaScript SDK 도메인 등록을 먼저 확인합니다.
+      </p>
+
+      <h3>5. 오늘의 금지사항</h3>
+      <div class="danger">
+        ❌ Admin 키를 코드에 넣기 금지<br>
+        ❌ 비밀번호, 결제 정보, 개인정보를 GitHub에 올리기 금지<br>
+        ❌ 처음부터 길찾기, 검색, 현재 위치까지 한 번에 넣기 금지<br>
+        ❌ Cloud Run 공개 URL을 만들기 전에 카카오맵부터 붙이려고 하기 금지
+      </div>
+    </section>
+
+    <section>
+      <h2>📣 수업 중 사용할 수 있는 멘트</h2>
+
+      <div class="teacher">
+        “오늘은 지도를 배우는 날이 아니라, 내 앱을 인터넷에 공개하는 날입니다.”
+      </div>
+
+      <div class="teacher">
+        “GitHub는 창고, Cloud Run은 인터넷에서 앱을 실행해 주는 공간, 카카오맵은 앱 안에 넣는 지도 부품입니다.”
+      </div>
+
+      <div class="teacher">
+        “6주차에는 파일 정리를 자동화했고, 7주차에는 손입력을 줄였고, 오늘은 장소 안내를 링크 하나로 줄입니다.”
+      </div>
+
+      <div class="teacher">
+        “AI 바이브 코딩은 코드를 외우는 수업이 아니라, 필요한 기능을 AI에게 단계별로 시켜서 완성하는 수업입니다.”
+      </div>
+    </section>
+
+    <section>
+      <h2>🎓 오늘 수업 마무리</h2>
+
+      <h3>오늘 배운 것</h3>
+      <ul>
+        <li>localhost와 공개 URL의 차이를 배웠습니다.</li>
+        <li>GitHub에 내 앱 소스를 기록했습니다.</li>
+        <li>Cloud Run으로 내 앱을 인터넷에 공개했습니다.</li>
+        <li>카카오 JavaScript SDK 도메인에 공개 URL을 등록했습니다.</li>
+        <li>공개된 웹앱에 카카오맵과 마커를 적용했습니다.</li>
+        <li>장소 목록 버튼을 만들어 위치 안내 서비스처럼 완성했습니다.</li>
+      </ul>
+
+      <h3>오늘의 완성품</h3>
+      <div class="success">
+        🌐 기본 웹앱 → 🐙 GitHub 기록 → ☁️ Cloud Run 배포 → 🔑 카카오 도메인 등록 → 🗺️ 카카오맵 적용 → 📍 위치 안내 서비스 완성
+      </div>
+
+      <h3>숙제</h3>
+      <div class="box">
+        <strong>내가 지도 앱으로 만들고 싶은 장소 3개 정해오기</strong>
+        <br>
+        예: 내 가게, 회사, 강의장, 모임 장소, 병원, 약국, 맛집, 여행지, 주차장 등
+      </div>
+
+      <h3>다음 주 예고</h3>
+      <div class="success">
+        다음 주에는 GitHub에 올린 프로젝트를 이어서 관리하거나,
+        위치 안내 서비스에 검색, 공공데이터, 장소 추천 기능을 붙이는 방향으로 확장할 수 있습니다. 🚀
+      </div>
+    </section>
+
+    <p class="footer-note">
+      8주차 AI 바이브 코딩 강의안 · 나만의 위치 안내 서비스 만들기
+    </p>
+  </main>
+
+
+<div><template shadowrootmode="open"><style>
+:host {
+    color-scheme: light;
+    all: initial;
+}
+* {
+    box-sizing: border-box;
+    color-scheme: light;
+}
+.AI_WRITER_CHATGPT_hidden {
+    display: none;
+}
+.popup {
+    position: fixed;
+    top: 0px;
+    right: 0px;
+    height: 100vh;
+    box-sizing: border-box;
+    display: flex;
+    flex-direction: column;
+    opacity: 0;
+    transition: all 0.3s ease-in-out;
+    z-index: -1;
+    font-size: 14px;
+    color-scheme: light;
+    background-color: #ffffff;
+    color: #333333;
+}
+.popup.open {
+    width: 25%;
+    opacity: 1;
+    z-index: 2147483599;
+}
+.AI_WRITER_CHATGPT_alert-bar {
+    position: absolute;
+    top: 50px;
+    left: 50%;
+    background-color: gray;
+    max-width: 240px;
+    transform: translateX(-50%);
+    color: white;
+    text-align: center;
+    padding: 4px 8px;
+    border-radius: 4px;
+    font-size: 12px;
+    z-index: 1000;
+    transition: opacity 0.5s ease-out;
+}
+.AI_WRITER_CHATGPT_container {
+    border-left: 1px solid rgba(0, 0, 0, 0.1);
+    width: 100%;
+    height: 100vh;
+    background-color: white;
+}
+button {
+    padding: 8px 18px;
+    background-color: var(--awgpt-el-color-primary);
+    color: white;
+    border: none;
+    border-radius: 3px;
+    cursor: pointer;
+}
+
+.el-button--primary {
+    --el-button-text-color: var(--awgpt-el-color-white);
+    --el-button-bg-color: var(--awgpt-el-color-primary);
+    --el-button-border-color: var(--awgpt-el-color-primary);
+    --el-button-outline-color: var(--awgpt-el-color-primary-light-5);
+    --el-button-active-color: var(--awgpt-el-color-primary-dark-2);
+    --el-button-hover-text-color: var(--awgpt-el-color-white);
+    --el-button-hover-link-text-color: var(--awgpt-el-color-primary-light-5);
+    --el-button-hover-bg-color: var(--awgpt-el-color-primary-light-3);
+    --el-button-hover-border-color: var(--awgpt-el-color-primary-light-3);
+    --el-button-active-bg-color: var(--awgpt-el-color-primary-dark-2);
+    --el-button-active-border-color: var(--awgpt-el-color-primary-dark-2);
+    --el-button-disabled-text-color: var(--awgpt-el-color-white);
+    --el-button-disabled-bg-color: var(--awgpt-el-color-primary-light-5);
+    --el-button-disabled-border-color: var(--awgpt-el-color-primary-light-5)
+}
+.AI_WRITER_CHATGPT-button {
+    box-shadow: 0 1px 3px rgba(0,0,0,.1), 0 1px 2px rgba(0,0,0,.18);
+}
+.AI_WRITER_CHATGPT-button-gray {
+    color: #606266;
+    border: 1px #dcdfe6 solid;
+    border-radius: 4px;
+    background-color: white;
+}
+.AI_WRITER_CHATGPT_icon {
+    display:block;
+}
+.AI_WRITER_CHATGPT_header {
+    width: 100%;
+    height: 40px;
+    display:flex;
+    justify-content: space-between;
+    align-items: center;
+    border-bottom: 1px solid rgba(0, 0, 0, 0.1);
+}
+.AI_WRITER_CHATGPT_header-main {
+    margin-left: 2%;
+    display: flex;
+    align-items: center;
+}
+.AI_WRITER_CHATGPT_header-main-link {
+    text-decoration: none;
+    color: black;
+}
+.AI_WRITER_CHATGPT_header-right {
+    display:flex;
+    justify-content: end;
+    align-items: center;
+}
+.AI_WRITER_CHATGPT_header-shortcut {
+    font-size: 12px;
+    color: #8a8a8a;
+    width: 90px;
+}
+.AI_WRITER_CHATGPT_header-close {
+    margin-right: 2%;
+    display:flex;
+    align-items: center;
+    cursor: pointer;
+}
+.AI_WRITER_CHATGPT_chatbox-view {
+    width: 100%;
+    padding: 10px 0px;
+    overflow-y: auto;
+}
+.AI_WRITER_CHATGPT_chatbox-operate {
+    width: 96%;
+    padding: 10px 2% 0px 2%;
+    display: flex;
+    flex-wrap: wrap;
+}
+.AI_WRITER_CHATGPT_chatbox-input {
+    width: 100%;
+    display:block;
+    margin: 10px auto;
+    resize:none;
+    border: 1px #bfbfbf solid;
+    padding: 6px;
+    border-radius: 4px;
+    background-color: #ffffff;
+    color: #333333;
+    font-size: 14px;
+    font-family: inherit;
+}
+.AI_WRITER_CHATGPT_chatbox-input:focus {
+    outline: none !important;
+    border:1px #8a8a8a solid;
+}
+
+.AI_WRITER_CHATGPT_chatbox-view-msg {
+    text-align:left;
+    padding: 6px 10px;
+    margin: 10px 20px;
+    background-color: #F9F2ED;
+    border-radius: 4px;
+    line-height: 1.6;
+    position:relative;
+    word-break: break-word;
+}
+.AI_WRITER_CHATGPT_chatbox-view-role-user {
+    white-space: pre-wrap;
+}
+.AI_WRITER_CHATGPT_chatbox-view-role-assistant h1,
+.AI_WRITER_CHATGPT_chatbox-view-role-assistant h2,
+.AI_WRITER_CHATGPT_chatbox-view-role-assistant h3,
+.AI_WRITER_CHATGPT_chatbox-view-role-assistant h4 {
+    font-weight: bold;
+    margin: 8px 0 4px;
+    line-height: 1.4;
+}
+.AI_WRITER_CHATGPT_chatbox-view-role-assistant h1 { font-size: 1.3em; }
+.AI_WRITER_CHATGPT_chatbox-view-role-assistant h2 { font-size: 1.15em; }
+.AI_WRITER_CHATGPT_chatbox-view-role-assistant h3 { font-size: 1.05em; }
+.AI_WRITER_CHATGPT_chatbox-view-role-assistant p  { margin: 4px 0; }
+.AI_WRITER_CHATGPT_chatbox-view-role-assistant ul,
+.AI_WRITER_CHATGPT_chatbox-view-role-assistant ol {
+    padding-left: 18px;
+    margin: 4px 0;
+}
+.AI_WRITER_CHATGPT_chatbox-view-role-assistant li { margin: 2px 0; }
+.AI_WRITER_CHATGPT_chatbox-view-role-assistant hr {
+    border: none;
+    border-top: 1px solid #ccc;
+    margin: 8px 0;
+}
+.AI_WRITER_CHATGPT_chatbox-view-role-assistant table {
+    border-collapse: collapse;
+    width: 100%;
+    margin: 6px 0;
+    font-size: 0.9em;
+}
+.AI_WRITER_CHATGPT_chatbox-view-role-assistant th,
+.AI_WRITER_CHATGPT_chatbox-view-role-assistant td {
+    border: 1px solid #ccc;
+    padding: 4px 8px;
+    text-align: left;
+}
+.AI_WRITER_CHATGPT_chatbox-view-role-assistant th {
+    background: #e8eef3;
+    font-weight: bold;
+}
+.AI_WRITER_CHATGPT_chatbox-view-role-assistant pre {
+    background: #f4f4f4;
+    border-radius: 4px;
+    padding: 8px;
+    overflow-x: auto;
+    margin: 6px 0;
+    font-size: 0.88em;
+}
+.AI_WRITER_CHATGPT_chatbox-view-role-assistant code {
+    background: #f0f0f0;
+    border-radius: 3px;
+    padding: 1px 4px;
+    font-family: monospace;
+    font-size: 0.9em;
+}
+.AI_WRITER_CHATGPT_chatbox-view-role-assistant pre code {
+    background: none;
+    padding: 0;
+}
+.AI_WRITER_CHATGPT_chatbox-view-msg-copy {
+    position: absolute;
+    right: 6px;
+    bottom: 6px;
+    opacity: 0;
+    cursor: pointer;
+    display: flex;
+    align-items: center;
+    gap: 3px;
+    background: rgba(255,255,255,0.92);
+    border: 1px solid #ddd;
+    border-radius: 4px;
+    padding: 2px 7px;
+    font-size: 11px;
+    color: #666;
+    transition: opacity 0.15s;
+    user-select: none;
+}
+.AI_WRITER_CHATGPT_chatbox-view-msg:hover .AI_WRITER_CHATGPT_chatbox-view-msg-copy {
+    opacity: 1;
+}
+.AI_WRITER_CHATGPT_chatbox-view-msg-copy:hover {
+    background: #e8e8e8;
+    color: #333;
+}
+.AI_WRITER_CHATGPT_chatbox-view-role-assistant {
+    background-color: #F1F6F9;
+}
+.AI_WRITER_CHATGPT_chatbox-view-role-user {
+    background-color: #F6F1F1;
+}
+.AI_WRITER_CHATGPT_generate {
+    width: 100%;
+    height: 34px;
+    display:flex;
+    justify-content: center;
+    align-items: center;
+}
+.AI_WRITER_CHATGPT_generate-loading {
+    opicity: 0.8;
+}
+
+.AI_WRITER_CHATGPT_generate-loading .AI_WRITER_CHATGPT_loading-spinner {
+    display: block;
+}
+.AI_WRITER_CHATGPT_chatbox-ext {
+    width: 100%;
+    display:flex;
+    justify-content: space-between;
+    align-items: center;
+}
+.AI_WRITER_CHATGPT_chatbox-select {
+    width: 120px;
+}
+.AI_WRITER_CHATGPT_clear {
+    cursor: pointer;
+}
+.AI_WRITER_CHATGPT_footer {
+    margin: 10px 0px;
+    padding: 0px 15px;
+    display:flex;
+    justify-content: space-between;
+    align-items: center;
+}
+.AI_WRITER_CHATGPT_footer_left {
+    width: 50%;
+    display:flex;
+    justify-content: start;
+    align-items: center;
+}
+.AI_WRITER_CHATGPT_footer_right {
+    width: 50%;
+    display:flex;
+    justify-content: end;
+    align-items: center;
+}
+.AI_WRITER_CHATGPT_user_member {
+    cursor: pointer;
+    display: flex;
+    align-items: center;
+}
+.AI_WRITER_CHATGPT_user {
+    color: #515151;
+}
+.AI_WRITER_CHATGPT_setting {
+    text-decoration: underline;
+    color: #515151;
+    cursor: pointer;
+    display: block;
+}
+.AI_WRITER_CHATGPT_contact-us {
+    text-decoration: underline;
+    color: #515151;
+    cursor: pointer;
+    display: block;
+    margin-left: 20px;
+}
+.AI_WRITER_CHATGPT_logout {
+    text-decoration: underline;
+    color: #515151;
+    cursor: pointer;
+    display: block;
+    margin-left: 20px;
+}
+.AI_WRITER_CHATGPT_login-model {
+    position: absolute;
+    left: 0px;
+    top: 0px;
+    width: 100%;
+    height: 100%;
+    background: rgba(0, 0, 0, 0.6);
+    display: flex;
+    justify-content: center;
+    align-items: center;
+}
+.AI_WRITER_CHATGPT_upgrade-model {
+    position: absolute;
+    left: 0px;
+    top: 0px;
+    width: 100%;
+    height: 100%;
+    background: rgba(0, 0, 0, 0.6);
+    display: flex;
+    justify-content: center;
+    align-items: center;
+}
+
+.AI_WRITER_CHATGPT_login-block {
+    width: 90%;
+    height: 100px;
+    background-color: white;
+    border-radius: 5px;
+    display:flex;
+    justify-content: center;
+    align-items: center;
+}
+.AI_WRITER_CHATGPT_login-user {
+    font-size: 18px;
+    width: 100px;
+    height: 34px;
+    display:flex;
+    justify-content: center;
+    align-items: center;
+}
+.AI_WRITER_CHATGPT_clear-model {
+    position: absolute;
+    left: 0px;
+    top: 0px;
+    width: 100%;
+    height: 100%;
+    background: rgba(0, 0, 0, 0.6);
+    display: flex;
+    justify-content: center;
+    align-items: center;
+}
+.AI_WRITER_CHATGPT_clear-model-block {
+    width: 70%;
+    background-color: white;
+    border-radius: 5px;
+    padding: 30px 20px;
+}
+.AI_WRITER_CHATGPT_clear-model-footer {
+    display:flex;
+    justify-content: center;
+    align-items: center;
+    margin-top: 20px;
+}
+.AI_WRITER_CHATGPT_clear-model-message {
+    font-size: 14px;
+}
+.AI_WRITER_CHATGPT_clear-model-confirm {
+    margin-left: 15px;
+}
+
+.AI_WRITER_CHATGPT--hide {
+    display: none !important;
+}
+
+@keyframes aiwc-on4fpkp5oh9 {
+    0% { opacity: 1 }
+    100% { opacity: 0 }
+  }
+  .aiwc-on4fpkp5oh9 div {
+    left: 47px;
+    top: 24px;
+    position: absolute;
+    animation: aiwc-on4fpkp5oh9 linear 1s infinite;
+    background: #ffffff;
+    width: 6px;
+    height: 12px;
+    border-radius: 3px / 6px;
+    transform-origin: 3px 26px;
+  }.aiwc-on4fpkp5oh9 div:nth-child(1) {
+    transform: rotate(0deg);
+    animation-delay: -0.9166666666666666s;
+    background: #ffffff;
+  }.aiwc-on4fpkp5oh9 div:nth-child(2) {
+    transform: rotate(30deg);
+    animation-delay: -0.8333333333333334s;
+    background: #ffffff;
+  }.aiwc-on4fpkp5oh9 div:nth-child(3) {
+    transform: rotate(60deg);
+    animation-delay: -0.75s;
+    background: #ffffff;
+  }.aiwc-on4fpkp5oh9 div:nth-child(4) {
+    transform: rotate(90deg);
+    animation-delay: -0.6666666666666666s;
+    background: #ffffff;
+  }.aiwc-on4fpkp5oh9 div:nth-child(5) {
+    transform: rotate(120deg);
+    animation-delay: -0.5833333333333334s;
+    background: #ffffff;
+  }.aiwc-on4fpkp5oh9 div:nth-child(6) {
+    transform: rotate(150deg);
+    animation-delay: -0.5s;
+    background: #ffffff;
+  }.aiwc-on4fpkp5oh9 div:nth-child(7) {
+    transform: rotate(180deg);
+    animation-delay: -0.4166666666666667s;
+    background: #ffffff;
+  }.aiwc-on4fpkp5oh9 div:nth-child(8) {
+    transform: rotate(210deg);
+    animation-delay: -0.3333333333333333s;
+    background: #ffffff;
+  }.aiwc-on4fpkp5oh9 div:nth-child(9) {
+    transform: rotate(240deg);
+    animation-delay: -0.25s;
+    background: #ffffff;
+  }.aiwc-on4fpkp5oh9 div:nth-child(10) {
+    transform: rotate(270deg);
+    animation-delay: -0.16666666666666666s;
+    background: #ffffff;
+  }.aiwc-on4fpkp5oh9 div:nth-child(11) {
+    transform: rotate(300deg);
+    animation-delay: -0.08333333333333333s;
+    background: #ffffff;
+  }.aiwc-on4fpkp5oh9 div:nth-child(12) {
+    transform: rotate(330deg);
+    animation-delay: 0s;
+    background: #ffffff;
+  }
+  .AI_WRITER_CHATGPT_loading-spinner {
+    width: 28px;
+    height: 28px;
+    display: none;
+    overflow: hidden;
+  }
+  .aiwc-on4fpkp5oh9 {
+    width: 100%;
+    height: 100%;
+    position: relative;
+    transform: translateZ(0) scale(0.28);
+    backface-visibility: hidden;
+    transform-origin: 0 0; /* see note above */
+  }
+  .aiwc-on4fpkp5oh9 div { box-sizing: content-box; }
+</style><div class="popup open" style="width: 476.25px; display: none;"><div class="AI_WRITER_CHATGPT_container"><div class="AI_WRITER_CHATGPT_header"><div class="AI_WRITER_CHATGPT_header-main"><a href="https://www.aiwriterchatgpt.com/" class="AI_WRITER_CHATGPT_header-main-link" target="_blank">AI Writer ChatGPT</a></div><div class="AI_WRITER_CHATGPT_header-right"><div class="AI_WRITER_CHATGPT_header-shortcut">Shortcut: ⌘+J</div><svg t="1684403337895" class="AI_WRITER_CHATGPT_header-close AI_WRITER_CHATGPT_icon" viewBox="0 0 1024 1024" version="1.1" xmlns="http://www.w3.org/2000/svg" p-id="3557" width="24" height="24"><path d="M504.224 470.288l207.84-207.84a16 16 0 0 1 22.608 0l11.328 11.328a16 16 0 0 1 0 22.624l-207.84 207.824 207.84 207.84a16 16 0 0 1 0 22.608l-11.328 11.328a16 16 0 0 1-22.624 0l-207.824-207.84-207.84 207.84a16 16 0 0 1-22.608 0l-11.328-11.328a16 16 0 0 1 0-22.624l207.84-207.824-207.84-207.84a16 16 0 0 1 0-22.608l11.328-11.328a16 16 0 0 1 22.624 0l207.824 207.84z" fill="#8a8a8a" p-id="3558"></path></svg></div></div><div class="AI_WRITER_CHATGPT_chatbox-view" style="height:calc(100% - 280px)" id="AI_WRITER_CHATGPT_chatbox-view"><div id="AI_WRITER_CHATGPT_chatbox-view-container" class="AI_WRITER_CHATGPT_chatbox-view-container"></div></div><div class="AI_WRITER_CHATGPT_chatbox-operate"><div class="AI_WRITER_CHATGPT_chatbox-ext"><div class="AI_WRITER_CHATGPT_chatbox-type"><select id="AI_WRITER_CHATGPT_chatbox-select" class="AI_WRITER_CHATGPT_chatbox-select"><option value="default">Chat</option><option value="trans2english">Translate To English</option></select></div><div><svg t="1684405395423" class="AI_WRITER_CHATGPT_icon AI_WRITER_CHATGPT_clear" viewBox="0 0 1024 1024" version="1.1" xmlns="http://www.w3.org/2000/svg" p-id="4595" width="24" height="24"><path d="M917.333333 469.333333H106.666667c-12.8 0-21.333333-8.533333-21.333334-21.333333v-170.666667c0-12.8 8.533333-21.333333 21.333334-21.333333h298.666666V106.666667c0-12.8 8.533333-21.333333 21.333334-21.333334h170.666666c12.8 0 21.333333 8.533333 21.333334 21.333334v149.333333h298.666666c12.8 0 21.333333 8.533333 21.333334 21.333333v170.666667c0 12.8-8.533333 21.333333-21.333334 21.333333zM128 426.666667h768v-128H597.333333c-12.8 0-21.333333-8.533333-21.333333-21.333334V128h-128v149.333333c0 12.8-8.533333 21.333333-21.333333 21.333334H128v128z" fill="#333333" p-id="4596"></path><path d="M853.333333 938.666667H170.666667c-12.8 0-21.333333-8.533333-21.333334-21.333334V448c0-12.8 8.533333-21.333333 21.333334-21.333333h682.666666c12.8 0 21.333333 8.533333 21.333334 21.333333v469.333333c0 12.8-8.533333 21.333333-21.333334 21.333334zM192 896h640V469.333333H192v426.666667z" fill="#333333" p-id="4597"></path><path d="M341.333333 936.533333c-12.8 0-21.333333-8.533333-21.333333-21.333333V746.666667c0-12.8 8.533333-21.333333 21.333333-21.333334s21.333333 8.533333 21.333334 21.333334v168.533333c0 12.8-8.533333 21.333333-21.333334 21.333333zM512 936.533333c-12.8 0-21.333333-8.533333-21.333333-21.333333V746.666667c0-12.8 8.533333-21.333333 21.333333-21.333334s21.333333 8.533333 21.333333 21.333334v168.533333c0 12.8-8.533333 21.333333-21.333333 21.333333zM682.666667 936.533333c-12.8 0-21.333333-8.533333-21.333334-21.333333V746.666667c0-12.8 8.533333-21.333333 21.333334-21.333334s21.333333 8.533333 21.333333 21.333334v168.533333c0 12.8-8.533333 21.333333-21.333333 21.333333z" fill="#333333" p-id="4598"></path></svg></div></div><textarea id="AI_WRITER_CHATGPT_chatbox-input" class="AI_WRITER_CHATGPT_chatbox-input" placeholder="Ask ChatGPT..." rows="1" style="height: 80px;"></textarea><button type="button" class="el-button el-button--primary AI_WRITER_CHATGPT-button AI_WRITER_CHATGPT_generate AI_WRITER_CHATGPT_generate_action" id="AI_WRITER_CHATGPT_generate"><div class="AI_WRITER_CHATGPT_loading-spinner"><div class="aiwc-on4fpkp5oh9"><div></div><div></div><div></div><div></div><div></div><div></div><div></div><div></div><div></div><div></div><div></div><div></div></div></div><span class="AI_WRITER_CHATGPT_generate_action">Generate</span></button></div><div class="AI_WRITER_CHATGPT_footer"><div class="AI_WRITER_CHATGPT_footer_left"><a class="AI_WRITER_CHATGPT_user"></a><a class="AI_WRITER_CHATGPT_user_member"><svg t="1686304051884" class="icon user-member-icon" viewBox="0 0 1024 1024" version="1.1" xmlns="http://www.w3.org/2000/svg" p-id="2438" width="16" height="16"><path d="M493.2 958.1c-6 0-11.7-2.8-15.4-7.6L32.6 370.4c-5.4-7-5.4-16.7 0-23.7L255.2 58.4c3.7-4.8 9.4-7.6 15.4-7.6h445.2c6 0 11.7 2.8 15.4 7.6l222.6 288.2c5.4 7 5.4 16.7 0 23.7L508.6 950.5c-3.6 4.8-9.3 7.6-15.4 7.6zM72.6 358.6l420.6 548.1 420.6-548.1L706.2 89.8h-426L72.6 358.6z" fill="#bfbfbf" p-id="2439"></path><path d="M919.6 382H66.8c-10.7 0-19.5-8.7-19.5-19.4 0-10.8 8.7-19.5 19.5-19.5h852.9c10.8 0 19.5 8.7 19.5 19.5-0.1 10.7-8.8 19.4-19.6 19.4z" fill="#bfbfbf" p-id="2440"></path><path d="M492.5 382c-0.1 0-0.1 0 0 0-6.1 0-11.8-2.9-15.5-7.7L255.1 82.1c-6.5-8.6-4.8-20.8 3.7-27.3 8.6-6.5 20.8-4.8 27.3 3.7l206.4 271.9L700.3 58.5c6.5-8.5 18.8-10.1 27.3-3.6 8.6 6.5 10.2 18.7 3.6 27.3L507.9 374.3c-3.7 4.9-9.4 7.7-15.4 7.7z" fill="#bfbfbf" p-id="2441"></path></svg></a></div><div class="AI_WRITER_CHATGPT_footer_right"><a class="AI_WRITER_CHATGPT_setting">setting</a><a class="AI_WRITER_CHATGPT_contact-us">contact us</a><a class="AI_WRITER_CHATGPT_logout AI_WRITER_CHATGPT--hide">logout</a></div></div><div class="AI_WRITER_CHATGPT_login-model"><div class="AI_WRITER_CHATGPT_login-block"><button class="el-button el-button--primary AI_WRITER_CHATGPT-button AI_WRITER_CHATGPT_login-user">Login</button></div></div><div class="AI_WRITER_CHATGPT_updrade-model"><div class="AI_WRITER_CHATGPT_updrade-block"><button class="el-button el-button--primary AI_WRITER_CHATGPT-button AI_WRITER_CHATGPT_updrade-user">Upgrade to Membership</button></div></div><div class="AI_WRITER_CHATGPT_clear-model AI_WRITER_CHATGPT--hide"><div class="AI_WRITER_CHATGPT_clear-model-block"><div class="AI_WRITER_CHATGPT_clear-model-message">All chat history will be completely deleted, are you sure to continue?</div><div class="AI_WRITER_CHATGPT_clear-model-footer"><button class="AI_WRITER_CHATGPT-button-gray AI_WRITER_CHATGPT_clear-model-cancel">Cancle</button><button class="el-button el-button--primary AI_WRITER_CHATGPT_clear-model-confirm">Confirm</button></div></div></div><div id="AI_WRITER_CHATGPT_alert-bar" class="AI_WRITER_CHATGPT_alert-bar AI_WRITER_CHATGPT_hidden"></div></div></div></template></div><style>
+:root {
+    color-scheme: light;
+    --awgpt-el-color-white: #ffffff;
+    --awgpt-el-color-black: #000000;
+    --awgpt-el-color-primary: #00B8A9;
+    --awgpt-el-color-primary-light-3: #79bbff;
+    --awgpt-el-color-primary-light-5: #a0cfff;
+    --awgpt-el-color-primary-light-7: #c6e2ff;
+    --awgpt-el-color-primary-light-8: #d9ecff;
+    --awgpt-el-color-primary-light-9: #ecf5ff;
+    --awgpt-el-color-primary-dark-2: #337ecc;
+    --awgpt-el-color-success: #67c23a;
+    --awgpt-el-color-success-light-3: #95d475;
+    --awgpt-el-color-success-light-5: #b3e19d;
+    --awgpt-el-color-success-light-7: #d1edc4;
+    --awgpt-el-color-success-light-8: #e1f3d8;
+    --awgpt-el-color-success-light-9: #f0f9eb;
+    --awgpt-el-color-success-dark-2: #529b2e;
+    --awgpt-el-color-warning: #e6a23c;
+    --awgpt-el-color-warning-light-3: #eebe77;
+    --awgpt-el-color-warning-light-5: #f3d19e;
+    --awgpt-el-color-warning-light-7: #f8e3c5;
+    --awgpt-el-color-warning-light-8: #faecd8;
+    --awgpt-el-color-warning-light-9: #fdf6ec;
+    --awgpt-el-color-warning-dark-2: #b88230;
+    --awgpt-el-color-danger: #f56c6c;
+    --awgpt-el-color-danger-light-3: #f89898;
+    --awgpt-el-color-danger-light-5: #fab6b6;
+    --awgpt-el-color-danger-light-7: #fcd3d3;
+    --awgpt-el-color-danger-light-8: #fde2e2;
+    --awgpt-el-color-danger-light-9: #fef0f0;
+    --awgpt-el-color-danger-dark-2: #c45656;
+    --awgpt-el-color-error: #f56c6c;
+    --awgpt-el-color-error-light-3: #f89898;
+    --awgpt-el-color-error-light-5: #fab6b6;
+    --awgpt-el-color-error-light-7: #fcd3d3;
+    --awgpt-el-color-error-light-8: #fde2e2;
+    --awgpt-el-color-error-light-9: #fef0f0;
+    --awgpt-el-color-error-dark-2: #c45656;
+    --awgpt-el-color-info: #909399;
+    --awgpt-el-color-info-light-3: #b1b3b8;
+    --awgpt-el-color-info-light-5: #c8c9cc;
+    --awgpt-el-color-info-light-7: #dedfe0;
+    --awgpt-el-color-info-light-8: #e9e9eb;
+    --awgpt-el-color-info-light-9: #f4f4f5;
+    --awgpt-el-color-info-dark-2: #73767a;
+    --el-bg-color: #ffffff;
+    --el-bg-color-page: #f2f3f5;
+    --el-bg-color-overlay: #ffffff;
+    --el-text-color-primary: #303133;
+    --el-text-color-regular: #606266;
+    --el-text-color-secondary: #909399;
+    --el-text-color-placeholder: #a8abb2;
+    --el-text-color-disabled: #c0c4cc;
+    --el-border-color: #dcdfe6;
+    --el-border-color-light: #e4e7ed;
+    --el-border-color-lighter: #ebeef5;
+    --el-border-color-extra-light: #f2f6fc;
+    --el-border-color-dark: #d4d7de;
+    --el-border-color-darker: #cdd0d6;
+    --el-fill-color: #f0f2f5;
+    --el-fill-color-light: #f5f7fa;
+    --el-fill-color-lighter: #fafafa;
+    --el-fill-color-extra-light: #fafcff;
+    --el-fill-color-dark: #ebedf0;
+    --el-fill-color-darker: #e6e8eb;
+    --el-fill-color-blank: #ffffff;
+    --el-box-shadow: 0px 12px 32px 4px rgba(0, 0, 0, .04), 0px 8px 20px rgba(0, 0, 0, .08);
+    --el-box-shadow-light: 0px 0px 12px rgba(0, 0, 0, .12);
+    --el-box-shadow-lighter: 0px 0px 6px rgba(0, 0, 0, .12);
+    --el-box-shadow-dark: 0px 16px 48px 16px rgba(0, 0, 0, .08), 0px 12px 32px rgba(0, 0, 0, .12), 0px 8px 16px -8px rgba(0, 0, 0, .16);
+}
+</style><a id="bottomBar" style="position: fixed; bottom: -40px; left: 0px; z-index: 9999; transform: translateX(-50%); background-color: transparent; border-radius: 5px 5px 0px 0px; opacity: 0.3; padding: 5px; transition: 0.3s; cursor: pointer; max-height: 100px; max-width: 45px;"><img src="chrome-extension://kobncfkmjelbefaoohoblamnbackjggk/icon/icon_32.png" style="width: 32px; height: 32px;"></a></body></html>

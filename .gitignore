@@ -12,3 +12,4 @@ npm-debug.log*
 Thumbs.db
 .DS_Store
 .vibe-diagnosis/config.json
+.vibe-clinic/config.json

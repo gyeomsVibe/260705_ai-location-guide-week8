@@ -4,7 +4,7 @@
     {
       "name": "location-guide",
       "runtimeExecutable": "npm",
-      "runtimeArgs": ["start"],
+      "runtimeArgs": ["--prefix", "backend", "start"],
       "port": 3000
     }
   ]

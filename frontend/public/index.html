@@ -79,6 +79,9 @@
 
     * { box-sizing: border-box; margin: 0; padding: 0; }
 
+    /* JavaScript로 토글하는 요소를 레이아웃에서 완전히 숨깁니다. */
+    .hidden { display: none !important; }
+
     body {
       font-family: 'Noto Sans KR', sans-serif;
       background: var(--bg-gradient);
@@ -869,6 +872,7 @@
     let placeServices;
     let selectedPlace = ZONES_DATA.seoul[0]; // 기본 중심: 서울시청
     let activeSearchKeyword = "";
+    let searchRequestId = 0; // 늦게 도착한 이전 검색 응답을 무시하기 위한 세대 번호
 
     // 지도 리소스 관리용 변수
     let centerMarker = null; // 타겟팅된 중심점의 마커
@@ -1160,6 +1164,9 @@
     function searchPlaces() {
       if (!selectedPlace || !activeSearchKeyword) return;
 
+      const requestId = ++searchRequestId;
+      const keyword = activeSearchKeyword;
+
       const listContainer = document.getElementById("results-list");
       listContainer.innerHTML = '🔍 실시간으로 지도를 검색하고 있습니다...';
       document.getElementById("btn-clear").classList.remove("hidden");
@@ -1171,13 +1178,17 @@
         sort: kakao.maps.services.SortBy.ACCURACY
       };
 
-      placeServices.keywordSearch(activeSearchKeyword, (data, status, pagination) => {
+      placeServices.keywordSearch(keyword, (data, status) => {
+        if (requestId !== searchRequestId) return;
         clearSearchMarkers();
 
         if (status === kakao.maps.services.Status.OK) {
           renderSearchResults(data);
         } else if (status === kakao.maps.services.Status.ZERO_RESULT) {
-          listContainer.innerHTML = `<div class="empty-state">😅 2km 반경 내에 '${activeSearchKeyword}' 결과가 없습니다.</div>`;
+          const emptyState = document.createElement("div");
+          emptyState.className = "empty-state";
+          emptyState.textContent = `😅 2km 반경 내에 '${keyword}' 결과가 없습니다.`;
+          listContainer.replaceChildren(emptyState);
           document.getElementById("result-count").textContent = "0";
         } else {
           listContainer.innerHTML = '<div class="empty-state">❌ 검색 처리 도중 에러가 발생했습니다.</div>';
@@ -1315,6 +1326,7 @@
 
     // 검색 전체 초기화 및 지도 초기 중심 복원
     function clearSearch() {
+      searchRequestId += 1;
       clearSearchMarkers();
       activeSearchKeyword = "";
       document.getElementById("search-input").value = "";

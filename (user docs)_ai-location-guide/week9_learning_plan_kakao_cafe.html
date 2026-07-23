@@ -1,0 +1,259 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>9주차 학습계획서 | 공공 카페 데이터로 카카오맵 검색 서비스 만들기</title>
+<style>
+:root{
+  --bg:#f6f3ee; --paper:#fffdf9; --ink:#2b2621; --muted:#746a61;
+  --accent:#6f4e37; --accent2:#c98f5d; --line:#e5d9cf; --ok:#2f7d5b;
+  --warn:#a45c18; --danger:#a13e3e; --chip:#efe4da;
+}
+*{box-sizing:border-box}
+body{margin:0;background:var(--bg);color:var(--ink);font-family:system-ui,-apple-system,"Noto Sans KR","Apple SD Gothic Neo",sans-serif;line-height:1.65}
+main{max-width:1080px;margin:auto;padding:32px 18px 72px}
+.hero{background:linear-gradient(135deg,#3e2d24,#7a533d);color:white;border-radius:24px;padding:38px;box-shadow:0 18px 50px rgba(52,35,24,.16)}
+.hero h1{margin:0 0 8px;font-size:clamp(28px,5vw,48px);line-height:1.15}
+.hero p{margin:8px 0;color:#f2e9e2}
+.badge{display:inline-block;padding:6px 12px;border:1px solid rgba(255,255,255,.35);border-radius:999px;margin:4px 6px 4px 0;font-size:14px}
+.card{background:var(--paper);border:1px solid var(--line);border-radius:18px;padding:24px;margin-top:20px;box-shadow:0 8px 24px rgba(60,42,31,.05)}
+h2{margin:0 0 14px;font-size:25px;color:#4a3325}
+h3{margin:0 0 8px;font-size:19px}
+.grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(240px,1fr));gap:14px}
+.kpi{padding:18px;border-radius:14px;background:#fbf7f2;border:1px solid var(--line)}
+.kpi strong{display:block;font-size:24px;color:var(--accent)}
+.notice{border-left:5px solid var(--accent2);padding:14px 16px;background:#fff6ed;border-radius:10px}
+.danger{border-left-color:var(--danger);background:#fff2f2}
+.ok{border-left-color:var(--ok);background:#eef9f4}
+.step{position:relative;padding:22px 22px 20px 72px;border:1px solid var(--line);border-radius:16px;margin:16px 0;background:white}
+.num{position:absolute;left:20px;top:20px;width:36px;height:36px;border-radius:50%;display:grid;place-items:center;background:var(--accent);color:white;font-weight:800}
+.meta{display:flex;flex-wrap:wrap;gap:8px;margin:8px 0 14px}
+.chip{background:var(--chip);color:#5b4030;border-radius:999px;padding:4px 10px;font-size:13px}
+ul{padding-left:20px}
+.check{list-style:none;padding:0}
+.check li{margin:8px 0}
+.check input{transform:scale(1.2);margin-right:9px}
+.prompt{white-space:pre-wrap;background:#251d19;color:#f8eee8;padding:16px;border-radius:12px;overflow:auto;font-size:14px}
+table{width:100%;border-collapse:collapse}
+th,td{padding:12px;border-bottom:1px solid var(--line);vertical-align:top;text-align:left}
+th{background:#f4ebe4}
+.small{font-size:13px;color:var(--muted)}
+.status{font-weight:700;color:var(--warn)}
+footer{margin-top:28px;color:var(--muted);font-size:13px;text-align:center}
+@media print{
+ body{background:white}.hero,.card,.step{box-shadow:none}
+ main{max-width:none;padding:0}.prompt{background:#eee;color:#111}
+}
+</style>
+</head>
+<body>
+<main>
+<section class="hero">
+  <span class="badge">/학습모드 ACTIVATED</span>
+  <span class="badge">Artifact class: 학습계획서</span>
+  <span class="badge">Status: 실행 전</span>
+  <h1>공공 카페 데이터로<br>카카오맵 검색 서비스 만들기</h1>
+  <p>9주차 교안을 “한 단계씩 실행하고, 각 단계의 성공 증거를 확인한 뒤 다음 단계로 이동”하도록 재구성한 순차형 학습계획서</p>
+</section>
+
+<section class="card">
+<h2>1. 전수분석 요약</h2>
+<div class="grid">
+ <div class="kpi"><strong>1개</strong>최종 목표: 내 위치 주변 카페 검색 웹앱</div>
+ <div class="kpi"><strong>7단계</strong>상태 확인 → API → 위치 → 반경 → 검색 → UI → 배포</div>
+ <div class="kpi"><strong>3시간</strong>교안 기준 수업 시간</div>
+ <div class="kpi"><strong>6개</strong>주요 오류 분기</div>
+</div>
+<p>이 수업의 핵심은 코드를 직접 작성하는 것이 아니라, 기존 카카오맵 프로젝트에 공공데이터 API를 연결하도록 Antigravity 2.0 에이전트에게 기능 단위로 지시하고 결과를 검증하는 것입니다.</p>
+<div class="notice">
+<strong>핵심 구조:</strong> 공공데이터포털 상가정보 API → 카페/커피/음료 업종 필터 → 현재 위치 및 반경 계산 → 카카오맵 마커·원·목록 → GitHub → Render 공개 URL
+</div>
+</section>
+
+<section class="card">
+<h2>2. 학습 목표와 완료 정의</h2>
+<ul class="check">
+<li><input type="checkbox">공공데이터 인증키와 Kakao JavaScript 키의 역할을 구분한다.</li>
+<li><input type="checkbox">기존 카카오맵 프로젝트의 실행·배포 상태를 점검한다.</li>
+<li><input type="checkbox">카페 후보 데이터 5건을 조회하고 필수 필드를 확인한다.</li>
+<li><input type="checkbox">현재 위치, 1km 원, 주변 카페 마커를 함께 표시한다.</li>
+<li><input type="checkbox">1km·3km·5km·전국 모드와 검색창을 연결한다.</li>
+<li><input type="checkbox">모바일 공개 URL에서 기능을 검증한다.</li>
+</ul>
+<div class="notice ok"><strong>최종 완료 증거:</strong> 휴대폰에서 Render HTTPS 공개 URL을 열고 위치 권한을 허용했을 때, 내 위치 중심 1km 원·카페 마커·검색 결과 목록이 보이며 반경 버튼과 검색이 실제 결과를 바꾼다.</div>
+</section>
+
+<section class="card">
+<h2>3. Gate 0 — 시작 전 필수 확인</h2>
+<p class="status">이 Gate를 통과하지 못하면 실습 1로 진행하지 않는다.</p>
+<ul class="check">
+<li><input type="checkbox">Antigravity 2.0 설치 및 실행 가능</li>
+<li><input type="checkbox">8-1주차 프로젝트 폴더 접근 가능</li>
+<li><input type="checkbox">Render 공개 URL에서 기존 카카오맵 표시</li>
+<li><input type="checkbox">GitHub 저장소와 Render 연결 확인</li>
+<li><input type="checkbox">Kakao Developers JavaScript 키 준비</li>
+<li><input type="checkbox">공공데이터포털 상가정보 API 승인 및 인증키 준비</li>
+</ul>
+<div class="notice danger"><strong>금지:</strong> 인증키를 화면 캡처, 공개 GitHub, 프론트엔드 코드에 노출하지 않는다. Kakao Admin 키 대신 JavaScript 키를 사용한다.</div>
+</section>
+
+<section class="card">
+<h2>4. 순차 실행 학습계획</h2>
+
+<div class="step">
+<div class="num">1</div>
+<h3>기존 프로젝트 상태 확인</h3>
+<div class="meta"><span class="chip">예상 20분</span><span class="chip">진행 조건: Gate 0 통과</span></div>
+<ul>
+<li>8-1주차 카카오맵 프로젝트를 Antigravity 2.0에서 연다.</li>
+<li>카카오맵 로딩, Render 설정, GitHub 연결, 실행 방법, 패키지 상태를 점검시킨다.</li>
+<li>향후 API 연결에 적절한 구조를 제안받는다.</li>
+</ul>
+<div class="prompt">이 프로젝트는 8-1주차에서 만든 카카오맵 웹앱입니다. 제가 소스 코드를 직접 수정하지 않도록 현재 프로젝트 상태를 점검해 주세요. 카카오맵 로딩, Render 배포 설정, GitHub 연결, 실행 방법, 필요한 패키지, 공공 카페 데이터 연결 구조를 확인하고 필요한 설치와 실행은 직접 진행해 주세요. 제가 해야 할 클릭과 입력만 알려주세요.</div>
+<p><strong>성공 증거:</strong> 로컬 또는 미리보기에서 기존 카카오맵이 정상 표시되고, 에이전트가 실행 방법과 구조를 설명한다.</p>
+</div>
+
+<div class="step">
+<div class="num">2</div>
+<h3>공공 카페 데이터 연결 및 5건 테스트</h3>
+<div class="meta"><span class="chip">예상 40분</span><span class="chip">보안 핵심</span></div>
+<ul>
+<li>상가정보 API에서 카페·커피·음료 업종만 필터링하도록 지시한다.</li>
+<li>인증키는 로컬 .env와 Render 환경변수로 분리한다.</li>
+<li>먼저 5건만 조회하여 상호명·업종명·주소·위도·경도를 확인한다.</li>
+</ul>
+<div class="prompt">소상공인시장진흥공단_상가(상권)정보_API를 연결해 주세요. 전국 상가 데이터 중 카페/커피/음료 업종만 검색합니다. 인증키는 화면과 공개 저장소에 노출하지 말고 로컬 환경변수와 Render 환경변수 방식으로 처리하세요. 먼저 5건만 조회해 상호명, 업종명, 주소, 위도, 경도가 있는지 실행 결과로 확인해 주세요.</div>
+<p><strong>성공 증거:</strong> 실제 응답에서 카페 후보 5건 내외와 필수 필드가 확인된다.</p>
+</div>
+
+<div class="step">
+<div class="num">3</div>
+<h3>첫 화면을 현재 위치 기준 1km로 구성</h3>
+<div class="meta"><span class="chip">예상 40분</span><span class="chip">HTTPS 필요</span></div>
+<ul>
+<li>접속 시 위치 권한을 요청한다.</li>
+<li>허용 시 지도 중심 이동, 현재 위치 마커, 1km 원, 주변 카페 마커를 표시한다.</li>
+<li>거부 시 기본 위치와 쉬운 안내문을 제공한다.</li>
+</ul>
+<div class="prompt">첫 접속 시 브라우저 위치 권한을 요청하고, 허용하면 현재 위치를 지도 중심으로 설정해 현재 위치 마커와 1km 반경 원을 표시하세요. 1km 안의 카페만 기본 표시하세요. 거부 시 기본 위치와 안내 문구를 제공하고, HTTPS 공개 URL에서도 동작을 검증해 주세요.</div>
+<p><strong>성공 증거:</strong> 현재 위치 마커, 1km 원, 주변 카페 마커가 동시에 보인다.</p>
+</div>
+
+<div class="step">
+<div class="num">4</div>
+<h3>1km · 3km · 5km · 전국 반경 칩 연결</h3>
+<div class="meta"><span class="chip">예상 20분</span><span class="chip">UI와 데이터 동기화</span></div>
+<ul>
+<li>기본 선택은 1km로 한다.</li>
+<li>칩 선택 시 원 크기·검색 반경·마커·목록을 함께 갱신한다.</li>
+<li>전국 모드는 반경 원을 숨기고 검색어가 있을 때만 제한된 결과를 보여준다.</li>
+</ul>
+<div class="prompt">1km, 3km, 5km, 전국 라벨식 칩을 추가하세요. 선택된 칩을 강조하고, 1/3/5km 선택 시 원 크기와 검색 결과, 마커, 목록을 함께 갱신하세요. 전국 모드는 검색어가 있을 때만 실행하고 결과 개수를 제한하세요. 모바일 터치에 적합하게 만드세요.</div>
+<p><strong>성공 증거:</strong> 칩을 누를 때 선택 표시뿐 아니라 실제 결과 수와 지도 표시 범위가 바뀐다.</p>
+</div>
+
+<div class="step">
+<div class="num">5</div>
+<h3>카페 검색창과 결과 상호작용 구현</h3>
+<div class="meta"><span class="chip">예상 15분</span><span class="chip">검색 범위 연동</span></div>
+<ul>
+<li>상호명·주소·업종명에 검색어가 포함되면 결과를 표시한다.</li>
+<li>반경 모드에서는 선택 반경 내부만, 전국 모드에서는 제한된 전국 결과만 검색한다.</li>
+<li>목록 클릭 시 지도 이동 및 해당 마커 강조를 구현한다.</li>
+</ul>
+<div class="prompt">검색창과 검색 버튼을 추가하고 상호명, 주소, 업종명 기준으로 검색하세요. 현재 반경 모드와 검색을 연결하고, 결과 목록에 상호명, 주소, 업종명, 내 위치로부터의 거리를 표시하세요. 결과 클릭 시 지도 이동과 마커 강조를 구현하고, 결과가 없으면 반경 확대 안내를 보여주세요.</div>
+<p><strong>성공 증거:</strong> “스타벅스”, “커피”, “디저트”, “강남” 등의 검색어가 지도 마커와 목록을 함께 바꾼다.</p>
+</div>
+
+<div class="step">
+<div class="num">6</div>
+<h3>초보자용 화면과 상태 메시지 정리</h3>
+<div class="meta"><span class="chip">예상 15분</span><span class="chip">사용성 검토</span></div>
+<ul>
+<li>제목, 현재 반경, 결과 개수, 검색창, 칩, 지도, 목록을 한눈에 배치한다.</li>
+<li>모바일 세로 화면에서 자연스러운 순서를 확인한다.</li>
+<li>로딩·빈 결과·오류 메시지를 쉬운 한국어로 제공한다.</li>
+</ul>
+<div class="prompt">전체 화면을 “내 주변 카페 찾기” 서비스로 정리하세요. 현재 검색 반경과 결과 개수를 표시하고, 검색창·반경 칩·지도·목록을 한눈에 배치하세요. 모바일에서는 검색 UI가 위, 지도와 목록이 아래에 오게 하며 로딩, 빈 결과, 오류 상태를 쉬운 문장으로 표시하세요.</div>
+<p><strong>성공 증거:</strong> 기능 확인용 화면이 아니라 처음 보는 사용자도 조작 가능한 서비스 화면처럼 보인다.</p>
+</div>
+
+<div class="step">
+<div class="num">7</div>
+<h3>GitHub 반영, Render 재배포, 모바일 검증</h3>
+<div class="meta"><span class="chip">예상 25분</span><span class="chip">외부 변경 작업</span></div>
+<ul>
+<li>변경 파일 검토 후 적절한 커밋 메시지로 커밋·푸시한다.</li>
+<li>Render 자동 배포 상태와 로그를 확인한다.</li>
+<li>배포 완료 후 데스크톱과 휴대폰에서 HTTPS 공개 URL을 검증한다.</li>
+</ul>
+<div class="prompt">변경 파일을 검토하고 적절한 커밋 메시지로 GitHub에 반영한 뒤 Render 자동 배포를 확인하세요. 배포 완료 후 공개 URL에서 위치 권한, 1km 기본 원, 반경 칩, 검색, 목록, 마커가 모두 작동하는지 점검하고 문제를 수정하세요.</div>
+<p><strong>성공 증거:</strong> 휴대폰 공개 URL에서 핵심 기능이 작동하며 인증키가 노출되지 않는다.</p>
+</div>
+</section>
+
+<section class="card">
+<h2>5. 오류 분기표</h2>
+<table>
+<thead><tr><th>증상</th><th>가능 원인</th><th>에이전트 지시</th></tr></thead>
+<tbody>
+<tr><td>현재 위치를 못 가져옴</td><td>위치 권한 차단</td><td>권한 재허용 안내와 기본 위치 fallback 추가</td></tr>
+<tr><td>카페 데이터가 없음</td><td>인증키·승인·API 주소·파라미터 오류</td><td>API 호출 로그, 상태코드, 요청 파라미터 점검</td></tr>
+<tr><td>지도는 보이나 마커가 없음</td><td>위도·경도 필드명 또는 빈 좌표</td><td>실제 응답 필드와 마커 생성 로직 대조</td></tr>
+<tr><td>전국 모드가 느림</td><td>과도한 데이터 조회·렌더링</td><td>검색어 필수, 결과 상한, 페이지네이션 적용</td></tr>
+<tr><td>Render에서 위치 기능 이상</td><td>HTTPS·브라우저 권한·배포 환경 차이</td><td>공개 HTTPS URL에서 geolocation 직접 점검</td></tr>
+<tr><td>반경 버튼을 눌러도 결과 동일</td><td>UI 상태와 검색 함수 미연결</td><td>클릭 이벤트, 반경 상태값, 재조회 흐름 추적</td></tr>
+</tbody>
+</table>
+</section>
+
+<section class="card">
+<h2>6. 검증 시나리오</h2>
+<ol>
+<li><strong>첫 접속:</strong> 위치 권한 허용 → 현재 위치 마커·1km 원·카페 표시</li>
+<li><strong>권한 거부:</strong> 기본 위치와 안내문 표시, 앱이 멈추지 않음</li>
+<li><strong>반경 변경:</strong> 1km→3km→5km 순으로 결과와 원 크기 변화</li>
+<li><strong>전국 검색:</strong> 검색어 없이 과도한 호출 없음, 검색어 입력 후 제한된 결과</li>
+<li><strong>검색:</strong> 결과 목록과 지도 마커 동시 갱신</li>
+<li><strong>목록 클릭:</strong> 해당 카페로 지도 이동 및 마커 강조</li>
+<li><strong>보안:</strong> 브라우저 화면·저장소·로그에 인증키가 그대로 노출되지 않음</li>
+<li><strong>모바일:</strong> 터치 가능한 칩 크기, 읽기 쉬운 목록, HTTPS 위치 기능 확인</li>
+</ol>
+</section>
+
+<section class="card">
+<h2>7. 3시간 권장 시간표</h2>
+<table>
+<thead><tr><th>시간</th><th>학습 활동</th><th>통과 조건</th></tr></thead>
+<tbody>
+<tr><td>00:00–00:20</td><td>공공데이터·키·보안 복습, Gate 0</td><td>필수 준비물 모두 확인</td></tr>
+<tr><td>00:20–00:40</td><td>단계 1 프로젝트 상태 확인</td><td>기존 지도 실행</td></tr>
+<tr><td>00:40–01:20</td><td>단계 2 API 연결 및 5건 테스트</td><td>필수 필드 확인</td></tr>
+<tr><td>01:20–02:00</td><td>단계 3 현재 위치·1km 구현</td><td>마커·원·카페 동시 표시</td></tr>
+<tr><td>02:00–02:35</td><td>단계 4~6 반경·검색·UI</td><td>지도와 목록 동기화</td></tr>
+<tr><td>02:35–03:00</td><td>단계 7 배포·모바일 검증</td><td>공개 URL 핵심 기능 작동</td></tr>
+</tbody>
+</table>
+</section>
+
+<section class="card">
+<h2>8. 최종 체크리스트</h2>
+<ul class="check">
+<li><input type="checkbox">API 키가 안전한 환경변수에 저장되어 있다.</li>
+<li><input type="checkbox">첫 화면 기본값은 현재 위치 기준 1km이다.</li>
+<li><input type="checkbox">현재 위치 마커와 반경 원이 보인다.</li>
+<li><input type="checkbox">카페 마커와 결과 목록이 함께 갱신된다.</li>
+<li><input type="checkbox">1km·3km·5km·전국 칩이 실제 검색 범위를 바꾼다.</li>
+<li><input type="checkbox">검색어와 반경 조건이 함께 적용된다.</li>
+<li><input type="checkbox">빈 결과·로딩·오류 안내가 있다.</li>
+<li><input type="checkbox">GitHub 반영 및 Render 재배포가 완료되었다.</li>
+<li><input type="checkbox">휴대폰 HTTPS 공개 URL에서 검증했다.</li>
+</ul>
+<p class="small">주의: 이 문서는 실행 계획서이며, 실제 프로젝트 설치·배포·Runtime 검증 결과를 의미하지 않습니다.</p>
+</section>
+
+<footer>작성 기준: 9주차 강의안 전체 흐름, 실습 1~7, 오류 해결, 금지사항, 최종 체크리스트</footer>
+</main>
+</body>
+</html>
