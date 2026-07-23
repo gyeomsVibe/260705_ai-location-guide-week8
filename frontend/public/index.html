@@ -470,10 +470,395 @@
     }
 
     /* 초장문 텍스트 레이아웃 붕괴 방어막 (Vaccine V5) */
-    .rc-title, .rc-address, .co-title, .co-desc {
+    .rc-title, .rc-address, .co-title, .co-desc, .benefit-title, .benefit-summary, .benefit-detail-val {
       word-break: break-word;
       overflow-wrap: anywhere;
     }
+
+    /* 혜택 & 주변 탐색 모드 전환 탭 스타일 */
+    .mode-tab-nav {
+      display: flex;
+      gap: 6px;
+      margin-bottom: 14px;
+      border-bottom: 2px solid var(--border-color);
+      padding-bottom: 2px;
+    }
+
+    .mode-tab-btn {
+      flex: 1;
+      padding: 9px 12px;
+      font-size: 0.875rem;
+      font-weight: 700;
+      border: none;
+      border-radius: var(--radius-sm) var(--radius-sm) 0 0;
+      background: transparent;
+      color: var(--text-sub);
+      cursor: pointer;
+      transition: all 0.2s ease;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      gap: 6px;
+    }
+
+    .mode-tab-btn:hover {
+      color: var(--primary);
+      background: var(--primary-light);
+    }
+
+    .mode-tab-btn.active {
+      color: var(--primary);
+      border-bottom: 3px solid var(--primary);
+      background: var(--primary-light);
+    }
+
+    /* 벙 맛집 1등 메인 CTA 버튼 스타일 */
+    .bung-main-cta {
+      width: 100%;
+      padding: 12px 16px;
+      font-size: 0.95rem;
+      font-weight: 800;
+      color: #ffffff;
+      background: linear-gradient(135deg, #f97316 0%, #ea580c 100%);
+      border: none;
+      border-radius: var(--radius-md);
+      cursor: pointer;
+      box-shadow: 0 4px 14px rgba(249, 115, 22, 0.35);
+      transition: all 0.2s cubic-bezier(0.4, 0, 0.2, 1);
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      margin-bottom: 10px;
+    }
+
+    .bung-main-cta:hover {
+      transform: translateY(-2px);
+      box-shadow: 0 6px 18px rgba(249, 115, 22, 0.45);
+      background: linear-gradient(135deg, #fb923c 0%, #f97316 100%);
+    }
+
+    .bung-main-cta:active {
+      transform: translateY(0);
+    }
+
+    .bung-badge-tag {
+      background: rgba(255, 255, 255, 0.25);
+      font-size: 0.725rem;
+      padding: 2px 8px;
+      border-radius: 999px;
+      font-weight: 700;
+      backdrop-filter: blur(4px);
+    }
+
+    /* 일상 추천 칩 그리드 (점심/저녁/데이트/헬스장/산책로 등) */
+    .recommend-chip-grid {
+      display: grid;
+      grid-template-columns: repeat(2, 1fr);
+      gap: 6px;
+      margin-bottom: 10px;
+    }
+
+    .recommend-chip-btn {
+      padding: 8px 10px;
+      font-size: 0.8rem;
+      font-weight: 700;
+      border-radius: var(--radius-sm);
+      border: 1px solid var(--border-color);
+      background: var(--chip-bg);
+      color: var(--text-main);
+      cursor: pointer;
+      transition: all 0.2s ease;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      gap: 4px;
+      text-align: center;
+    }
+
+    .recommend-chip-btn:hover {
+      border-color: var(--primary);
+      color: var(--primary);
+      background: var(--primary-light);
+    }
+
+    .recommend-chip-btn.active {
+      border-color: var(--primary);
+      color: var(--primary);
+      background: var(--primary-light);
+      box-shadow: 0 0 0 2px var(--primary);
+    }
+
+    /* 벙 맛집 & 뭐먹지 조건 선택 레이어 */
+    .condition-panel {
+      background: var(--primary-light);
+      border: 1px solid var(--border-color);
+      border-radius: var(--radius-md);
+      padding: 12px;
+      margin-bottom: 12px;
+      display: flex;
+      flex-direction: column;
+      gap: 10px;
+    }
+
+    .condition-row-title {
+      font-size: 0.75rem;
+      font-weight: 700;
+      color: var(--text-sub);
+      margin-bottom: 4px;
+    }
+
+    .condition-options {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 4px;
+    }
+
+    .condition-opt-btn {
+      padding: 4px 8px;
+      font-size: 0.75rem;
+      font-weight: 600;
+      border-radius: var(--radius-sm);
+      border: 1px solid var(--border-color);
+      background: var(--card-bg);
+      color: var(--text-main);
+      cursor: pointer;
+      transition: all 0.15s ease;
+    }
+
+    .condition-opt-btn.active {
+      background: var(--primary);
+      color: #ffffff;
+      border-color: var(--primary);
+    }
+
+    .condition-submit-btn {
+      width: 100%;
+      padding: 8px;
+      font-size: 0.825rem;
+      font-weight: 800;
+      color: #ffffff;
+      background: var(--primary);
+      border: none;
+      border-radius: var(--radius-sm);
+      cursor: pointer;
+      transition: background 0.2s ease;
+      margin-top: 4px;
+    }
+
+    .condition-submit-btn:hover {
+      background: var(--primary-hover);
+    }
+
+
+    .quick-chip-btn {
+      padding: 8px 10px;
+      font-size: 0.8rem;
+      font-weight: 600;
+      border-radius: var(--radius-sm);
+      border: 1px solid var(--border-color);
+      background: var(--chip-bg);
+      color: var(--text-main);
+      cursor: pointer;
+      transition: all 0.2s ease;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      gap: 4px;
+      text-align: center;
+    }
+
+    .quick-chip-btn:hover {
+      border-color: var(--primary);
+      color: var(--primary);
+      background: var(--primary-light);
+    }
+
+    .quick-chip-btn.active {
+      background: var(--primary);
+      color: #ffffff;
+      border-color: var(--primary);
+    }
+
+    /* 혜택 결과 카드 스타일 */
+    .benefit-card {
+      background: var(--card-bg);
+      border: 1px solid var(--border-color);
+      border-radius: var(--radius-md);
+      padding: 12px 14px;
+      margin-bottom: 10px;
+      display: flex;
+      flex-direction: column;
+      gap: 8px;
+      transition: border-color 0.2s ease, box-shadow 0.2s ease;
+    }
+
+    .benefit-card:hover {
+      border-color: var(--primary);
+      box-shadow: var(--shadow-md);
+    }
+
+    .benefit-badge {
+      display: inline-block;
+      font-size: 0.7rem;
+      font-weight: 700;
+      padding: 2px 8px;
+      border-radius: 999px;
+      background: var(--primary-light);
+      color: var(--primary);
+      border: 1px solid var(--primary);
+      margin-bottom: 4px;
+    }
+
+    .benefit-title {
+      font-size: 0.95rem;
+      font-weight: 800;
+      color: var(--text-main);
+      line-height: 1.35;
+    }
+
+    .benefit-summary {
+      font-size: 0.825rem;
+      color: var(--text-sub);
+      line-height: 1.45;
+    }
+
+    .benefit-field-group {
+      font-size: 0.8rem;
+      display: flex;
+      flex-direction: column;
+      gap: 4px;
+      background: var(--chip-bg);
+      padding: 8px 10px;
+      border-radius: var(--radius-sm);
+    }
+
+    .benefit-field-row {
+      display: flex;
+      gap: 6px;
+    }
+
+    .benefit-label {
+      font-weight: 700;
+      color: var(--text-sub);
+      min-width: 60px;
+      flex-shrink: 0;
+    }
+
+    .benefit-val {
+      color: var(--text-main);
+    }
+
+    .benefit-notice-tag {
+      font-size: 0.75rem;
+      color: #d97706;
+      background: #fef3c7;
+      border: 1px solid #fcd34d;
+      padding: 4px 8px;
+      border-radius: var(--radius-sm);
+      font-weight: 600;
+      display: flex;
+      align-items: center;
+      gap: 4px;
+    }
+
+    :root[data-theme="dark"] .benefit-notice-tag {
+      color: #fef08a;
+      background: rgba(217, 119, 6, 0.2);
+      border-color: rgba(217, 119, 6, 0.4);
+    }
+
+    .benefit-accordion-btn {
+      background: transparent;
+      border: none;
+      color: var(--primary);
+      font-size: 0.8rem;
+      font-weight: 700;
+      cursor: pointer;
+      padding: 4px 0;
+      display: flex;
+      align-items: center;
+      gap: 4px;
+      margin-top: 2px;
+    }
+
+    .benefit-accordion-content {
+      display: flex;
+      flex-direction: column;
+      gap: 6px;
+      padding-top: 6px;
+      border-top: 1px dashed var(--border-color);
+      margin-top: 4px;
+    }
+
+    /* 공공데이터 연결 상태 접이식 패널 */
+    .data-sources-container {
+      margin-top: 14px;
+      border-top: 1px solid var(--border-color);
+      padding-top: 12px;
+    }
+
+    .data-sources-toggle-btn {
+      width: 100%;
+      padding: 8px 12px;
+      background: var(--chip-bg);
+      border: 1px solid var(--border-color);
+      border-radius: var(--radius-sm);
+      color: var(--text-sub);
+      font-size: 0.8rem;
+      font-weight: 700;
+      cursor: pointer;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      transition: all 0.2s ease;
+    }
+
+    .data-sources-toggle-btn:hover {
+      color: var(--primary);
+      border-color: var(--primary);
+    }
+
+    .data-sources-body {
+      margin-top: 8px;
+      display: flex;
+      flex-direction: column;
+      gap: 8px;
+    }
+
+    .ds-card {
+      background: var(--card-bg);
+      border: 1px solid var(--border-color);
+      border-radius: var(--radius-sm);
+      padding: 8px 10px;
+      font-size: 0.775rem;
+      display: flex;
+      flex-direction: column;
+      gap: 4px;
+    }
+
+    .ds-label {
+      font-weight: 700;
+      color: var(--text-main);
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+    }
+
+    .ds-status-badge {
+      font-size: 0.7rem;
+      padding: 1px 6px;
+      border-radius: 999px;
+      font-weight: 700;
+    }
+
+    .ds-status-success { background: #dcfce7; color: #15803d; border: 1px solid #86efac; }
+    .ds-status-pending { background: #fef3c7; color: #b45309; border: 1px solid #fde047; }
+    .ds-status-failed { background: #fee2e2; color: #b91c1c; border: 1px solid #fca5a5; }
+
+    :root[data-theme="dark"] .ds-status-success { background: rgba(22, 163, 74, 0.2); color: #86efac; border-color: rgba(22, 163, 74, 0.4); }
+    :root[data-theme="dark"] .ds-status-pending { background: rgba(217, 119, 6, 0.2); color: #fde047; border-color: rgba(217, 119, 6, 0.4); }
+    :root[data-theme="dark"] .ds-status-failed { background: rgba(220, 38, 38, 0.2); color: #fca5a5; border-color: rgba(220, 38, 38, 0.4); }
+
 
     .results-list {
       flex: 1;
@@ -692,92 +1077,263 @@
         <p class="subtitle">내 위치 또는 지정 지역 주변을 실시간 키워드 검색으로 자유롭게 탐색해 보세요.</p>
       </header>
 
-      <!-- 1단계: Shadcn UI 스타일 셀렉터 공간 최적화 -->
-      <section class="section">
-        <div class="section-title">
-          <span>1. 탐색 지역 지정</span>
-        </div>
-        <div class="select-container">
-          <div class="select-group">
-            <label for="select-zone" class="select-label">기본 권역 선택</label>
-            <select id="select-zone" class="shadcn-select" onchange="handleZoneChange()">
-              <option value="mylocation">📍 내 현재 위치 기준</option>
-              <option value="seoul" selected>🏙️ 서울특별시</option>
-              <option value="incheon">✈️ 인천광역시</option>
-              <option value="gyeonggi">🏞️ 경기도</option>
-              <option value="busan">🌊 부산광역시</option>
-              <option value="daegu">🍎 대구광역시</option>
-              <option value="daejeon">🔬 대전광역시</option>
-              <option value="gwangju">🌟 광주광역시</option>
-              <option value="ulsan">🎨 울산광역시</option>
-              <option value="sejong">🏛️ 세종특별자치시</option>
-              <option value="gangwon">🏔️ 강원특별자치도</option>
-              <option value="chungcheong">🌾 충청도 (청주/홍성)</option>
-              <option value="jeolla">🍵 전라도 (전주/무안)</option>
-              <option value="gyeongsang">🍏 경상도 (안동/창원)</option>
-              <option value="jeju">🌴 제주특별자치도</option>
-            </select>
+      <!-- 모드 전환 탭 (📍 내 주변 찾기 / 🎁 정부 혜택 찾기) -->
+      <nav class="mode-tab-nav" role="tablist" aria-label="탐색 모드 선택">
+        <button type="button" role="tab" id="tab-nearby" class="mode-tab-btn active" aria-selected="true" aria-controls="panel-nearby" onclick="switchViewMode('nearby')">
+          <span>📍 내 주변 찾기</span>
+        </button>
+        <button type="button" role="tab" id="tab-benefits" class="mode-tab-btn" aria-selected="false" aria-controls="panel-benefits" onclick="switchViewMode('benefits')">
+          <span>🎁 정부 혜택 찾기</span>
+        </button>
+      </nav>
+
+      <!-- 패널 1: 내 주변 찾기 (기존 카카오맵 & 카페 기능) -->
+      <div id="panel-nearby">
+        <!-- 1단계: Shadcn UI 스타일 셀렉터 공간 최적화 -->
+        <section class="section">
+          <div class="section-title">
+            <span>1. 탐색 지역 지정</span>
           </div>
-          <div class="select-group" id="group-detail-place">
-            <label for="select-place" class="select-label">상세 지점 선택</label>
-            <select id="select-place" class="shadcn-select" onchange="handlePlaceChange()">
-              <!-- 스크립트로 옵션 동적 추가 -->
-            </select>
+          <div class="select-container">
+            <div class="select-group">
+              <label for="select-zone" class="select-label">기본 권역 선택</label>
+              <select id="select-zone" class="shadcn-select" onchange="handleZoneChange()">
+                <option value="mylocation">📍 내 현재 위치 기준</option>
+                <option value="seoul" selected>🏙️ 서울특별시</option>
+                <option value="incheon">✈️ 인천광역시</option>
+                <option value="gyeonggi">🏞️ 경기도</option>
+                <option value="busan">🌊 부산광역시</option>
+                <option value="daegu">🍎 대구광역시</option>
+                <option value="daejeon">🔬 대전광역시</option>
+                <option value="gwangju">🌟 광주광역시</option>
+                <option value="ulsan">🎨 울산광역시</option>
+                <option value="sejong">🏛️ 세종특별자치시</option>
+                <option value="gangwon">🏔️ 강원특별자치도</option>
+                <option value="chungcheong">🌾 충청도 (청주/홍성)</option>
+                <option value="jeolla">🍵 전라도 (전주/무안)</option>
+                <option value="gyeongsang">🍏 경상도 (안동/창원)</option>
+                <option value="jeju">🌴 제주특별자치도</option>
+              </select>
+            </div>
+            <div class="select-group" id="group-detail-place">
+              <label for="select-place" class="select-label">상세 지점 선택</label>
+              <select id="select-place" class="shadcn-select" onchange="handlePlaceChange()">
+                <!-- 스크립트로 옵션 동적 추가 -->
+              </select>
+            </div>
           </div>
-        </div>
-      </section>
+        </section>
 
-      <!-- 2단계: 실시간 주변 텍스트 검색 & 내 주변 카페 찾기 반경 칩 -->
-      <section class="section">
-        <div class="section-title">
-          <span>2. 내 주변 카페 찾기 & 실시간 검색</span>
-          <span class="cafe-mode-badge" id="current-radius-badge">반경 1km</span>
-        </div>
-
-        <!-- 공공 카페 탐색용 반경 선택 칩 (F1: 1km / 3km / 5km 선택, 기본 1km) -->
-        <div class="select-label" style="margin-bottom: 6px;">공공 카페 탐색 반경 지정</div>
-        <div class="radius-chip-container" role="radiogroup" aria-label="카페 탐색 반경 선택">
-          <button type="button" class="radius-chip active" data-radius="1" aria-pressed="true" onclick="selectCafeRadius(1)">
-            <span>🎯 1km</span>
-          </button>
-          <button type="button" class="radius-chip" data-radius="3" aria-pressed="false" onclick="selectCafeRadius(3)">
-            <span>📍 3km</span>
-          </button>
-          <button type="button" class="radius-chip" data-radius="5" aria-pressed="false" onclick="selectCafeRadius(5)">
-            <span>🗺️ 5km</span>
-          </button>
-        </div>
-
-        <!-- 접근성 상태 안내 (aria-live="polite") -->
-        <div id="status-live-region" class="sr-only" aria-live="polite" aria-atomic="true"></div>
-
-        <!-- 자유 텍스트 검색 바 -->
-        <div class="search-bar">
-          <input type="text" id="search-input" aria-label="검색어 입력" class="shadcn-input" placeholder="장소명, 카페, 키워드 입력..." onkeypress="handleSearchKeyPress(event)" />
-          <button class="shadcn-btn" onclick="executeTextSearch()">
-            <span>검색</span>
-            <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><circle cx="11" cy="11" r="8"></circle><line x1="21" y1="21" x2="16.65" y2="16.65"></line></svg>
-          </button>
-        </div>
-
-        <!-- 추천 검색 키워드 칩 목록 (가장 컴팩트하게 정렬) -->
-        <div class="recommend-title">자주 찾는 장소 추천</div>
-        <div class="chip-container" id="chip-container">
-          <!-- 스크립트로 칩 목록 렌더링 -->
-        </div>
-      </section>
-
-      <!-- 3단계: 검색 결과 리스트 -->
-      <section class="section results-section">
-        <div class="results-header-info">
-          <div class="section-title" style="margin-bottom: 0;">
-            3. 검색 결과 <span class="badge-count" id="result-count">0</span>
+        <!-- 동네 일상 & 커뮤니티 추천 섹션 (V2) -->
+        <section class="section">
+          <div class="section-title">
+            <span>동네에서 뭐 할까?</span>
+            <span class="bung-badge-tag" style="background:var(--primary-light); color:var(--primary); border:1px solid var(--primary);">동네 모임 추천</span>
           </div>
-          <button class="btn-clear-search hidden" id="btn-clear" onclick="clearSearch()">검색 초기화</button>
-        </div>
 
-        <div class="results-list" id="results-list">
-          <div class="empty-state">장소명을 직접 검색하거나 추천 칩을 눌러 주변을 조회해 보세요!</div>
+          <!-- 1등 메인 CTA: 벙 맛집 -->
+          <button type="button" class="bung-main-cta" id="btn-bung-main" onclick="toggleBungConditionPanel()">
+            <div style="display: flex; align-items: center; gap: 8px;">
+              <span style="font-size: 1.25rem;">🍻</span>
+              <div style="text-align: left;">
+                <div>동네 모임 · 벙 맛집 찾기</div>
+                <div style="font-size: 0.725rem; font-weight: 500; opacity: 0.9;">인원·예산·시간·분위기 맞춤 장소 결정</div>
+              </div>
+            </div>
+            <span class="bung-badge-tag">1등 추천</span>
+          </button>
+
+          <!-- 벙 맛집 조건 선택 레이어 (hidden) -->
+          <div id="panel-bung-conditions" class="condition-panel hidden">
+            <div class="condition-row-title">👥 인원수</div>
+            <div class="condition-options" id="opts-bung-people">
+              <button type="button" class="condition-opt-btn active" data-val="2명" onclick="selectConditionOpt('opts-bung-people', this)">2명</button>
+              <button type="button" class="condition-opt-btn" data-val="3~4명" onclick="selectConditionOpt('opts-bung-people', this)">3~4명</button>
+              <button type="button" class="condition-opt-btn" data-val="5명 이상" onclick="selectConditionOpt('opts-bung-people', this)">5명 이상</button>
+            </div>
+
+            <div class="condition-row-title">💰 1인당 예산</div>
+            <div class="condition-options" id="opts-bung-budget">
+              <button type="button" class="condition-opt-btn" data-val="1만원 이하" onclick="selectConditionOpt('opts-bung-budget', this)">1만원 이하</button>
+              <button type="button" class="condition-opt-btn active" data-val="1~2만원" onclick="selectConditionOpt('opts-bung-budget', this)">1~2만원</button>
+              <button type="button" class="condition-opt-btn" data-val="2만원 이상" onclick="selectConditionOpt('opts-bung-budget', this)">2만원 이상</button>
+            </div>
+
+            <div class="condition-row-title">⏰ 시간대</div>
+            <div class="condition-options" id="opts-bung-time">
+              <button type="button" class="condition-opt-btn" data-val="점심" onclick="selectConditionOpt('opts-bung-time', this)">점심</button>
+              <button type="button" class="condition-opt-btn active" data-val="저녁" onclick="selectConditionOpt('opts-bung-time', this)">저녁</button>
+              <button type="button" class="condition-opt-btn" data-val="야식" onclick="selectConditionOpt('opts-bung-time', this)">야식</button>
+            </div>
+
+            <div class="condition-row-title">✨ 모임 분위기</div>
+            <div class="condition-options" id="opts-bung-vibe">
+              <button type="button" class="condition-opt-btn active" data-val="대화하기 좋은" onclick="selectConditionOpt('opts-bung-vibe', this)">대화하기 좋은</button>
+              <button type="button" class="condition-opt-btn" data-val="활기찬" onclick="selectConditionOpt('opts-bung-vibe', this)">활기찬</button>
+              <button type="button" class="condition-opt-btn" data-val="든든한 식사" onclick="selectConditionOpt('opts-bung-vibe', this)">든든한 식사</button>
+            </div>
+
+            <button type="button" class="condition-submit-btn" onclick="executeBungSearch()">
+              🔍 맞춤 모임 장소 후보 찾기
+            </button>
+          </div>
+
+          <!-- 점심/저녁 뭐먹지 조건 레이어 (hidden) -->
+          <div id="panel-food-conditions" class="condition-panel hidden">
+            <div class="condition-row-title" id="food-panel-title">🍱 오늘 메뉴 성향 선택</div>
+            <div class="condition-options" id="opts-food-vibe">
+              <button type="button" class="condition-opt-btn active" data-val="든든하게" onclick="selectConditionOpt('opts-food-vibe', this)">든든하게</button>
+              <button type="button" class="condition-opt-btn" data-val="가볍게" onclick="selectConditionOpt('opts-food-vibe', this)">가볍게</button>
+              <button type="button" class="condition-opt-btn" data-val="매콤하게" onclick="selectConditionOpt('opts-food-vibe', this)">매콤하게</button>
+              <button type="button" class="condition-opt-btn" data-val="따뜻하게" onclick="selectConditionOpt('opts-food-vibe', this)">따뜻하게</button>
+              <button type="button" class="condition-opt-btn" data-val="새로운 메뉴" onclick="selectConditionOpt('opts-food-vibe', this)">새로운 메뉴</button>
+            </div>
+            <button type="button" class="condition-submit-btn" onclick="executeFoodSearch()">
+              🔍 맞춤 메뉴 장소 찾기
+            </button>
+          </div>
+
+          <!-- 일상 추천 칩 목록 (우선순위 순서 정렬) -->
+          <div class="select-label" style="margin-bottom: 6px;">상황별 빠른 장소 추천</div>
+          <div class="recommend-chip-grid">
+            <button type="button" class="recommend-chip-btn" onclick="openFoodPanel('점심')">
+              <span>🍱 점심 뭐 먹지</span>
+            </button>
+            <button type="button" class="recommend-chip-btn" onclick="openFoodPanel('저녁')">
+              <span>🌙 저녁 뭐 먹지</span>
+            </button>
+            <button type="button" class="recommend-chip-btn" onclick="executeRecommendPreset('데이트')">
+              <span>👩‍❤️‍👨 데이트 코스</span>
+            </button>
+            <button type="button" class="recommend-chip-btn" onclick="executeRecommendPreset('헬스장')">
+              <span>🏋️ 헬스장</span>
+            </button>
+            <button type="button" class="recommend-chip-btn" onclick="executeRecommendPreset('산책로')">
+              <span>🌳 산책로</span>
+            </button>
+            <button type="button" class="recommend-chip-btn" onclick="executeRecommendPreset('카페')">
+              <span>☕ 카페</span>
+            </button>
+            <button type="button" class="recommend-chip-btn" onclick="executeRecommendPreset('맛집')">
+              <span>🍣 맛집</span>
+            </button>
+            <button type="button" class="recommend-chip-btn" onclick="executeRecommendPreset('병원약국')">
+              <span>🏥 병원·약국</span>
+            </button>
+          </div>
+        </section>
+
+        <!-- 2단계: 실시간 주변 텍스트 검색 & 내 주변 카페 찾기 반경 칩 -->
+        <section class="section">
+          <div class="section-title">
+            <span>2. 내 주변 카페 찾기 & 실시간 검색</span>
+            <span class="cafe-mode-badge" id="current-radius-badge">반경 1km</span>
+          </div>
+
+          <!-- 공공 카페 탐색용 반경 선택 칩 (F1: 1km / 3km / 5km 선택, 기본 1km) -->
+          <div class="select-label" style="margin-bottom: 6px;">공공 카페 탐색 반경 지정</div>
+          <div class="radius-chip-container" role="radiogroup" aria-label="카페 탐색 반경 선택">
+            <button type="button" class="radius-chip active" data-radius="1" aria-pressed="true" onclick="selectCafeRadius(1)">
+              <span>🎯 1km</span>
+            </button>
+            <button type="button" class="radius-chip" data-radius="3" aria-pressed="false" onclick="selectCafeRadius(3)">
+              <span>📍 3km</span>
+            </button>
+            <button type="button" class="radius-chip" data-radius="5" aria-pressed="false" onclick="selectCafeRadius(5)">
+              <span>🗺️ 5km</span>
+            </button>
+          </div>
+
+          <!-- 접근성 상태 안내 (aria-live="polite") -->
+          <div id="status-live-region" class="sr-only" aria-live="polite" aria-atomic="true"></div>
+
+          <!-- 자유 텍스트 검색 바 -->
+          <div class="search-bar">
+            <input type="text" id="search-input" aria-label="검색어 입력" class="shadcn-input" placeholder="장소명, 카페, 키워드 입력..." onkeypress="handleSearchKeyPress(event)" />
+            <button class="shadcn-btn" onclick="executeTextSearch()">
+              <span>검색</span>
+              <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><circle cx="11" cy="11" r="8"></circle><line x1="21" y1="21" x2="16.65" y2="16.65"></line></svg>
+            </button>
+          </div>
+
+          <!-- 추천 검색 키워드 칩 목록 (가장 컴팩트하게 정렬) -->
+          <div class="recommend-title">자주 찾는 장소 추천</div>
+          <div class="chip-container" id="chip-container">
+            <!-- 스크립트로 칩 목록 렌더링 -->
+          </div>
+        </section>
+
+        <!-- 3단계: 검색 결과 리스트 -->
+        <section class="section results-section">
+          <div class="results-header-info">
+            <div class="section-title" style="margin-bottom: 0;">
+              3. 검색 결과 <span class="badge-count" id="result-count">0</span>
+            </div>
+            <button class="btn-clear-search hidden" id="btn-clear" onclick="clearSearch()">검색 초기화</button>
+          </div>
+
+          <div class="results-list" id="results-list">
+            <div class="empty-state">장소명을 직접 검색하거나 추천 칩을 눌러 주변을 조회해 보세요!</div>
+          </div>
+        </section>
+      </div>
+
+      <!-- 패널 2: 정부 혜택 찾기 (행정안전부 공공서비스 혜택) -->
+      <div id="panel-benefits" class="hidden">
+        <section class="section">
+          <div class="section-title">
+            <span>정부 혜택 탐색</span>
+          </div>
+          <p class="subtitle" style="margin-bottom: 8px;">상황을 선택하거나 궁금한 내용을 검색해 보세요.</p>
+
+          <div class="select-label" style="margin-bottom: 4px;">상황별 빠른 탐색</div>
+          <div class="quick-chip-grid" role="radiogroup" aria-label="상황별 빠른 탐색">
+            <button type="button" class="quick-chip-btn" data-category="1인 창조기업" onclick="selectQuickBenefitCategory('1인 창조기업')">
+              <span>🏢 1인 창조기업</span>
+            </button>
+            <button type="button" class="quick-chip-btn" data-category="소상공인" onclick="selectQuickBenefitCategory('소상공인')">
+              <span>🏪 소상공인</span>
+            </button>
+            <button type="button" class="quick-chip-btn" data-category="예비창업" onclick="selectQuickBenefitCategory('예비창업')">
+              <span>💡 예비창업</span>
+            </button>
+            <button type="button" class="quick-chip-btn" data-category="신규 창업" onclick="selectQuickBenefitCategory('신규 창업')">
+              <span>🚀 신규 창업</span>
+            </button>
+          </div>
+
+          <!-- 혜택 전용 키워드 검색 바 -->
+          <div class="search-bar">
+            <input type="text" id="benefit-search-input" aria-label="혜택 검색어 입력" class="shadcn-input" placeholder="창업 지원금, 융자, 자금, 교육 등..." onkeypress="handleBenefitSearchKeyPress(event)" />
+            <button class="shadcn-btn" id="btn-search-benefits" onclick="executeBenefitSearch()">
+              <span>검색</span>
+              <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><circle cx="11" cy="11" r="8"></circle><line x1="21" y1="21" x2="16.65" y2="16.65"></line></svg>
+            </button>
+          </div>
+        </section>
+
+        <section class="section results-section">
+          <div class="results-header-info">
+            <div class="section-title" style="margin-bottom: 0;">
+              맞춤 혜택 목록 <span class="badge-count" id="benefit-result-count">0</span>
+            </div>
+          </div>
+
+          <div id="benefit-status-live-region" class="sr-only" aria-live="polite" aria-atomic="true"></div>
+          <div class="results-list" id="benefit-results-list" aria-live="polite">
+            <div class="empty-state">위의 빠른 탐색 버튼을 누르시거나 혜택 키워드를 검색해 보세요!</div>
+          </div>
+        </section>
+      </div>
+
+      <!-- 🔌 공공데이터 연결 상태 접이식 패널 -->
+      <section class="data-sources-container">
+        <button type="button" class="data-sources-toggle-btn" aria-expanded="false" aria-controls="data-sources-body" onclick="toggleDataSourcesPanel()">
+          <span>🔌 공공데이터 연결 상태</span>
+          <span id="ds-toggle-icon">▼</span>
+        </button>
+        <div id="data-sources-body" class="data-sources-body hidden">
+          <div class="empty-state" style="padding: 10px; font-size: 0.75rem;">연결 상태를 조회하고 있습니다...</div>
         </div>
       </section>
     </aside>
@@ -1731,6 +2287,840 @@
     function clearCafeMarkers() {
       cafeMarkers.forEach(m => m.setMap(null));
       cafeMarkers = [];
+    }
+
+    // ==========================================
+    // V2 동네 일상 & 커뮤니티 추천 어댑터 모듈
+    // ==========================================
+
+    // ==========================================
+    // V2 동네 일상 & 커뮤니티 추천 어댑터 모듈
+    // ==========================================
+
+    let currentFoodMeal = "점심";
+    let recommendSearchRequestId = 0;
+
+    // 현재 선택된 위치 좌표 획득 도우미
+    function getSelectedLocation() {
+      if (selectedPlace && typeof selectedPlace.lat === "number" && typeof selectedPlace.lng === "number") {
+        return { lat: selectedPlace.lat, lng: selectedPlace.lng };
+      }
+      return { lat: 37.5665, lng: 126.9780 };
+    }
+
+    // 기존 검색 및 추천 검색 마커/오버레이 전체 소거 및 세대 번호 업
+    function clearAllSearchState() {
+      recommendSearchRequestId += 1;
+      searchRequestId += 1;
+      cafeSearchRequestId += 1;
+
+      if (cafeAbortController) {
+        cafeAbortController.abort();
+        cafeAbortController = null;
+      }
+      if (benefitAbortController) {
+        benefitAbortController.abort();
+        benefitAbortController = null;
+      }
+
+      clearSearchMarkers();
+      clearCafeMarkers();
+      closeAllOverlays();
+
+      const listContainer = document.getElementById("results-list");
+      if (listContainer) listContainer.innerHTML = "";
+      const countBadge = document.getElementById("result-count");
+      if (countBadge) countBadge.textContent = "0";
+    }
+
+    // 조건 옵션 버튼 클릭 토글
+    function selectConditionOpt(groupId, el) {
+      const container = document.getElementById(groupId);
+      if (!container) return;
+      container.querySelectorAll(".condition-opt-btn").forEach(btn => btn.classList.remove("active"));
+      el.classList.add("active");
+    }
+
+    // 벙 맛집 조건 레이어 토글
+    function toggleBungConditionPanel() {
+      const bungPanel = document.getElementById("panel-bung-conditions");
+      const foodPanel = document.getElementById("panel-food-conditions");
+      if (foodPanel) foodPanel.classList.add("hidden");
+      if (bungPanel) {
+        bungPanel.classList.toggle("hidden");
+      }
+    }
+
+    // 벙 맛집 모임 장소 후보 검색 실행
+    function executeBungSearch() {
+      const getActiveVal = (groupId) => {
+        const el = document.querySelector(`#${groupId} .condition-opt-btn.active`);
+        return el ? el.dataset.val : "";
+      };
+
+      const people = getActiveVal("opts-bung-people") || "모임";
+      const budget = getActiveVal("opts-bung-budget") || "";
+      const time = getActiveVal("opts-bung-time") || "저녁";
+      const vibe = getActiveVal("opts-bung-vibe") || "대화하기 좋은";
+
+      const terms = [people, budget, vibe, time, "맛집"].filter(Boolean);
+      const keyword = terms.join(" ");
+
+      const queryInput = document.getElementById("search-input");
+      if (queryInput) queryInput.value = keyword;
+
+      const noticeText = `💡 ${people} · ${budget ? budget + ' · ' : ''}${vibe} (${time}) 추천 모임 장소입니다. (방문 전 단체석 및 영업시간을 확인하세요.)`;
+
+      searchPlacesWithHeaderNotice(
+        keyword,
+        "모임 장소 후보",
+        noticeText
+      );
+
+      const bungPanel = document.getElementById("panel-bung-conditions");
+      if (bungPanel) bungPanel.classList.add("hidden");
+    }
+
+    // 점심/저녁 뭐먹지 조건 패널 열기
+    function openFoodPanel(mealType) {
+      currentFoodMeal = mealType;
+      const bungPanel = document.getElementById("panel-bung-conditions");
+      const foodPanel = document.getElementById("panel-food-conditions");
+      const titleEl = document.getElementById("food-panel-title");
+
+      if (bungPanel) bungPanel.classList.add("hidden");
+      if (titleEl) titleEl.textContent = `🍱 오늘 ${mealType} 메뉴 성향 선택`;
+      if (foodPanel) foodPanel.classList.remove("hidden");
+    }
+
+    // 뭐먹지 맞춤 메뉴 장소 검색
+    function executeFoodSearch() {
+      const el = document.querySelector("#opts-food-vibe .condition-opt-btn.active");
+      const vibe = el ? el.dataset.val : "든든하게";
+
+      try {
+        localStorage.setItem("last_food_preference", JSON.stringify({ meal: currentFoodMeal, vibe, timestamp: Date.now() }));
+      } catch {}
+
+      let query = `${currentFoodMeal} ${vibe} 맛집`;
+      if (vibe === "새로운 메뉴") query = `${currentFoodMeal} 이색 맛집`;
+
+      const queryInput = document.getElementById("search-input");
+      if (queryInput) queryInput.value = query;
+
+      searchPlacesWithHeaderNotice(query, `${currentFoodMeal} 메뉴 후보`);
+
+      const foodPanel = document.getElementById("panel-food-conditions");
+      if (foodPanel) foodPanel.classList.add("hidden");
+    }
+
+    // 일상 추천 프리셋 (데이트/헬스장/산책로/카페/맛집/병원약국)
+    function executeRecommendPreset(type) {
+      const bungPanel = document.getElementById("panel-bung-conditions");
+      const foodPanel = document.getElementById("panel-food-conditions");
+      if (bungPanel) bungPanel.classList.add("hidden");
+      if (foodPanel) foodPanel.classList.add("hidden");
+
+      const queryInput = document.getElementById("search-input");
+
+      if (type === "데이트") {
+        if (queryInput) queryInput.value = "데이트 코스 맛집";
+        searchDateCourse();
+      } else if (type === "헬스장") {
+        if (queryInput) queryInput.value = "헬스장";
+        searchPlacesWithHeaderNotice("헬스장", "가까운 헬스장 후보");
+      } else if (type === "산책로") {
+        if (queryInput) queryInput.value = "산책로 공원";
+        searchPlacesWithHeaderNotice("산책로 공원", "주변 산책로 · 공원");
+      } else if (type === "카페") {
+        if (queryInput) queryInput.value = "카페";
+        searchPlacesWithHeaderNotice("카페", "주변 카페");
+      } else if (type === "맛집") {
+        if (queryInput) queryInput.value = "맛집";
+        searchPlacesWithHeaderNotice("맛집", "주변 맛집");
+      } else if (type === "병원약국") {
+        if (queryInput) queryInput.value = "병원 약국";
+        searchPlacesWithHeaderNotice("병원 약국", "주변 병원 · 약국");
+      }
+    }
+
+    // 데이트 코스 2~3단계 (식사 ➔ 카페 ➔ 산책) 다단계 키워드 추천 검색
+    function searchDateCourse() {
+      if (!isKakaoMapReady()) {
+        updateStatusLiveRegion("카카오 지도가 준비되는 중입니다.");
+        return;
+      }
+      clearAllSearchState();
+      const reqId = recommendSearchRequestId;
+
+      const listContainer = document.getElementById("results-list");
+      if (listContainer) {
+        listContainer.innerHTML = '<div class="empty-state">💑 2~3단계 데이트 코스(식사 ➔ 카페 ➔ 산책)를 구성하고 있습니다...</div>';
+      }
+
+      const center = getSelectedLocation();
+      const options = {
+        location: new kakao.maps.LatLng(center.lat, center.lng),
+        radius: 2000
+      };
+
+      const steps = [
+        { stepName: "1단계: 식사", keyword: "분위기 데이트 맛집", emoji: "🍽️" },
+        { stepName: "2단계: 카페", keyword: "분위기 카페", emoji: "☕" },
+        { stepName: "3단계: 산책", keyword: "산책로 공원", emoji: "🌳" }
+      ];
+
+      let stepResults = [];
+      let completedCount = 0;
+
+      steps.forEach((step, idx) => {
+        if (!placeServices) return;
+        placeServices.keywordSearch(step.keyword, (data, status) => {
+          if (reqId !== recommendSearchRequestId) return;
+          completedCount++;
+
+          if (status === kakao.maps.services.Status.OK && data && data.length > 0) {
+            data.slice(0, 2).forEach(item => {
+              stepResults.push({
+                ...item,
+                stepName: step.stepName,
+                stepEmoji: step.emoji,
+                stepIndex: idx + 1
+              });
+            });
+          }
+
+          if (completedCount === steps.length) {
+            if (reqId !== recommendSearchRequestId) return;
+            renderDateCourseResults(stepResults);
+          }
+        }, options);
+      });
+    }
+
+    // 데이트 코스 다단계 결과 카드 및 마커 렌더러
+    function renderDateCourseResults(places) {
+      const listContainer = document.getElementById("results-list");
+      const countBadge = document.getElementById("result-count");
+
+      if (countBadge) countBadge.textContent = places ? places.length : 0;
+      if (!listContainer) return;
+
+      listContainer.innerHTML = "";
+
+      const noticeDiv = document.createElement("div");
+      noticeDiv.className = "benefit-notice-tag";
+      noticeDiv.style.marginBottom = "8px";
+      noticeDiv.textContent = "💡 [1단계: 식사] ➔ [2단계: 카페] ➔ [3단계: 산책] 2~3단계 맞춤 데이트 코스 추천입니다.";
+      listContainer.appendChild(noticeDiv);
+
+      if (!places || places.length === 0) {
+        const emptyDiv = document.createElement("div");
+        emptyDiv.className = "empty-state";
+        emptyDiv.textContent = "🔍 주변 데이트 코스 후보 장소를 찾지 못했습니다. 다른 위치로 시도해 보세요.";
+        listContainer.appendChild(emptyDiv);
+        updateStatusLiveRegion("데이트 코스 검색 결과가 없습니다.");
+        return;
+      }
+
+      updateStatusLiveRegion(`2~3단계 데이트 추천 코스 장소 ${places.length}건을 구성했습니다.`);
+
+      const bounds = new kakao.maps.LatLngBounds();
+
+      places.forEach((place, index) => {
+        const placePos = new kakao.maps.LatLng(place.y, place.x);
+        bounds.extend(placePos);
+
+        const marker = new kakao.maps.Marker({
+          position: placePos,
+          clickable: true,
+          zIndex: 3
+        });
+        marker.setMap(map);
+        searchMarkers.push(marker);
+
+        const card = document.createElement("div");
+        card.className = "result-card";
+        card.id = `result-card-${index}`;
+
+        const stepTag = document.createElement("div");
+        stepTag.style.cssText = "display:inline-block; font-size:11px; font-weight:bold; background:#e0e7ff; color:#3730a3; padding:2px 6px; border-radius:4px; margin-bottom:6px;";
+        stepTag.textContent = `${place.stepEmoji} ${place.stepName}`;
+
+        const titleDiv = document.createElement("div");
+        titleDiv.className = "rc-title";
+        titleDiv.textContent = place.place_name || "장소";
+
+        const categoryDiv = document.createElement("div");
+        categoryDiv.className = "rc-address";
+        categoryDiv.textContent = place.category_name || "카테고리 정보 없음";
+
+        const addressDiv = document.createElement("div");
+        addressDiv.className = "rc-address";
+        addressDiv.textContent = place.road_address_name || place.address_name || "주소 정보 없음";
+
+        card.appendChild(stepTag);
+        card.appendChild(titleDiv);
+        card.appendChild(categoryDiv);
+        card.appendChild(addressDiv);
+
+        const selectAction = () => {
+          document.querySelectorAll('.result-card').forEach(c => c.classList.remove('active'));
+          card.classList.add('active');
+          card.scrollIntoView({ behavior: 'smooth', block: 'nearest' });
+          openOverlay(placePos, `[${place.stepName}] ${place.place_name}`, place.road_address_name || place.address_name || '', false, place.place_url);
+          map.panTo(placePos);
+        };
+
+        kakao.maps.event.addListener(marker, 'click', selectAction);
+        card.onclick = selectAction;
+
+        listContainer.appendChild(card);
+      });
+
+      map.setBounds(bounds);
+    }
+
+    // 커스텀 헤더 및 안내 태그가 포함된 키워드 장소 검색 어댑터 (세대 번호 요청 검사 포함)
+    function searchPlacesWithHeaderNotice(keyword, customTitle = null, customNotice = null) {
+      if (!isKakaoMapReady()) {
+        updateStatusLiveRegion("카카오 지도가 준비되는 중입니다.");
+        return;
+      }
+      clearAllSearchState();
+      const reqId = recommendSearchRequestId;
+
+      const center = getSelectedLocation();
+      const options = {
+        location: new kakao.maps.LatLng(center.lat, center.lng),
+        radius: 2000
+      };
+
+      if (!placeServices) return;
+      placeServices.keywordSearch(keyword, (data, status) => {
+        if (reqId !== recommendSearchRequestId) return;
+        if (status === kakao.maps.services.Status.OK) {
+          renderPlacesWithCustomHeader(data, customTitle, customNotice);
+        } else if (status === kakao.maps.services.Status.ZERO_RESULT) {
+          renderPlacesWithCustomHeader([], customTitle, customNotice);
+        } else {
+          updateStatusLiveRegion("검색 중 오류가 발생했습니다.");
+        }
+      }, options);
+    }
+
+    // customTitle과 customNotice를 안전하게 지원하는 장소 렌더러
+    function renderPlacesWithCustomHeader(places, customTitle, customNotice) {
+      const listContainer = document.getElementById("results-list");
+      const countBadge = document.getElementById("result-count");
+
+      if (countBadge) countBadge.textContent = places ? places.length : 0;
+      if (!listContainer) return;
+
+      listContainer.innerHTML = "";
+
+      if (customNotice) {
+        const noticeDiv = document.createElement("div");
+        noticeDiv.className = "benefit-notice-tag";
+        noticeDiv.style.marginBottom = "8px";
+        noticeDiv.textContent = customNotice;
+        listContainer.appendChild(noticeDiv);
+      }
+
+      if (!places || places.length === 0) {
+        const emptyDiv = document.createElement("div");
+        emptyDiv.className = "empty-state";
+        emptyDiv.textContent = customTitle
+          ? `🔍 ${customTitle} 조건에 부합하는 장소를 찾지 못했습니다. 다른 위치나 키워드로 시도해 보세요.`
+          : "🔍 검색 결과가 없습니다.";
+        listContainer.appendChild(emptyDiv);
+        updateStatusLiveRegion("검색 결과가 없습니다.");
+        return;
+      }
+
+      const titleText = customTitle || "검색 결과";
+      updateStatusLiveRegion(`${titleText} ${places.length}건을 찾았습니다.`);
+
+      const bounds = new kakao.maps.LatLngBounds();
+
+      places.forEach((place, index) => {
+        const placePos = new kakao.maps.LatLng(place.y, place.x);
+        bounds.extend(placePos);
+
+        const marker = new kakao.maps.Marker({
+          position: placePos,
+          clickable: true,
+          zIndex: 3
+        });
+        marker.setMap(map);
+        searchMarkers.push(marker);
+
+        const card = document.createElement("div");
+        card.className = "result-card";
+        card.id = `result-card-${index}`;
+
+        const titleDiv = document.createElement("div");
+        titleDiv.className = "rc-title";
+        titleDiv.textContent = place.place_name || "장소";
+
+        const categoryDiv = document.createElement("div");
+        categoryDiv.className = "rc-address";
+        categoryDiv.textContent = place.category_name || "카테고리 정보 없음";
+
+        const addressDiv = document.createElement("div");
+        addressDiv.className = "rc-address";
+        addressDiv.textContent = place.road_address_name || place.address_name || "주소 정보 없음";
+
+        card.appendChild(titleDiv);
+        card.appendChild(categoryDiv);
+        card.appendChild(addressDiv);
+
+        const selectAction = () => {
+          document.querySelectorAll('.result-card').forEach(c => c.classList.remove('active'));
+          card.classList.add('active');
+          card.scrollIntoView({ behavior: 'smooth', block: 'nearest' });
+          openOverlay(placePos, place.place_name, place.road_address_name || place.address_name || '', false, place.place_url);
+          map.panTo(placePos);
+        };
+
+        kakao.maps.event.addListener(marker, 'click', selectAction);
+        card.onclick = selectAction;
+
+        listContainer.appendChild(card);
+      });
+
+      map.setBounds(bounds);
+    }
+
+    // ==========================================
+    // 혜택 탐색 & 데이터 연결 상태 병렬 프론트엔드 모듈
+    // ==========================================
+
+    let currentViewMode = "nearby"; // "nearby" | "benefits"
+    let benefitSearchRequestId = 0;
+    let benefitAbortController = null;
+    let selectedQuickCategory = "";
+    let isDataSourcesOpen = false;
+
+    // 모드 전환 탭 토글 (📍 내 주변 찾기 ↔ 🎁 정부 혜택 찾기)
+    function switchViewMode(mode) {
+      currentViewMode = mode;
+      const tabNearby = document.getElementById("tab-nearby");
+      const tabBenefits = document.getElementById("tab-benefits");
+      const panelNearby = document.getElementById("panel-nearby");
+      const panelBenefits = document.getElementById("panel-benefits");
+
+      if (!tabNearby || !tabBenefits || !panelNearby || !panelBenefits) return;
+
+      if (mode === "benefits") {
+        tabNearby.classList.remove("active");
+        tabNearby.setAttribute("aria-selected", "false");
+        tabBenefits.classList.add("active");
+        tabBenefits.setAttribute("aria-selected", "true");
+        panelNearby.classList.add("hidden");
+        panelBenefits.classList.remove("hidden");
+      } else {
+        tabBenefits.classList.remove("active");
+        tabBenefits.setAttribute("aria-selected", "false");
+        tabNearby.classList.add("active");
+        tabNearby.setAttribute("aria-selected", "true");
+        panelBenefits.classList.add("hidden");
+        panelNearby.classList.remove("hidden");
+      }
+    }
+
+    // 상황별 빠른 탐색 칩 클릭
+    function selectQuickBenefitCategory(category) {
+      selectedQuickCategory = category;
+      document.querySelectorAll(".quick-chip-btn").forEach(btn => {
+        if (btn.dataset.category === category) {
+          btn.classList.add("active");
+          btn.setAttribute("aria-pressed", "true");
+        } else {
+          btn.classList.remove("active");
+          btn.setAttribute("aria-pressed", "false");
+        }
+      });
+
+      const input = document.getElementById("benefit-search-input");
+      if (input) input.value = category;
+      fetchBenefits({ query: category, userType: category });
+    }
+
+    // 혜택 검색어 입력 Enter 키 핸들러
+    function handleBenefitSearchKeyPress(event) {
+      if (event.key === "Enter") {
+        executeBenefitSearch();
+      }
+    }
+
+    // 혜택 키워드 검색 실행
+    function executeBenefitSearch() {
+      const input = document.getElementById("benefit-search-input");
+      const query = input ? input.value.trim() : "";
+      fetchBenefits({ query });
+    }
+
+    // 혜택 REST API 어댑터 (/api/benefits)
+    async function fetchBenefits(params = {}) {
+      const listContainer = document.getElementById("benefit-results-list");
+      const countBadge = document.getElementById("benefit-result-count");
+      const liveRegion = document.getElementById("benefit-status-live-region");
+
+      benefitSearchRequestId += 1;
+      const requestId = benefitSearchRequestId;
+
+      if (benefitAbortController) {
+        benefitAbortController.abort();
+      }
+      benefitAbortController = new AbortController();
+
+      if (listContainer) {
+        listContainer.innerHTML = "";
+        const loadingDiv = document.createElement("div");
+        loadingDiv.className = "empty-state";
+        loadingDiv.textContent = "🎁 공공서비스 혜택을 조회하는 중입니다…";
+        listContainer.appendChild(loadingDiv);
+      }
+      if (liveRegion) liveRegion.textContent = "공공서비스 혜택 정보를 불러오는 중입니다.";
+
+      try {
+        const url = new URL("/api/benefits", window.location.origin);
+        url.searchParams.set("limit", "10");
+        if (params.query) url.searchParams.set("q", params.query);
+        if (params.userType) url.searchParams.set("userType", params.userType);
+
+        const response = await fetch(url.toString(), {
+          signal: benefitAbortController.signal,
+          headers: { "Accept": "application/json" }
+        });
+
+        if (requestId !== benefitSearchRequestId) return;
+
+        if (response.status === 404) {
+          renderBenefitError("백엔드 혜택 기능을 준비하고 있습니다.");
+          return;
+        }
+        if (response.status === 503) {
+          renderBenefitError("혜택 API 인증키 설정을 확인해 주세요.");
+          return;
+        }
+        if (!response.ok) {
+          let errMessage = "혜택 정보를 불러오지 못했습니다. 잠시 후 다시 시도해 주세요.";
+          try {
+            const errData = await response.json();
+            if (errData?.error?.message && typeof errData.error.message === "string") {
+              errMessage = errData.error.message;
+            }
+          } catch {}
+          renderBenefitError(errMessage);
+          return;
+        }
+
+        const data = await response.json();
+        const items = Array.isArray(data?.items) ? data.items : [];
+        renderBenefitResults(items, data?.totalCount || items.length, params.query || selectedQuickCategory);
+      } catch (error) {
+        if (error.name === "AbortError") return;
+        if (requestId !== benefitSearchRequestId) return;
+        renderBenefitError("혜택 정보를 불러오지 못했습니다. 잠시 후 다시 시도해 주세요.");
+      }
+    }
+
+    // 혜택 오류/빈 결과 표출
+    function renderBenefitError(messageText) {
+      const listContainer = document.getElementById("benefit-results-list");
+      const countBadge = document.getElementById("benefit-result-count");
+      const liveRegion = document.getElementById("benefit-status-live-region");
+
+      if (countBadge) countBadge.textContent = "0";
+      if (listContainer) {
+        listContainer.innerHTML = "";
+        const errDiv = document.createElement("div");
+        errDiv.className = "empty-state";
+        errDiv.textContent = messageText;
+        listContainer.appendChild(errDiv);
+      }
+      if (liveRegion) liveRegion.textContent = messageText;
+    }
+
+    // 혜택 목록 안전 DOM 렌더러 (XSS 100% 차단 textContent 및 createElement 전용)
+    function renderBenefitResults(items, totalCount, matchedKeyword = "") {
+      const listContainer = document.getElementById("benefit-results-list");
+      const countBadge = document.getElementById("benefit-result-count");
+      const liveRegion = document.getElementById("benefit-status-live-region");
+
+      if (countBadge) countBadge.textContent = totalCount || items.length;
+      if (!listContainer) return;
+
+      listContainer.innerHTML = "";
+
+      if (!items || items.length === 0) {
+        const emptyDiv = document.createElement("div");
+        emptyDiv.className = "empty-state";
+        emptyDiv.textContent = "조건에 부합하는 공공 혜택이 없습니다. 다른 키워드나 빠른 탐색 버튼을 선택해 보세요.";
+        listContainer.appendChild(emptyDiv);
+        if (liveRegion) liveRegion.textContent = "검색 조건에 맞는 공공 혜택이 없습니다.";
+        return;
+      }
+
+      if (liveRegion) liveRegion.textContent = `총 ${items.length}개의 맞춤 공공 혜택을 찾았습니다.`;
+
+      items.forEach((item, index) => {
+        const card = document.createElement("div");
+        card.className = "benefit-card";
+
+        // 배지 (지원유형 / 소관기관유형)
+        if (item.supportType || item.agencyType) {
+          const badge = document.createElement("span");
+          badge.className = "benefit-badge";
+          badge.textContent = [item.supportType, item.agencyType].filter(Boolean).join(" · ");
+          card.appendChild(badge);
+        }
+
+        // 서비스명 (제목)
+        const title = document.createElement("div");
+        title.className = "benefit-title";
+        title.textContent = item.name || "공공서비스 혜택";
+        card.appendChild(title);
+
+        // 요약
+        if (item.summary) {
+          const summary = document.createElement("div");
+          summary.className = "benefit-summary";
+          summary.textContent = item.summary;
+          card.appendChild(summary);
+        }
+
+        // 안내 태그
+        const noticeTag = document.createElement("div");
+        noticeTag.className = "benefit-notice-tag";
+        noticeTag.textContent = "💡 조건 일치 가능성이 있는 혜택입니다. 상세 지원 조건을 확인해 주세요.";
+        card.appendChild(noticeTag);
+
+        // 주요 필드 그룹 (지원대상, 지원내용, 신청기한, 소관기관)
+        const fieldGroup = document.createElement("div");
+        fieldGroup.className = "benefit-field-group";
+
+        const appendFieldRow = (labelStr, valStr) => {
+          if (!valStr) return;
+          const row = document.createElement("div");
+          row.className = "benefit-field-row";
+
+          const label = document.createElement("span");
+          label.className = "benefit-label";
+          label.textContent = labelStr;
+
+          const val = document.createElement("span");
+          val.className = "benefit-val";
+          val.textContent = valStr;
+
+          row.appendChild(label);
+          row.appendChild(val);
+          fieldGroup.appendChild(row);
+        };
+
+        appendFieldRow("지원대상", item.target);
+        appendFieldRow("지원내용", item.support);
+        appendFieldRow("신청기한", item.applicationDeadline);
+        appendFieldRow("소관기관", item.agency);
+
+        if (matchedKeyword) {
+          appendFieldRow("왜 보여줬나요?", `'${matchedKeyword}' 조건과 일치하여 추천되었습니다.`);
+        }
+
+        card.appendChild(fieldGroup);
+
+        // 상세 정보 펼침/접기 (Accordion)
+        const accordionBtn = document.createElement("button");
+        accordionBtn.type = "button";
+        accordionBtn.className = "benefit-accordion-btn";
+        accordionBtn.textContent = "▼ 상세 정보 및 신청방법 더보기";
+
+        const accordionContent = document.createElement("div");
+        accordionContent.className = "benefit-accordion-content hidden";
+
+        const appendAccordionRow = (labelStr, valStr) => {
+          if (!valStr) return;
+          const row = document.createElement("div");
+          row.className = "benefit-field-row";
+
+          const label = document.createElement("span");
+          label.className = "benefit-label";
+          label.textContent = labelStr;
+
+          const val = document.createElement("span");
+          val.className = "benefit-val";
+          val.textContent = valStr;
+
+          row.appendChild(label);
+          row.appendChild(val);
+          accordionContent.appendChild(row);
+        };
+
+        appendAccordionRow("선정기준", item.selectionCriteria);
+        appendAccordionRow("신청방법", item.applicationMethod);
+        appendAccordionRow("담당부서", item.department);
+        appendAccordionRow("접수기관", item.receptionAgency);
+        appendAccordionRow("전화문의", item.phone);
+
+        // 공식 상세 URL 링크 (http:// 또는 https:// 안전 검증)
+        if (item.detailUrl && typeof item.detailUrl === "string") {
+          const trimmedUrl = item.detailUrl.trim();
+          if (/^https?:\/\//i.test(trimmedUrl)) {
+            const linkRow = document.createElement("div");
+            linkRow.className = "benefit-field-row";
+            linkRow.style.marginTop = "4px";
+
+            const linkAnchor = document.createElement("a");
+            linkAnchor.href = trimmedUrl;
+            linkAnchor.target = "_blank";
+            linkAnchor.rel = "noopener noreferrer";
+            linkAnchor.style.color = "var(--primary)";
+            linkAnchor.style.fontWeight = "700";
+            linkAnchor.style.fontSize = "0.8rem";
+            linkAnchor.style.textDecoration = "underline";
+            linkAnchor.textContent = "🔗 정부24 공식 상세페이지 바로가기";
+
+            linkRow.appendChild(linkAnchor);
+            accordionContent.appendChild(linkRow);
+          }
+        }
+
+        accordionBtn.onclick = () => {
+          const isHidden = accordionContent.classList.contains("hidden");
+          if (isHidden) {
+            accordionContent.classList.remove("hidden");
+            accordionBtn.textContent = "▲ 상세 정보 접기";
+          } else {
+            accordionContent.classList.add("hidden");
+            accordionBtn.textContent = "▼ 상세 정보 및 신청방법 더보기";
+          }
+        };
+
+        card.appendChild(accordionBtn);
+        card.appendChild(accordionContent);
+        listContainer.appendChild(card);
+      });
+    }
+
+    // ==========================================
+    // 공공데이터 연결 상태 패널 (/api/data-sources)
+    // ==========================================
+
+    function toggleDataSourcesPanel() {
+      const body = document.getElementById("data-sources-body");
+      const toggleBtn = document.querySelector(".data-sources-toggle-btn");
+      const toggleIcon = document.getElementById("ds-toggle-icon");
+
+      if (!body) return;
+      isDataSourcesOpen = !isDataSourcesOpen;
+
+      if (isDataSourcesOpen) {
+        body.classList.remove("hidden");
+        if (toggleBtn) toggleBtn.setAttribute("aria-expanded", "true");
+        if (toggleIcon) toggleIcon.textContent = "▲";
+        fetchDataSources();
+      } else {
+        body.classList.add("hidden");
+        if (toggleBtn) toggleBtn.setAttribute("aria-expanded", "false");
+        if (toggleIcon) toggleIcon.textContent = "▼";
+      }
+    }
+
+    async function fetchDataSources() {
+      const body = document.getElementById("data-sources-body");
+      if (!body) return;
+
+      try {
+        const response = await fetch("/api/data-sources", {
+          headers: { "Accept": "application/json" }
+        });
+
+        if (response.status === 404) {
+          renderDataSourcesError("백엔드 데이터 소스 상태 기능을 준비하고 있습니다.");
+          return;
+        }
+
+        if (!response.ok) {
+          renderDataSourcesError("데이터 소스 연결 상태를 불러오지 못했습니다.");
+          return;
+        }
+
+        const data = await response.json();
+        const items = Array.isArray(data?.items) ? data.items : [];
+        renderDataSources(items);
+      } catch (error) {
+        renderDataSourcesError("데이터 소스 연결 상태를 불러오지 못했습니다.");
+      }
+    }
+
+    function renderDataSourcesError(messageText) {
+      const body = document.getElementById("data-sources-body");
+      if (!body) return;
+      body.innerHTML = "";
+      const errDiv = document.createElement("div");
+      errDiv.className = "empty-state";
+      errDiv.style.padding = "8px";
+      errDiv.style.fontSize = "0.75rem";
+      errDiv.textContent = messageText;
+      body.appendChild(errDiv);
+    }
+
+    function renderDataSources(items) {
+      const body = document.getElementById("data-sources-body");
+      if (!body) return;
+
+      body.innerHTML = "";
+
+      if (!items || items.length === 0) {
+        renderDataSourcesError("등록된 데이터 소스가 없습니다.");
+        return;
+      }
+
+      items.forEach(item => {
+        const dsCard = document.createElement("div");
+        dsCard.className = "ds-card";
+
+        // 쉬운 한국어 라벨 변환
+        const configuredLabel = item.configured === true ? "키 설정됨" : "키 미설정";
+        let implLabel = "사용 가능";
+        if (item.implementationStatus === "planned") implLabel = "연결 준비 중";
+
+        let verifLabel = "아직 확인 전";
+        let verifClass = "ds-status-pending";
+        if (item.verificationStatus === "success") {
+          verifLabel = "연결 확인 완료";
+          verifClass = "ds-status-success";
+        } else if (item.verificationStatus === "failed") {
+          verifLabel = "연결 확인 실패";
+          verifClass = "ds-status-failed";
+        }
+
+        const labelRow = document.createElement("div");
+        labelRow.className = "ds-label";
+
+        const titleSpan = document.createElement("span");
+        titleSpan.textContent = item.label || item.id || "공공데이터";
+
+        const badgeSpan = document.createElement("span");
+        badgeSpan.className = `ds-status-badge ${verifClass}`;
+        badgeSpan.textContent = `${configuredLabel} · ${implLabel} (${verifLabel})`;
+
+        labelRow.appendChild(titleSpan);
+        labelRow.appendChild(badgeSpan);
+        dsCard.appendChild(labelRow);
+
+        if (item.message) {
+          const msgDiv = document.createElement("div");
+          msgDiv.style.color = "var(--text-sub)";
+          msgDiv.style.fontSize = "0.725rem";
+          msgDiv.textContent = item.message;
+          dsCard.appendChild(msgDiv);
+        }
+
+        body.appendChild(dsCard);
+      });
     }
 
   </script>
