@@ -409,6 +409,72 @@
       color: var(--primary);
     }
 
+    /* 공공 카페 반경 선택 칩 스타일 */
+    .radius-chip-container {
+      display: flex;
+      gap: 6px;
+      margin-top: 8px;
+      margin-bottom: 10px;
+    }
+
+    .radius-chip {
+      flex: 1;
+      padding: 7px 10px;
+      font-size: 0.8rem;
+      font-weight: 700;
+      border-radius: var(--radius-sm);
+      border: 1px solid var(--border-color);
+      background: var(--chip-bg);
+      color: var(--chip-text);
+      cursor: pointer;
+      transition: all 0.2s cubic-bezier(0.4, 0, 0.2, 1);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      gap: 4px;
+    }
+
+    .radius-chip:hover {
+      border-color: var(--primary);
+      color: var(--primary);
+    }
+
+    .radius-chip.active {
+      background: var(--primary);
+      color: #ffffff;
+      border-color: var(--primary);
+      box-shadow: var(--shadow-sm);
+    }
+
+    .cafe-mode-badge {
+      font-size: 0.7rem;
+      padding: 2px 6px;
+      border-radius: 999px;
+      background: var(--primary-light);
+      color: var(--primary);
+      font-weight: 700;
+      border: 1px solid var(--primary);
+    }
+
+    /* Screen reader accessible hidden element */
+    .sr-only {
+      position: absolute;
+      width: 1px;
+      height: 1px;
+      padding: 0;
+      margin: -1px;
+      overflow: hidden;
+      clip: rect(0, 0, 0, 0);
+      white-space: nowrap;
+      border: 0;
+    }
+
+    /* 초장문 텍스트 레이아웃 붕괴 방어막 (Vaccine V5) */
+    .rc-title, .rc-address, .co-title, .co-desc {
+      word-break: break-word;
+      overflow-wrap: anywhere;
+    }
+
     .results-list {
       flex: 1;
       overflow-y: auto;
@@ -661,15 +727,33 @@
         </div>
       </section>
 
-      <!-- 2단계: 실시간 주변 텍스트 검색 & 추천 칩 -->
+      <!-- 2단계: 실시간 주변 텍스트 검색 & 내 주변 카페 찾기 반경 칩 -->
       <section class="section">
         <div class="section-title">
-          <span>2. 주변 실시간 검색 (반경 2km)</span>
+          <span>2. 내 주변 카페 찾기 & 실시간 검색</span>
+          <span class="cafe-mode-badge" id="current-radius-badge">반경 1km</span>
         </div>
-        
+
+        <!-- 공공 카페 탐색용 반경 선택 칩 (F1: 1km / 3km / 5km 선택, 기본 1km) -->
+        <div class="select-label" style="margin-bottom: 6px;">공공 카페 탐색 반경 지정</div>
+        <div class="radius-chip-container" role="radiogroup" aria-label="카페 탐색 반경 선택">
+          <button type="button" class="radius-chip active" data-radius="1" aria-pressed="true" onclick="selectCafeRadius(1)">
+            <span>🎯 1km</span>
+          </button>
+          <button type="button" class="radius-chip" data-radius="3" aria-pressed="false" onclick="selectCafeRadius(3)">
+            <span>📍 3km</span>
+          </button>
+          <button type="button" class="radius-chip" data-radius="5" aria-pressed="false" onclick="selectCafeRadius(5)">
+            <span>🗺️ 5km</span>
+          </button>
+        </div>
+
+        <!-- 접근성 상태 안내 (aria-live="polite") -->
+        <div id="status-live-region" class="sr-only" aria-live="polite" aria-atomic="true"></div>
+
         <!-- 자유 텍스트 검색 바 -->
         <div class="search-bar">
-          <input type="text" id="search-input" aria-label="검색어 입력" class="shadcn-input" placeholder="원하는 장소나 키워드 입력..." onkeypress="handleSearchKeyPress(event)" />
+          <input type="text" id="search-input" aria-label="검색어 입력" class="shadcn-input" placeholder="장소명, 카페, 키워드 입력..." onkeypress="handleSearchKeyPress(event)" />
           <button class="shadcn-btn" onclick="executeTextSearch()">
             <span>검색</span>
             <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><circle cx="11" cy="11" r="8"></circle><line x1="21" y1="21" x2="16.65" y2="16.65"></line></svg>
@@ -691,7 +775,7 @@
           </div>
           <button class="btn-clear-search hidden" id="btn-clear" onclick="clearSearch()">검색 초기화</button>
         </div>
-        
+
         <div class="results-list" id="results-list">
           <div class="empty-state">장소명을 직접 검색하거나 추천 칩을 눌러 주변을 조회해 보세요!</div>
         </div>
@@ -707,7 +791,7 @@
 
   <!-- 카카오 지도 SDK (서비스 라이브러리 추가) -->
   <script src="https://dapi.kakao.com/v2/maps/sdk.js?appkey=012385551d235007080d46ee9ad59cb0&libraries=services&autoload=false"></script>
-  
+
   <script>
     // 테마 토글 및 로컬 스토리지 연동
     function toggleTheme() {
@@ -716,13 +800,13 @@
       const newTheme = currentTheme === "dark" ? "light" : "dark";
       html.dataset.theme = newTheme;
       localStorage.setItem("theme", newTheme);
-      
+
       const themeIcon = document.querySelector(".theme-icon");
       if (themeIcon) {
         themeIcon.textContent = newTheme === "dark" ? "☀️" : "🌙";
       }
     }
-    
+
     (function() {
       const savedTheme = localStorage.getItem("theme") || "light";
       if (savedTheme === "dark") {
@@ -874,6 +958,13 @@
     let activeSearchKeyword = "";
     let searchRequestId = 0; // 늦게 도착한 이전 검색 응답을 무시하기 위한 세대 번호
 
+    // 공공 카페 & 반경 시각화 전용 변수 (F1~F4)
+    let selectedRadiusKm = 1;     // F1: 1km, 3km, 5km 반경 (기본 1km)
+    let cafeCircle = null;         // F3: 지도상 반경 원 인스턴스 (kakao.maps.Circle)
+    let cafeMarkers = [];        // F2: 공공 카페 마커 배열
+    let cafeSearchRequestId = 0; // F4: 카페 API 세대 번호
+    let cafeAbortController = null; // F4: fetch 취소용 AbortController
+
     // 지도 리소스 관리용 변수
     let centerMarker = null; // 타겟팅된 중심점의 마커
     let searchMarkers = [];  // 실시간 조회 결과 장소들의 마커 리스트
@@ -904,7 +995,7 @@
       // 렌더 구성 요소 빌드
       updatePlaceOptions();
       renderRecommendChips();
-      
+
       // 최초 구동 시 브라우저 Geolocation 기반 내 위치 조회 자동 시도
       tryAutoDetectLocation();
     }
@@ -917,7 +1008,7 @@
             // 위치 수신 성공 시 권역 드롭다운을 '내 위치'로 자동 교체
             const zoneSelect = document.getElementById("select-zone");
             zoneSelect.value = "mylocation";
-            
+
             // 상세 지역은 내 위치 기준이므로 숨김 처리
             document.getElementById("group-detail-place").style.display = "none";
 
@@ -931,7 +1022,7 @@
 
             focusOnPlace();
 
-            document.getElementById("results-list").innerHTML = 
+            document.getElementById("results-list").innerHTML =
               '<div class="empty-state">🎉 내 현재 위치를 감지했습니다!<br>검색창에 장소명을 치거나 하단 칩을 눌러 주변을 조회하세요.</div>';
           },
           (error) => {
@@ -951,7 +1042,7 @@
       const zoneSelect = document.getElementById("select-zone");
       const zoneKey = zoneSelect.value;
       const inputVal = document.getElementById("search-input").value.trim();
-      
+
       if (inputVal) {
         clearSearchMarkers();
         activeSearchKeyword = inputVal;
@@ -967,7 +1058,7 @@
         // 인천 / 서울 선택 시 상세지점 셀렉트 활성화 및 세부 옵션 렌더링
         document.getElementById("group-detail-place").style.display = "flex";
         updatePlaceOptions();
-        
+
         // 해당 권역의 첫 번째 지점을 기본값으로 선정
         selectedPlace = ZONES_DATA[zoneKey][0];
         focusOnPlace();
@@ -1022,7 +1113,7 @@
     function getMyLocation() {
       const listContainer = document.getElementById("results-list");
       const inputVal = document.getElementById("search-input").value.trim();
-      
+
       listContainer.innerHTML = '<div class="empty-state">📡 현재 위치 정보(GPS)를 조회하고 있습니다...</div>';
 
       if (!navigator.geolocation) {
@@ -1089,7 +1180,7 @@
         btn.onclick = () => {
           document.querySelectorAll('.chip').forEach(c => c.classList.remove('active'));
           btn.classList.add('active');
-          
+
           // 검색창에 추천 키워드명을 채워주고 즉시 검색 수행
           document.getElementById("search-input").value = chip.key;
           executeTextSearch();
@@ -1124,14 +1215,19 @@
         }
       });
 
-      searchPlaces();
+      // 백엔드 API 연동 시도 (미완료 시 기존 카카오 키워드 검색 Fallback)
+      fetchCafes({
+        lat: selectedPlace.lat,
+        lng: selectedPlace.lng,
+        radiusKm: selectedRadiusKm,
+        query: inputVal
+      });
     }
 
-    // 현재 지정된 지점으로 맵 카메라 이동 및 마커 반영
-    function focusOnPlace() {
-      const pos = new kakao.maps.LatLng(selectedPlace.lat, selectedPlace.lng);
-      map.panTo(pos);
-      updateCenterMarker();
+    // 공공 카페 전용 마커 정리
+    function clearCafeMarkers() {
+      cafeMarkers.forEach(m => m.setMap(null));
+      cafeMarkers = [];
     }
 
     // 지도 상에 위치한 중심 마커 갱신
@@ -1267,26 +1363,43 @@
       map.setBounds(bounds);
     }
 
-    // 커스텀 오버레이 윈도우 생성
+    // 커스텀 오버레이 윈도우 생성 (Vaccine V3: XSS 방어를 위한 DOM API & textContent 전용 적용)
     function openOverlay(position, title, desc, isCenter = false, url = null) {
       closeAllOverlays();
 
       const content = document.createElement('div');
       content.className = 'custom-overlay';
-      
+
+      const titleDiv = document.createElement('div');
+      titleDiv.className = 'co-title';
+      titleDiv.textContent = title;
+
+      const descDiv = document.createElement('div');
+      descDiv.className = 'co-desc';
+      descDiv.textContent = desc;
+
       if (isCenter) {
         content.style.borderColor = 'var(--primary)';
-        content.innerHTML = `
-          <div class="co-title" style="color:var(--primary); font-size: 0.95rem;">${title}</div>
-          <div class="co-desc">${desc}</div>
-        `;
+        titleDiv.style.color = 'var(--primary)';
+        titleDiv.style.fontSize = '0.95rem';
       } else {
         content.style.borderColor = '#64748b';
-        content.innerHTML = `
-          <div class="co-title">${title}</div>
-          <div class="co-desc">${desc}</div>
-          ${url ? `<a href="${url}" target="_blank" style="font-size: 10px; color: var(--primary); text-decoration: underline; margin-top: 4px; font-weight: 700;">상세 정보 페이지 보기</a>` : ''}
-        `;
+      }
+
+      content.appendChild(titleDiv);
+      content.appendChild(descDiv);
+
+      if (url) {
+        const link = document.createElement('a');
+        link.href = url;
+        link.target = '_blank';
+        link.style.fontSize = '10px';
+        link.style.color = 'var(--primary)';
+        link.style.textDecoration = 'underline';
+        link.style.marginTop = '4px';
+        link.style.fontWeight = '700';
+        link.textContent = '상세 정보 페이지 보기';
+        content.appendChild(link);
       }
 
       const overlay = new kakao.maps.CustomOverlay({
@@ -1331,7 +1444,7 @@
       activeSearchKeyword = "";
       document.getElementById("search-input").value = "";
       document.querySelectorAll('.chip').forEach(c => c.classList.remove('active'));
-      
+
       const listContainer = document.getElementById("results-list");
       listContainer.innerHTML = '<div class="empty-state">장소명을 직접 검색하거나 추천 칩을 눌러 주변을 조회해 보세요!</div>';
       document.getElementById("result-count").textContent = "0";
@@ -1342,8 +1455,284 @@
         map.setLevel(4);
         map.panTo(pos);
         updateCenterMarker();
+        updateCafeRadiusCircle(selectedPlace.lat, selectedPlace.lng, selectedRadiusKm);
       }
     }
+
+    /* ==========================================================================
+       9주차 프론트엔드 Handoff REST API 연동 & 공공 카페 시각화 기능 (F1 ~ F4)
+       ========================================================================== */
+
+    // 접근성 라이브 리전 안내 메시지 갱신 (aria-live="polite")
+    function updateStatusLiveRegion(text) {
+      const liveRegion = document.getElementById("status-live-region");
+      if (liveRegion) {
+        liveRegion.textContent = text;
+      }
+    }
+
+    // F1 & F3: 공공 카페 탐색 반경 칩 선택 (1km / 3km / 5km)
+    function selectCafeRadius(radiusKm) {
+      selectedRadiusKm = Number(radiusKm);
+
+      // 반경 칩 버튼 aria-pressed 및 active 상태 동기화
+      document.querySelectorAll('.radius-chip').forEach(btn => {
+        const r = Number(btn.getAttribute('data-radius'));
+        if (r === selectedRadiusKm) {
+          btn.classList.add('active');
+          btn.setAttribute('aria-pressed', 'true');
+        } else {
+          btn.classList.remove('active');
+          btn.setAttribute('aria-pressed', 'false');
+        }
+      });
+
+      // 반경 뱃지 표기 업데이트
+      const badge = document.getElementById('current-radius-badge');
+      if (badge) {
+        badge.textContent = `반경 ${selectedRadiusKm}km`;
+      }
+
+      updateStatusLiveRegion(`카페 탐색 반경이 ${selectedRadiusKm}km로 변경되었습니다.`);
+
+      // F3: 지도 중심 반경 원(Circle) 시각화 갱신
+      if (selectedPlace && map) {
+        updateCafeRadiusCircle(selectedPlace.lat, selectedPlace.lng, selectedRadiusKm);
+      }
+
+      // 지정된 지점 중심 /api/cafes 요청
+      const inputVal = document.getElementById("search-input").value.trim();
+      fetchCafes({
+        lat: selectedPlace.lat,
+        lng: selectedPlace.lng,
+        radiusKm: selectedRadiusKm,
+        query: inputVal || activeSearchKeyword
+      });
+    }
+
+    // F3: 지도 상 반경 원(kakao.maps.Circle) 드로잉 및 갱신
+    function updateCafeRadiusCircle(lat, lng, radiusKm) {
+      if (cafeCircle) {
+        cafeCircle.setMap(null);
+        cafeCircle = null;
+      }
+
+      if (!map || !lat || !lng) return;
+
+      const centerPos = new kakao.maps.LatLng(lat, lng);
+      cafeCircle = new kakao.maps.Circle({
+        center: centerPos,
+        radius: radiusKm * 1000,
+        strokeWeight: 2,
+        strokeColor: '#4f46e5',
+        strokeOpacity: 0.8,
+        strokeStyle: 'dashed',
+        fillColor: '#4f46e5',
+        fillOpacity: 0.12
+      });
+
+      cafeCircle.setMap(map);
+    }
+
+    function isKakaoMapReady() {
+      return typeof kakao !== "undefined" && Boolean(kakao.maps) && typeof map !== "undefined" && Boolean(map);
+    }
+
+    function clearCafePresentation() {
+      clearCafeMarkers();
+      clearSearchMarkers();
+
+      const countBadge = document.getElementById("result-count");
+      if (countBadge) countBadge.textContent = "0";
+    }
+
+    function showCafeMessage(message, liveMessage) {
+      clearCafePresentation();
+
+      const listContainer = document.getElementById("results-list");
+      const state = document.createElement("div");
+      state.className = "empty-state";
+      state.textContent = message;
+      listContainer.replaceChildren(state);
+      updateStatusLiveRegion(liveMessage || message);
+    }
+    // F4: 백엔드 REST API 호환 공공 카페 연동 어댑터 (fetchCafes)
+    async function fetchCafes({ lat, lng, radiusKm, query }) {
+      if (cafeAbortController) {
+        cafeAbortController.abort();
+      }
+      cafeAbortController = new AbortController();
+      const signal = cafeAbortController.signal;
+
+      const requestId = ++cafeSearchRequestId;
+      const listContainer = document.getElementById("results-list");
+
+      updateStatusLiveRegion("공공 카페 데이터를 불러오는 중입니다...");
+      listContainer.innerHTML = '<div class="empty-state">☕ 주변 공공 카페 데이터를 불러오고 있습니다...</div>';
+      document.getElementById("btn-clear").classList.remove("hidden");
+
+      try {
+        const queryParam = query ? `&q=${encodeURIComponent(query)}` : '';
+        const url = `/api/cafes?lat=${lat}&lng=${lng}&radiusKm=${radiusKm}&limit=50${queryParam}`;
+
+        const response = await fetch(url, { signal });
+
+        if (requestId !== cafeSearchRequestId) return;
+
+        const data = await response.json();
+
+        if (!response.ok) {
+          const errMsg = (data && data.error && data.error.message)
+            ? data.error.message
+            : "카페 데이터를 불러오지 못했습니다.";
+          showCafeMessage(
+            "⚠️ " + errMsg + " (상태 코드: " + response.status + ")",
+            "카페 데이터를 불러오지 못했습니다. 상태 코드 " + response.status
+          );
+          return;
+        }
+
+        renderCafeResults(data.items || []);
+      } catch (err) {
+        if (err.name === "AbortError") return;
+        console.warn("[F4 fetchCafes] API 통신 실패:", err.message);
+
+        if (requestId !== cafeSearchRequestId) return;
+
+        clearCafePresentation();
+        if (activeSearchKeyword && isKakaoMapReady()) {
+          searchPlaces();
+          return;
+        }
+
+        showCafeMessage(
+          "❌ 공공 카페 데이터를 불러오지 못했습니다. 잠시 후 다시 시도해 주세요.",
+          "공공 카페 데이터 통신 오류가 발생했습니다."
+        );
+      }
+    }
+
+    // F2: 공공 카페 표준 항목 안전한 DOM 렌더링 어댑터 (XSS 방지를 위한 textContent 전용 사용)
+    function renderCafeResults(items) {
+      clearCafeMarkers();
+      clearSearchMarkers();
+
+      const listContainer = document.getElementById("results-list");
+      listContainer.innerHTML = "";
+
+      const countBadge = document.getElementById("result-count");
+      if (countBadge) countBadge.textContent = items.length;
+
+      if (!items || items.length === 0) {
+        const emptyDiv = document.createElement("div");
+        emptyDiv.className = "empty-state";
+        emptyDiv.textContent = `☕ 선택하신 반경 ${selectedRadiusKm}km 내에 공공 카페 검색 결과가 없습니다.`;
+        listContainer.appendChild(emptyDiv);
+        updateStatusLiveRegion(`반경 ${selectedRadiusKm}km 내 카페 검색 결과가 없습니다.`);
+        return;
+      }
+
+      if (!isKakaoMapReady()) {
+        items.forEach((item) => {
+          const card = document.createElement("div");
+          card.className = "result-card";
+
+          const title = document.createElement("div");
+          title.className = "rc-title";
+          title.textContent = item.name || "카페";
+
+          const address = document.createElement("div");
+          address.className = "rc-address";
+          address.textContent = item.address || item.category || "주소 정보 없음";
+
+          card.append(title, address);
+          listContainer.appendChild(card);
+        });
+        updateStatusLiveRegion("공공 카페 목록을 표시했습니다. 지도는 현재 사용할 수 없습니다.");
+        return;
+      }
+      updateStatusLiveRegion(`총 ${items.length}개의 공공 카페를 찾았습니다.`);
+      const bounds = new kakao.maps.LatLngBounds();
+      bounds.extend(new kakao.maps.LatLng(selectedPlace.lat, selectedPlace.lng));
+
+      items.forEach((item, index) => {
+        const lat = Number(item.latitude);
+        const lng = Number(item.longitude);
+        if (Number.isNaN(lat) || Number.isNaN(lng)) return;
+
+        const cafePos = new kakao.maps.LatLng(lat, lng);
+        bounds.extend(cafePos);
+
+        // 1. 카카오 마커 렌더링
+        const marker = new kakao.maps.Marker({
+          position: cafePos,
+          clickable: true,
+          zIndex: 4
+        });
+        marker.setMap(map);
+        cafeMarkers.push(marker);
+
+        // 거리 포맷팅 (0.42 -> 420m, 1.5 -> 1.5km)
+        let distStr = "";
+        if (typeof item.distanceKm === 'number') {
+          distStr = item.distanceKm < 1
+            ? `${Math.round(item.distanceKm * 1000)}m`
+            : `${item.distanceKm.toFixed(1)}km`;
+        }
+
+        // 2. 카드 안전 생성 (DOM API & textContent 전용 사용)
+        const card = document.createElement("div");
+        card.className = "result-card";
+        card.id = `cafe-card-${index}`;
+
+        const rcTitle = document.createElement("div");
+        rcTitle.className = "rc-title";
+
+        const nameSpan = document.createElement("span");
+        nameSpan.textContent = item.name || "카페";
+        rcTitle.appendChild(nameSpan);
+
+        if (distStr) {
+          const distSpan = document.createElement("span");
+          distSpan.className = "rc-distance";
+          distSpan.textContent = distStr;
+          rcTitle.appendChild(distSpan);
+        }
+
+        const rcAddress = document.createElement("div");
+        rcAddress.className = "rc-address";
+        rcAddress.textContent = item.address || item.category || "주소 정보 없음";
+
+        card.appendChild(rcTitle);
+        card.appendChild(rcAddress);
+
+        // 마커 및 카드 선택 상태 공유
+        const selectAction = () => {
+          document.querySelectorAll('.result-card').forEach(c => c.classList.remove('active'));
+          card.classList.add('active');
+          card.scrollIntoView({ behavior: 'smooth', block: 'nearest' });
+
+          const overlayTitle = item.name || "카페";
+          const overlayDesc = `${item.category || '커피·음료'} · ${item.address || ''}`;
+          openOverlay(cafePos, overlayTitle, overlayDesc, false);
+          map.panTo(cafePos);
+        };
+
+        kakao.maps.event.addListener(marker, 'click', selectAction);
+        card.onclick = selectAction;
+
+        listContainer.appendChild(card);
+      });
+
+      map.setBounds(bounds);
+    }
+
+    // 공공 카페 전용 마커 정리
+    function clearCafeMarkers() {
+      cafeMarkers.forEach(m => m.setMap(null));
+      cafeMarkers = [];
+    }
+
   </script>
 </body>
 </html>

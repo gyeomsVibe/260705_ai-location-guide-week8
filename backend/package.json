@@ -4,9 +4,11 @@
   "description": "나만의 위치 안내 서비스 - 8~9주차 실습 및 공공 카페 데이터 연동",
   "main": "server.js",
   "scripts": {
-    "start": "node server.js"
+    "start": "node server.js",
+    "test": "node --test test/*.test.js"
   },
   "dependencies": {
+    "dotenv": "^16.6.1",
     "express": "^4.21.2"
   },
   "devDependencies": {
