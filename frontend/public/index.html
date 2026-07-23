@@ -8,165 +8,164 @@
   <!-- Google Fonts (Noto Sans KR & Outfit) -->
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-  <link href="https://fonts.googleapis.com/css2?family=Noto+Sans+KR:wght@300;400;500;700;900&family=Outfit:wght@400;600;800&display=swap" rel="stylesheet">
-
-  <style>
-    :root {
-      --bg-gradient: linear-gradient(135deg, #f8fafc 0%, #e2e8f0 100%);
-      --card-bg: rgba(255, 255, 255, 0.95);
+  <link href="https://fonts.googleapis.com/css2?family=Noto+Sans+KR:wght@300;400;500;700;900&family=Outfit:wght@400;600;800&display=swap    :root {
+      --bg-gradient: linear-gradient(135deg, #f1f5f9 0%, #e2e8f0 50%, #f8fafc 100%);
+      --card-bg: rgba(255, 255, 255, 0.85);
+      --card-border: rgba(226, 232, 240, 0.8);
+      --glass-blur: blur(16px);
       --text-main: #0f172a;
       --text-sub: #475569;
       --primary: #4f46e5;
-      --primary-light: #eef2ff;
+      --primary-light: rgba(79, 70, 229, 0.08);
       --primary-hover: #4338ca;
+      --accent-orange: #f97316;
       --border-color: #cbd5e1;
-      --shadow-sm: 0 1px 2px 0 rgba(0, 0, 0, 0.05);
-      --shadow-md: 0 4px 6px -1px rgba(0, 0, 0, 0.05), 0 2px 4px -2px rgba(0, 0, 0, 0.05);
-      --shadow-lg: 0 10px 15px -3px rgba(0, 0, 0, 0.05), 0 4px 6px -4px rgba(0, 0, 0, 0.05);
-      --radius-lg: 16px;
-      --radius-md: 10px;
-      --radius-sm: 6px;
-      --input-bg: #ffffff;
-      --select-bg: #ffffff;
-      --chip-bg: #f1f5f9;
-      --chip-text: #475569;
-      --card-active-bg: #eef2ff;
+      --success: #10b981;
+      --accent: #ef4444;
+      --shadow-sm: 0 1px 3px rgba(0, 0, 0, 0.05);
+      --shadow-md: 0 8px 20px -4px rgba(0, 0, 0, 0.08);
+      --shadow-lg: 0 20px 25px -5px rgba(0, 0, 0, 0.1), 0 8px 10px -6px rgba(0, 0, 0, 0.04);
+      --shadow-glow: 0 0 20px rgba(79, 70, 229, 0.2);
+      --radius-lg: 20px;
+      --radius-md: 12px;
+      --radius-sm: 8px;
+      --input-bg: rgba(255, 255, 255, 0.9);
+      --select-bg: rgba(255, 255, 255, 0.9);
+      --chip-bg: rgba(241, 245, 249, 0.9);
+      --chip-text: #334155;
+      --card-active-bg: rgba(79, 70, 229, 0.06);
       --overlay-border: #4f46e5;
     }
 
     :root[data-theme="dark"] {
       --bg-gradient: linear-gradient(135deg, #090d16 0%, #0f172a 100%);
-      --card-bg: rgba(15, 23, 42, 0.95);
+      --card-bg: rgba(15, 23, 42, 0.85);
+      --card-border: rgba(51, 65, 85, 0.8);
+      --glass-blur: blur(16px);
       --text-main: #f8fafc;
       --text-sub: #94a3b8;
-      --primary: #818cf8;
-      --primary-light: rgba(129, 140, 248, 0.15);
-      --primary-hover: #6366f1;
+      --primary: #6366f1;
+      --primary-light: rgba(99, 102, 241, 0.15);
+      --primary-hover: #4f46e5;
+      --accent-orange: #fb923c;
       --border-color: #334155;
-      --shadow-sm: 0 1px 2px 0 rgba(0, 0, 0, 0.5);
-      --shadow-md: 0 4px 6px -1px rgba(0, 0, 0, 0.3), 0 2px 4px -2px rgba(0, 0, 0, 0.3);
-      --shadow-lg: 0 10px 15px -3px rgba(0, 0, 0, 0.4), 0 4px 6px -4px rgba(0, 0, 0, 0.4);
-      --input-bg: #1e293b;
-      --select-bg: #1e293b;
-      --chip-bg: #1e293b;
-      --chip-text: #94a3b8;
-      --card-active-bg: rgba(129, 140, 248, 0.12);
-      --overlay-border: #818cf8;
+      --shadow-sm: 0 1px 3px rgba(0, 0, 0, 0.4);
+      --shadow-md: 0 8px 20px -4px rgba(0, 0, 0, 0.4);
+      --shadow-lg: 0 20px 25px -5px rgba(0, 0, 0, 0.5);
+      --shadow-glow: 0 0 20px rgba(99, 102, 241, 0.3);
+      --input-bg: rgba(30, 41, 59, 0.9);
+      --select-bg: rgba(30, 41, 59, 0.9);
+      --chip-bg: rgba(30, 41, 59, 0.9);
+      --chip-text: #cbd5e1;
+      --card-active-bg: rgba(99, 102, 241, 0.15);
+      --overlay-border: #6366f1;
     }
 
-    /* System preference dark-mode detection mapping */
     @media (prefers-color-scheme: dark) {
       :root:not([data-theme="light"]) {
         --bg-gradient: linear-gradient(135deg, #090d16 0%, #0f172a 100%);
-        --card-bg: rgba(15, 23, 42, 0.95);
+        --card-bg: rgba(15, 23, 42, 0.85);
+        --card-border: rgba(51, 65, 85, 0.8);
+        --glass-blur: blur(16px);
         --text-main: #f8fafc;
         --text-sub: #94a3b8;
-        --primary: #818cf8;
-        --primary-light: rgba(129, 140, 248, 0.15);
-        --primary-hover: #6366f1;
+        --primary: #6366f1;
+        --primary-light: rgba(99, 102, 241, 0.15);
+        --primary-hover: #4f46e5;
+        --accent-orange: #fb923c;
         --border-color: #334155;
-        --shadow-sm: 0 1px 2px 0 rgba(0, 0, 0, 0.5);
-        --shadow-md: 0 4px 6px -1px rgba(0, 0, 0, 0.3), 0 2px 4px -2px rgba(0, 0, 0, 0.3);
-        --shadow-lg: 0 10px 15px -3px rgba(0, 0, 0, 0.4), 0 4px 6px -4px rgba(0, 0, 0, 0.4);
-        --input-bg: #1e293b;
-        --select-bg: #1e293b;
-        --chip-bg: #1e293b;
-        --chip-text: #94a3b8;
-        --card-active-bg: rgba(129, 140, 248, 0.12);
-        --overlay-border: #818cf8;
+        --shadow-sm: 0 1px 3px rgba(0, 0, 0, 0.4);
+        --shadow-md: 0 8px 20px -4px rgba(0, 0, 0, 0.4);
+        --shadow-lg: 0 20px 25px -5px rgba(0, 0, 0, 0.5);
+        --shadow-glow: 0 0 20px rgba(99, 102, 241, 0.3);
+        --input-bg: rgba(30, 41, 59, 0.9);
+        --select-bg: rgba(30, 41, 59, 0.9);
+        --chip-bg: rgba(30, 41, 59, 0.9);
+        --chip-text: #cbd5e1;
+        --card-active-bg: rgba(99, 102, 241, 0.15);
+        --overlay-border: #6366f1;
       }
     }
 
     * { box-sizing: border-box; margin: 0; padding: 0; }
-
-    /* JavaScript로 토글하는 요소를 레이아웃에서 완전히 숨깁니다. */
     .hidden { display: none !important; }
 
     body {
-      font-family: 'Noto Sans KR', sans-serif;
+      font-family: 'Noto Sans KR', -apple-system, BlinkMacSystemFont, sans-serif;
       background: var(--bg-gradient);
       color: var(--text-main);
       min-height: 100vh;
       display: flex;
       justify-content: center;
       align-items: center;
-      padding: 20px;
+      padding: 16px;
       transition: background 0.3s ease, color 0.3s ease;
     }
 
-    /* Custom styled scrollbars for sidebar and results list */
-    ::-webkit-scrollbar {
-      width: 6px;
-      height: 6px;
-    }
-    ::-webkit-scrollbar-track {
-      background: transparent;
-    }
-    ::-webkit-scrollbar-thumb {
-      background: var(--border-color);
-      border-radius: 999px;
-    }
-    ::-webkit-scrollbar-thumb:hover {
-      background: var(--primary);
-    }
+    ::-webkit-scrollbar { width: 5px; height: 5px; }
+    ::-webkit-scrollbar-track { background: transparent; }
+    ::-webkit-scrollbar-thumb { background: var(--border-color); border-radius: 999px; }
+    ::-webkit-scrollbar-thumb:hover { background: var(--primary); }
 
-    /* 전체 앱 레이아웃 (반응형 2분할 구조) */
+    /* Spatial Cockpit UI: Glassmorphism App Container */
     .app-container {
       background: var(--card-bg);
       border-radius: var(--radius-lg);
       box-shadow: var(--shadow-lg);
       width: 100%;
-      max-width: 1280px;
-      height: 90vh;
-      min-height: 700px;
+      max-width: 1600px;
+      height: calc(100vh - 32px);
+      min-height: 750px;
       display: grid;
-      grid-template-columns: 480px 1fr;
+      grid-template-columns: minmax(420px, 480px) 1fr;
       overflow: hidden;
-      border: 1px solid var(--border-color);
-      backdrop-filter: blur(10px);
-      transition: background 0.3s ease, border-color 0.3s ease, box-shadow 0.3s ease;
+      border: 1px solid var(--card-border);
+      backdrop-filter: var(--glass-blur);
+      -webkit-backdrop-filter: var(--glass-blur);
+      transition: all 0.3s ease;
     }
 
-    /* 좌측 사이드바 패널 (스크롤 가능) */
+    /* 좌측 사이드바 패널 (글래스모피즘 스타일) */
     .sidebar {
-      padding: 20px 18px;
+      padding: 24px;
       display: flex;
       flex-direction: column;
-      border-right: 1px solid var(--border-color);
+      border-right: 1px solid var(--card-border);
       height: 100%;
       overflow-y: auto;
-      transition: border-color 0.3s ease;
+      background: rgba(255, 255, 255, 0.2);
     }
 
-    header {
-      margin-bottom: 12px;
+    :root[data-theme="dark"] .sidebar {
+      background: rgba(15, 23, 42, 0.4);
     }
+
+    header { margin-bottom: 16px; }
 
     .header-top {
       display: flex;
       justify-content: space-between;
       align-items: center;
-      margin-bottom: 4px;
+      margin-bottom: 6px;
     }
 
     h1 {
       font-family: 'Outfit', 'Noto Sans KR', sans-serif;
-      font-size: 1.55rem;
+      font-size: 1.45rem;
       font-weight: 800;
       color: var(--primary);
       display: flex;
       align-items: center;
-      gap: 6px;
-      transition: color 0.3s ease;
+      gap: 8px;
+      letter-spacing: -0.02em;
     }
 
-    /* 다크모드 토글 버튼 */
     .theme-toggle-btn {
-      background: var(--primary-light);
+      background: var(--chip-bg);
       border: 1px solid var(--border-color);
       border-radius: 50%;
-      width: 36px;
-      height: 36px;
+      width: 38px;
+      height: 38px;
       display: flex;
       align-items: center;
       justify-content: center;
@@ -175,91 +174,93 @@
     }
 
     .theme-toggle-btn:hover {
-      transform: scale(1.1) rotate(15deg);
+      transform: scale(1.08) rotate(12deg);
       background: var(--primary);
       color: #ffffff;
-      box-shadow: 0 0 10px var(--primary);
-    }
-
-    .theme-icon {
-      font-size: 1.1rem;
+      box-shadow: var(--shadow-glow);
     }
 
     .subtitle {
-      font-size: 0.85rem;
+      font-size: 0.825rem;
       color: var(--text-sub);
-      margin-top: 4px;
       line-height: 1.4;
-      transition: color 0.3s ease;
     }
 
-    /* 공통 섹션 스타일 */
-    .section-title {
-      font-size: 0.9rem;
+    /* 3대 메인 탭 네비게이션 (Spatial Tab Bar) */
+    .mode-tab-nav {
+      display: flex;
+      gap: 4px;
+      margin-bottom: 18px;
+      background: var(--chip-bg);
+      padding: 4px;
+      border-radius: var(--radius-md);
+      border: 1px solid var(--border-color);
+    }
+
+    .mode-tab-btn {
+      flex: 1;
+      padding: 10px 8px;
+      font-size: 0.825rem;
       font-weight: 700;
-      color: var(--text-main);
-      margin-bottom: 10px;
+      border: none;
+      border-radius: var(--radius-sm);
+      background: transparent;
+      color: var(--text-sub);
+      cursor: pointer;
+      transition: all 0.2s ease;
       display: flex;
       align-items: center;
-      justify-content: space-between;
-      transition: color 0.3s ease;
+      justify-content: center;
+      gap: 5px;
     }
 
-    .section {
-      margin-bottom: 14px;
-      padding-bottom: 12px;
-      border-bottom: 1px solid var(--border-color);
-      transition: border-color 0.3s ease;
+    .mode-tab-btn:hover {
+      color: var(--primary);
+      background: rgba(255, 255, 255, 0.5);
     }
 
-    .section:last-of-type {
-      border-bottom: none;
-      margin-bottom: 0;
-      padding-bottom: 0;
+    .mode-tab-btn.active {
+      color: var(--primary);
+      background: var(--card-bg);
+      box-shadow: var(--shadow-sm);
     }
 
-    /* 1. Shadcn UI 스타일 셀렉트 드롭다운 컨테이너 */
-    .select-container {
+    /* 서치 코크핏 통합 폼 (지역 선택 + 검색창) */
+    .search-cockpit-card {
+      background: var(--card-bg);
+      border: 1px solid var(--border-color);
+      border-radius: var(--radius-md);
+      padding: 14px;
+      margin-bottom: 16px;
+      box-shadow: var(--shadow-sm);
       display: flex;
       flex-direction: column;
       gap: 10px;
     }
 
-    .select-group {
-      display: flex;
-      flex-direction: column;
-      gap: 4px;
+    .cockpit-select-row {
+      display: grid;
+      grid-template-columns: 1fr 1fr auto;
+      gap: 6px;
+      align-items: center;
     }
 
-    .select-label {
-      font-size: 0.75rem;
-      font-weight: 700;
-      color: var(--text-sub);
-      transition: color 0.3s ease;
-    }
-
-    /* Shadcn UI 미니멀 셀렉트 드롭다운 디자인 */
     .shadcn-select {
       width: 100%;
-      padding: 10px 14px;
-      font-size: 0.875rem;
-      font-weight: 500;
+      padding: 8px 10px;
+      font-size: 0.8rem;
+      font-weight: 600;
       border: 1px solid var(--border-color);
       border-radius: var(--radius-sm);
       background-color: var(--select-bg);
       color: var(--text-main);
       cursor: pointer;
-      appearance: none; /* 브라우저 기본 화살표 숨김 */
+      appearance: none;
       background-image: url("data:image/svg+xml,%3csvg xmlns='http://www.w3.org/2000/svg' fill='none' viewBox='0 0 20 20'%3e%3cpath stroke='%2364748b' stroke-linecap='round' stroke-linejoin='round' stroke-width='1.5' d='M6 8l4 4 4-4'/%3e%3c/svg%3e");
-      background-position: right 12px center;
+      background-position: right 8px center;
       background-repeat: no-repeat;
-      background-size: 1.2rem;
+      background-size: 1rem;
       transition: all 0.2s ease;
-      box-shadow: var(--shadow-sm);
-    }
-
-    :root[data-theme="dark"] .shadcn-select {
-      background-image: url("data:image/svg+xml,%3csvg xmlns='http://www.w3.org/2000/svg' fill='none' viewBox='0 0 20 20'%3e%3cpath stroke='%2394a3b8' stroke-linecap='round' stroke-linejoin='round' stroke-width='1.5' d='M6 8l4 4 4-4'/%3e%3c/svg%3e");
     }
 
     .shadcn-select:focus {
@@ -268,30 +269,35 @@
       box-shadow: 0 0 0 2px var(--primary-light);
     }
 
-    .shadcn-select:disabled {
-      background-color: #f8fafc;
-      color: #64748b;
-      cursor: not-allowed;
+    .location-action-btn {
+      padding: 8px 10px;
+      border: 1px solid var(--primary);
+      border-radius: var(--radius-sm);
+      background: var(--primary);
+      color: #fff;
+      font-size: 0.775rem;
+      font-weight: 700;
+      cursor: pointer;
+      white-space: nowrap;
+      transition: all 0.15s ease;
     }
 
-    /* 2. 텍스트 검색란 & 추천 키워드 칩 */
+    .location-action-btn:hover { background: var(--primary-hover); }
+
     .search-bar {
       display: flex;
       gap: 6px;
-      margin-bottom: 10px;
     }
 
-    /* Shadcn UI 인풋 필드 */
     .shadcn-input {
       flex: 1;
-      padding: 10px 14px;
-      font-size: 0.875rem;
+      padding: 9px 12px;
+      font-size: 0.85rem;
       border: 1px solid var(--border-color);
       border-radius: var(--radius-sm);
       background-color: var(--input-bg);
       color: var(--text-main);
       transition: all 0.2s ease;
-      box-shadow: var(--shadow-sm);
     }
 
     .shadcn-input:focus {
@@ -300,68 +306,52 @@
       box-shadow: 0 0 0 2px var(--primary-light);
     }
 
-    /* Shadcn UI 프라이머리 버튼 */
     .shadcn-btn {
       background-color: var(--primary);
       color: #fff;
       border: none;
       border-radius: var(--radius-sm);
-      padding: 10px 16px;
-      font-size: 0.875rem;
-      font-weight: 600;
+      padding: 9px 14px;
+      font-size: 0.85rem;
+      font-weight: 700;
       cursor: pointer;
-      transition: background-color 0.2s ease, transform 0.1s ease;
-      white-space: nowrap;
+      transition: all 0.2s ease;
       display: flex;
       align-items: center;
       gap: 4px;
     }
 
-    .shadcn-btn:hover {
-      background-color: var(--primary-hover);
-    }
+    .shadcn-btn:hover { background-color: var(--primary-hover); }
 
-    .shadcn-btn:active {
-      transform: scale(0.97);
-    }
-
-    /* 추천 검색어 칩 그룹 */
-    .recommend-title {
-      font-size: 0.75rem;
-      font-weight: 700;
-      color: var(--text-sub);
-      margin-bottom: 6px;
-      text-transform: uppercase;
-      letter-spacing: 0.05em;
-      transition: color 0.3s ease;
-    }
-
-    .chip-container {
+    /* 가로 롤링 카테고리 칩 바 */
+    .chip-scroll-container {
       display: flex;
-      flex-wrap: wrap;
       gap: 6px;
+      overflow-x: auto;
+      padding-bottom: 4px;
+      margin-bottom: 14px;
     }
 
     .chip {
       background-color: var(--chip-bg);
       border: 1px solid var(--border-color);
       border-radius: 999px;
-      padding: 6px 12px;
+      padding: 5px 11px;
       font-size: 0.75rem;
       font-weight: 600;
       color: var(--chip-text);
       cursor: pointer;
       display: flex;
       align-items: center;
-      gap: 3px;
-      transition: all 0.2s cubic-bezier(0.4, 0, 0.2, 1);
+      gap: 4px;
+      white-space: nowrap;
+      transition: all 0.2s ease;
     }
 
     .chip:hover {
       background-color: var(--primary-light);
       border-color: var(--primary);
       color: var(--primary);
-      transform: translateY(-1px);
     }
 
     .chip.active {
@@ -370,12 +360,120 @@
       color: #fff;
     }
 
-    /* 3. 검색 결과 패널 */
+    /* 반경 선택 레버 칩 */
+    .radius-chip-container {
+      display: flex;
+      gap: 6px;
+      margin-top: 4px;
+    }
+
+    .radius-chip {
+      flex: 1;
+      padding: 6px 8px;
+      font-size: 0.75rem;
+      font-weight: 700;
+      border-radius: var(--radius-sm);
+      border: 1px solid var(--border-color);
+      background: var(--chip-bg);
+      color: var(--chip-text);
+      cursor: pointer;
+      transition: all 0.2s ease;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+    }
+
+    .radius-chip.active {
+      background: var(--primary);
+      color: #ffffff;
+      border-color: var(--primary);
+    }
+
+    /* 모임 장소 스마트 CTA 카드 */
+    .bung-smart-card {
+      background: linear-gradient(135deg, rgba(249, 115, 22, 0.08) 0%, rgba(234, 88, 12, 0.04) 100%);
+      border: 1px solid rgba(249, 115, 22, 0.3);
+      border-radius: var(--radius-md);
+      padding: 16px;
+      margin-bottom: 16px;
+      display: flex;
+      flex-direction: column;
+      gap: 10px;
+    }
+
+    .bung-smart-title {
+      font-size: 0.95rem;
+      font-weight: 800;
+      color: var(--accent-orange);
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+    }
+
+    .bung-smart-desc {
+      font-size: 0.8rem;
+      color: var(--text-sub);
+      line-height: 1.4;
+    }
+
+    .bung-trigger-btn {
+      width: 100%;
+      padding: 11px 14px;
+      font-size: 0.875rem;
+      font-weight: 800;
+      color: #ffffff;
+      background: linear-gradient(135deg, #f97316 0%, #ea580c 100%);
+      border: none;
+      border-radius: var(--radius-sm);
+      cursor: pointer;
+      box-shadow: 0 4px 12px rgba(249, 115, 22, 0.3);
+      transition: all 0.2s ease;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      gap: 6px;
+    }
+
+    .bung-trigger-btn:hover {
+      transform: translateY(-1px);
+      box-shadow: 0 6px 16px rgba(249, 115, 22, 0.4);
+    }
+
+    /* 데이트 코스 & 상황 추천 그리드 */
+    .preset-grid {
+      display: grid;
+      grid-template-columns: repeat(2, 1fr);
+      gap: 8px;
+      margin-bottom: 16px;
+    }
+
+    .preset-card-btn {
+      padding: 10px 12px;
+      font-size: 0.8rem;
+      font-weight: 700;
+      border-radius: var(--radius-sm);
+      border: 1px solid var(--border-color);
+      background: var(--card-bg);
+      color: var(--text-main);
+      cursor: pointer;
+      transition: all 0.2s ease;
+      display: flex;
+      align-items: center;
+      gap: 6px;
+    }
+
+    .preset-card-btn:hover {
+      border-color: var(--primary);
+      color: var(--primary);
+      background: var(--primary-light);
+    }
+
+    /* 결과 스크롤 섹션 */
     .results-section {
       flex: 1;
       display: flex;
       flex-direction: column;
-      min-height: 0; /* flex 자식 스크롤 가능하게 처리 */
+      min-height: 0;
     }
 
     .results-header-info {
@@ -386,147 +484,167 @@
     }
 
     .badge-count {
-      background: var(--chip-bg);
-      color: var(--text-sub);
+      background: var(--primary-light);
+      color: var(--primary);
       font-size: 0.75rem;
       padding: 2px 8px;
       border-radius: 999px;
-      font-weight: 700;
-      transition: background 0.3s ease, color 0.3s ease;
+      font-weight: 800;
     }
 
-    .btn-clear-search {
-      background: none;
-      border: none;
-      color: var(--text-sub);
-      font-size: 0.8rem;
-      cursor: pointer;
-      text-decoration: underline;
-      transition: color 0.2s ease;
-    }
-
-    .btn-clear-search:hover {
-      color: var(--primary);
-    }
-
-    /* 공공 카페 반경 선택 칩 스타일 */
-    .radius-chip-container {
+    .results-list {
+      flex: 1;
+      overflow-y: auto;
       display: flex;
+      flex-direction: column;
+      gap: 8px;
+    }
+
+    .empty-state {
+      text-align: center;
+      padding: 24px 16px;
+      color: var(--text-sub);
+      font-size: 0.85rem;
+      border: 1.5px dashed var(--border-color);
+      border-radius: var(--radius-md);
+      background: var(--card-bg);
+    }
+
+    .result-card {
+      background: var(--card-bg);
+      border: 1px solid var(--border-color);
+      border-radius: var(--radius-md);
+      padding: 12px 14px;
+      transition: all 0.2s ease;
+      cursor: pointer;
+      display: flex;
+      flex-direction: column;
+      gap: 4px;
+    }
+
+    .result-card:hover {
+      border-color: var(--primary);
+      transform: translateY(-2px);
+      box-shadow: var(--shadow-md);
+    }
+
+    .result-card.active {
+      border-color: var(--primary);
+      background: var(--card-active-bg);
+    }
+
+    .rc-title { font-size: 0.925rem; font-weight: 800; color: var(--text-main); }
+    .rc-address { font-size: 0.775rem; color: var(--text-sub); }
+
+    /* ==========================================
+       스마트 벙 조건 선택 팝업 모달 (Glassmorphic Modal)
+       ========================================== */
+    .modal-backdrop {
+      position: fixed;
+      top: 0;
+      left: 0;
+      width: 100vw;
+      height: 100vh;
+      background: rgba(15, 23, 42, 0.6);
+      backdrop-filter: blur(8px);
+      z-index: 9999;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      padding: 16px;
+      animation: fadeIn 0.2s ease;
+    }
+
+    @keyframes fadeIn {
+      from { opacity: 0; }
+      to { opacity: 1; }
+    }
+
+    .modal-container {
+      background: var(--card-bg);
+      border: 1px solid var(--card-border);
+      border-radius: var(--radius-lg);
+      box-shadow: var(--shadow-lg);
+      width: 100%;
+      max-width: 480px;
+      padding: 24px;
+      display: flex;
+      flex-direction: column;
+      gap: 16px;
+      backdrop-filter: var(--glass-blur);
+    }
+
+    .modal-header {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      border-bottom: 1px solid var(--border-color);
+      padding-bottom: 12px;
+    }
+
+    .modal-title {
+      font-size: 1.1rem;
+      font-weight: 800;
+      color: var(--text-main);
+      display: flex;
+      align-items: center;
       gap: 6px;
-      margin-top: 8px;
+    }
+
+    .modal-close-btn {
+      background: transparent;
+      border: none;
+      font-size: 1.25rem;
+      color: var(--text-sub);
+      cursor: pointer;
+    }
+
+    .condition-group-title {
+      font-size: 0.8rem;
+      font-weight: 700;
+      color: var(--text-sub);
+      margin-bottom: 6px;
+    }
+
+    .condition-opt-group {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 6px;
       margin-bottom: 10px;
     }
 
-    .radius-chip {
-      flex: 1;
-      padding: 7px 10px;
-      font-size: 0.8rem;
+    .condition-opt-btn {
+      padding: 7px 12px;
+      font-size: 0.775rem;
       font-weight: 700;
       border-radius: var(--radius-sm);
       border: 1px solid var(--border-color);
       background: var(--chip-bg);
       color: var(--chip-text);
       cursor: pointer;
-      transition: all 0.2s cubic-bezier(0.4, 0, 0.2, 1);
-      display: flex;
-      align-items: center;
-      justify-content: center;
-      gap: 4px;
+      transition: all 0.2s ease;
     }
 
-    .radius-chip:hover {
-      border-color: var(--primary);
-      color: var(--primary);
-    }
-
-    .radius-chip.active {
+    .condition-opt-btn.active {
       background: var(--primary);
       color: #ffffff;
       border-color: var(--primary);
-      box-shadow: var(--shadow-sm);
     }
 
-    .cafe-mode-badge {
-      font-size: 0.7rem;
-      padding: 2px 6px;
-      border-radius: 999px;
-      background: var(--primary-light);
-      color: var(--primary);
-      font-weight: 700;
-      border: 1px solid var(--primary);
-    }
-
-    /* Screen reader accessible hidden element */
-    .sr-only {
-      position: absolute;
-      width: 1px;
-      height: 1px;
-      padding: 0;
-      margin: -1px;
-      overflow: hidden;
-      clip: rect(0, 0, 0, 0);
-      white-space: nowrap;
-      border: 0;
-    }
-
-    /* 초장문 텍스트 레이아웃 붕괴 방어막 (Vaccine V5) */
-    .rc-title, .rc-address, .co-title, .co-desc, .benefit-title, .benefit-summary, .benefit-detail-val {
-      word-break: break-word;
-      overflow-wrap: anywhere;
-    }
-
-    /* 혜택 & 주변 탐색 모드 전환 탭 스타일 */
-    .mode-tab-nav {
-      display: flex;
-      gap: 6px;
-      margin-bottom: 14px;
-      border-bottom: 2px solid var(--border-color);
-      padding-bottom: 2px;
-    }
-
-    .mode-tab-btn {
-      flex: 1;
-      padding: 9px 12px;
-      font-size: 0.875rem;
-      font-weight: 700;
-      border: none;
-      border-radius: var(--radius-sm) var(--radius-sm) 0 0;
-      background: transparent;
-      color: var(--text-sub);
-      cursor: pointer;
-      transition: all 0.2s ease;
-      display: flex;
-      align-items: center;
-      justify-content: center;
-      gap: 6px;
-    }
-
-    .mode-tab-btn:hover {
-      color: var(--primary);
-      background: var(--primary-light);
-    }
-
-    .mode-tab-btn.active {
-      color: var(--primary);
-      border-bottom: 3px solid var(--primary);
-      background: var(--primary-light);
-    }
-
-    /* 벙 맛집 1등 메인 CTA 버튼 스타일 */
-    .bung-main-cta {
+    .condition-submit-btn {
       width: 100%;
-      padding: 12px 16px;
-      font-size: 0.95rem;
+      padding: 12px;
+      font-size: 0.9rem;
       font-weight: 800;
-      color: #ffffff;
-      background: linear-gradient(135deg, #f97316 0%, #ea580c 100%);
+      color: #fff;
+      background: var(--primary);
       border: none;
       border-radius: var(--radius-md);
       cursor: pointer;
-      box-shadow: 0 4px 14px rgba(249, 115, 22, 0.35);
-      transition: all 0.2s cubic-bezier(0.4, 0, 0.2, 1);
-      display: flex;
-      align-items: center;
+      transition: background 0.2s ease;
+    }
+
+    .condition-submit-btn:hover { background: var(--primary-hover); }center;
       justify-content: space-between;
       margin-bottom: 10px;
     }
@@ -555,6 +673,13 @@
       display: grid;
       grid-template-columns: repeat(2, 1fr);
       gap: 6px;
+      margin-bottom: 10px;
+    }
+
+    .quick-chip-grid {
+      display: grid;
+      grid-template-columns: repeat(2, minmax(0, 1fr));
+      gap: 7px;
       margin-bottom: 10px;
     }
 
@@ -595,16 +720,17 @@
       border-radius: var(--radius-md);
       padding: 12px;
       margin-bottom: 12px;
-      display: flex;
-      flex-direction: column;
-      gap: 10px;
+      display: grid;
+      grid-template-columns: 92px minmax(0, 1fr);
+      gap: 9px 10px;
+      align-items: center;
     }
 
     .condition-row-title {
       font-size: 0.75rem;
       font-weight: 700;
       color: var(--text-sub);
-      margin-bottom: 4px;
+      margin-bottom: 0;
     }
 
     .condition-options {
@@ -643,6 +769,7 @@
       cursor: pointer;
       transition: background 0.2s ease;
       margin-top: 4px;
+      grid-column: 1 / -1;
     }
 
     .condition-submit-btn:hover {
@@ -684,11 +811,11 @@
       background: var(--card-bg);
       border: 1px solid var(--border-color);
       border-radius: var(--radius-md);
-      padding: 12px 14px;
+      padding: 14px;
       margin-bottom: 10px;
       display: flex;
       flex-direction: column;
-      gap: 8px;
+      gap: 7px;
       transition: border-color 0.2s ease, box-shadow 0.2s ease;
     }
 
@@ -724,9 +851,9 @@
 
     .benefit-field-group {
       font-size: 0.8rem;
-      display: flex;
-      flex-direction: column;
-      gap: 4px;
+      display: grid;
+      grid-template-columns: repeat(2, minmax(0, 1fr));
+      gap: 7px 12px;
       background: var(--chip-bg);
       padding: 8px 10px;
       border-radius: var(--radius-sm);
@@ -734,18 +861,45 @@
 
     .benefit-field-row {
       display: flex;
-      gap: 6px;
+      flex-direction: column;
+      gap: 2px;
     }
 
     .benefit-label {
       font-weight: 700;
       color: var(--text-sub);
-      min-width: 60px;
+      min-width: 0;
       flex-shrink: 0;
     }
 
     .benefit-val {
       color: var(--text-main);
+    }
+
+    .service-fallback {
+      display: grid;
+      gap: 10px;
+      padding: 16px;
+      border: 1px solid #bfdbfe;
+      border-radius: var(--radius-md);
+      background: linear-gradient(145deg, #eff6ff, #ffffff);
+      color: #172554;
+    }
+
+    .service-fallback strong { font-size: 0.95rem; }
+    .service-fallback p { color: #475569; font-size: 0.8rem; line-height: 1.55; }
+    .service-fallback a {
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      min-height: 40px;
+      padding: 8px 12px;
+      border-radius: var(--radius-sm);
+      background: var(--primary);
+      color: #fff;
+      font-size: 0.8rem;
+      font-weight: 800;
+      text-decoration: none;
     }
 
     .benefit-notice-tag {
@@ -872,7 +1026,7 @@
     /* 빈 상태 & 에러 정보 */
     .empty-state {
       text-align: center;
-      padding: 30px 10px;
+      padding: 20px 14px;
       color: var(--text-sub);
       font-size: 0.85rem;
       border: 1.5px dashed var(--border-color);
@@ -1060,214 +1214,97 @@
         grid-row: 2;
         padding: 20px 16px;
       }
+
+      .condition-panel { grid-template-columns: 1fr; }
+      .condition-submit-btn { grid-column: auto; }
     }
   </style>
 </head>
 <body>
   <div class="app-container">
-    <!-- 좌측 검색 & 리스트 사이드바 -->
+    <!-- 좌측 검색 & 리스트 사이드바 (Glassmorphic Spatial Cockpit UI) -->
     <aside class="sidebar">
       <header>
         <div class="header-top">
-          <h1>📍 나만의 위치 안내 서비스</h1>
+          <h1>📍 오늘, 어디로 갈까요?</h1>
           <button id="theme-toggle" class="theme-toggle-btn" aria-label="테마 전환" onclick="toggleTheme()">
             <span class="theme-icon">🌙</span>
           </button>
         </div>
-        <p class="subtitle">내 위치 또는 지정 지역 주변을 실시간 키워드 검색으로 자유롭게 탐색해 보세요.</p>
+        <p class="subtitle">현재 위치 및 선택한 동네를 기준으로, 장소 탐색과 혜택 조회를 통합 제공합니다.</p>
       </header>
 
-      <!-- 모드 전환 탭 (📍 내 주변 찾기 / 🎁 정부 혜택 찾기) -->
+      <!-- 3대 메인 탭 네비게이션 (📍 내 주변 탐색 / 🍱 맞춤 모임·메뉴 / 🎁 정부 혜택) -->
       <nav class="mode-tab-nav" role="tablist" aria-label="탐색 모드 선택">
         <button type="button" role="tab" id="tab-nearby" class="mode-tab-btn active" aria-selected="true" aria-controls="panel-nearby" onclick="switchViewMode('nearby')">
-          <span>📍 내 주변 찾기</span>
+          <span>📍 내 주변 탐색</span>
+        </button>
+        <button type="button" role="tab" id="tab-bung" class="mode-tab-btn" aria-selected="false" aria-controls="panel-bung" onclick="switchViewMode('bung')">
+          <span>🍱 모임 · 메뉴</span>
         </button>
         <button type="button" role="tab" id="tab-benefits" class="mode-tab-btn" aria-selected="false" aria-controls="panel-benefits" onclick="switchViewMode('benefits')">
-          <span>🎁 정부 혜택 찾기</span>
+          <span>🎁 정부 혜택</span>
         </button>
       </nav>
 
-      <!-- 패널 1: 내 주변 찾기 (기존 카카오맵 & 카페 기능) -->
+      <!-- 패널 1: 내 주변 탐색 (통합 서치 코크핏 & 가로 칩 롤링) -->
       <div id="panel-nearby">
-        <!-- 1단계: Shadcn UI 스타일 셀렉터 공간 최적화 -->
-        <section class="section">
-          <div class="section-title">
-            <span>1. 탐색 지역 지정</span>
-          </div>
-          <div class="select-container">
-            <div class="select-group">
-              <label for="select-zone" class="select-label">기본 권역 선택</label>
-              <select id="select-zone" class="shadcn-select" onchange="handleZoneChange()">
-                <option value="mylocation">📍 내 현재 위치 기준</option>
-                <option value="seoul" selected>🏙️ 서울특별시</option>
-                <option value="incheon">✈️ 인천광역시</option>
-                <option value="gyeonggi">🏞️ 경기도</option>
-                <option value="busan">🌊 부산광역시</option>
-                <option value="daegu">🍎 대구광역시</option>
-                <option value="daejeon">🔬 대전광역시</option>
-                <option value="gwangju">🌟 광주광역시</option>
-                <option value="ulsan">🎨 울산광역시</option>
-                <option value="sejong">🏛️ 세종특별자치시</option>
-                <option value="gangwon">🏔️ 강원특별자치도</option>
-                <option value="chungcheong">🌾 충청도 (청주/홍성)</option>
-                <option value="jeolla">🍵 전라도 (전주/무안)</option>
-                <option value="gyeongsang">🍏 경상도 (안동/창원)</option>
-                <option value="jeju">🌴 제주특별자치도</option>
-              </select>
-            </div>
-            <div class="select-group" id="group-detail-place">
-              <label for="select-place" class="select-label">상세 지점 선택</label>
-              <select id="select-place" class="shadcn-select" onchange="handlePlaceChange()">
-                <!-- 스크립트로 옵션 동적 추가 -->
-              </select>
-            </div>
-          </div>
-        </section>
+        <div class="search-cockpit-card">
+          <div class="cockpit-select-row">
+            <select id="select-zone" class="shadcn-select" onchange="handleZoneChange()">
+              <option value="mylocation" hidden>📍 내 현재 위치</option>
+              <option value="seoul" selected>🏙️ 서울특별시</option>
+              <option value="incheon">✈️ 인천광역시</option>
+              <option value="gyeonggi">🏞️ 경기도</option>
+              <option value="busan">🌊 부산광역시</option>
+              <option value="daegu">🍎 대구광역시</option>
+              <option value="daejeon">🔬 대전광역시</option>
+              <option value="gwangju">🌟 광주광역시</option>
+              <option value="ulsan">🎨 울산광역시</option>
+              <option value="sejong">🏛️ 세종특별자치시</option>
+              <option value="gangwon">🏔️ 강원특별자치도</option>
+              <option value="chungcheong">🌾 충청도</option>
+              <option value="jeolla">🍵 전라도</option>
+              <option value="gyeongsang">🍏 경상도</option>
+              <option value="jeju">🌴 제주특별자치도</option>
+            </select>
 
-        <!-- 동네 일상 & 커뮤니티 추천 섹션 (V2) -->
-        <section class="section">
-          <div class="section-title">
-            <span>동네에서 뭐 할까?</span>
-            <span class="bung-badge-tag" style="background:var(--primary-light); color:var(--primary); border:1px solid var(--primary);">동네 모임 추천</span>
+            <select id="select-place" class="shadcn-select" onchange="handlePlaceChange()">
+              <!-- 스크립트로 옵션 동적 추가 -->
+            </select>
+
+            <button type="button" class="location-action-btn" id="btn-use-location" onclick="getMyLocation()">◎ 내 위치</button>
           </div>
 
-          <!-- 1등 메인 CTA: 벙 맛집 -->
-          <button type="button" class="bung-main-cta" id="btn-bung-main" onclick="toggleBungConditionPanel()">
-            <div style="display: flex; align-items: center; gap: 8px;">
-              <span style="font-size: 1.25rem;">🍻</span>
-              <div style="text-align: left;">
-                <div>동네 모임 · 벙 맛집 찾기</div>
-                <div style="font-size: 0.725rem; font-weight: 500; opacity: 0.9;">인원·예산·시간·분위기 맞춤 장소 결정</div>
-              </div>
-            </div>
-            <span class="bung-badge-tag">1등 추천</span>
-          </button>
-
-          <!-- 벙 맛집 조건 선택 레이어 (hidden) -->
-          <div id="panel-bung-conditions" class="condition-panel hidden">
-            <div class="condition-row-title">👥 인원수</div>
-            <div class="condition-options" id="opts-bung-people">
-              <button type="button" class="condition-opt-btn active" data-val="2명" onclick="selectConditionOpt('opts-bung-people', this)">2명</button>
-              <button type="button" class="condition-opt-btn" data-val="3~4명" onclick="selectConditionOpt('opts-bung-people', this)">3~4명</button>
-              <button type="button" class="condition-opt-btn" data-val="5명 이상" onclick="selectConditionOpt('opts-bung-people', this)">5명 이상</button>
-            </div>
-
-            <div class="condition-row-title">💰 1인당 예산</div>
-            <div class="condition-options" id="opts-bung-budget">
-              <button type="button" class="condition-opt-btn" data-val="1만원 이하" onclick="selectConditionOpt('opts-bung-budget', this)">1만원 이하</button>
-              <button type="button" class="condition-opt-btn active" data-val="1~2만원" onclick="selectConditionOpt('opts-bung-budget', this)">1~2만원</button>
-              <button type="button" class="condition-opt-btn" data-val="2만원 이상" onclick="selectConditionOpt('opts-bung-budget', this)">2만원 이상</button>
-            </div>
-
-            <div class="condition-row-title">⏰ 시간대</div>
-            <div class="condition-options" id="opts-bung-time">
-              <button type="button" class="condition-opt-btn" data-val="점심" onclick="selectConditionOpt('opts-bung-time', this)">점심</button>
-              <button type="button" class="condition-opt-btn active" data-val="저녁" onclick="selectConditionOpt('opts-bung-time', this)">저녁</button>
-              <button type="button" class="condition-opt-btn" data-val="야식" onclick="selectConditionOpt('opts-bung-time', this)">야식</button>
-            </div>
-
-            <div class="condition-row-title">✨ 모임 분위기</div>
-            <div class="condition-options" id="opts-bung-vibe">
-              <button type="button" class="condition-opt-btn active" data-val="대화하기 좋은" onclick="selectConditionOpt('opts-bung-vibe', this)">대화하기 좋은</button>
-              <button type="button" class="condition-opt-btn" data-val="활기찬" onclick="selectConditionOpt('opts-bung-vibe', this)">활기찬</button>
-              <button type="button" class="condition-opt-btn" data-val="든든한 식사" onclick="selectConditionOpt('opts-bung-vibe', this)">든든한 식사</button>
-            </div>
-
-            <button type="button" class="condition-submit-btn" onclick="executeBungSearch()">
-              🔍 맞춤 모임 장소 후보 찾기
-            </button>
-          </div>
-
-          <!-- 점심/저녁 뭐먹지 조건 레이어 (hidden) -->
-          <div id="panel-food-conditions" class="condition-panel hidden">
-            <div class="condition-row-title" id="food-panel-title">🍱 오늘 메뉴 성향 선택</div>
-            <div class="condition-options" id="opts-food-vibe">
-              <button type="button" class="condition-opt-btn active" data-val="든든하게" onclick="selectConditionOpt('opts-food-vibe', this)">든든하게</button>
-              <button type="button" class="condition-opt-btn" data-val="가볍게" onclick="selectConditionOpt('opts-food-vibe', this)">가볍게</button>
-              <button type="button" class="condition-opt-btn" data-val="매콤하게" onclick="selectConditionOpt('opts-food-vibe', this)">매콤하게</button>
-              <button type="button" class="condition-opt-btn" data-val="따뜻하게" onclick="selectConditionOpt('opts-food-vibe', this)">따뜻하게</button>
-              <button type="button" class="condition-opt-btn" data-val="새로운 메뉴" onclick="selectConditionOpt('opts-food-vibe', this)">새로운 메뉴</button>
-            </div>
-            <button type="button" class="condition-submit-btn" onclick="executeFoodSearch()">
-              🔍 맞춤 메뉴 장소 찾기
-            </button>
-          </div>
-
-          <!-- 일상 추천 칩 목록 (우선순위 순서 정렬) -->
-          <div class="select-label" style="margin-bottom: 6px;">상황별 빠른 장소 추천</div>
-          <div class="recommend-chip-grid">
-            <button type="button" class="recommend-chip-btn" onclick="openFoodPanel('점심')">
-              <span>🍱 점심 뭐 먹지</span>
-            </button>
-            <button type="button" class="recommend-chip-btn" onclick="openFoodPanel('저녁')">
-              <span>🌙 저녁 뭐 먹지</span>
-            </button>
-            <button type="button" class="recommend-chip-btn" onclick="executeRecommendPreset('데이트')">
-              <span>👩‍❤️‍👨 데이트 코스</span>
-            </button>
-            <button type="button" class="recommend-chip-btn" onclick="executeRecommendPreset('헬스장')">
-              <span>🏋️ 헬스장</span>
-            </button>
-            <button type="button" class="recommend-chip-btn" onclick="executeRecommendPreset('산책로')">
-              <span>🌳 산책로</span>
-            </button>
-            <button type="button" class="recommend-chip-btn" onclick="executeRecommendPreset('카페')">
-              <span>☕ 카페</span>
-            </button>
-            <button type="button" class="recommend-chip-btn" onclick="executeRecommendPreset('맛집')">
-              <span>🍣 맛집</span>
-            </button>
-            <button type="button" class="recommend-chip-btn" onclick="executeRecommendPreset('병원약국')">
-              <span>🏥 병원·약국</span>
-            </button>
-          </div>
-        </section>
-
-        <!-- 2단계: 실시간 주변 텍스트 검색 & 내 주변 카페 찾기 반경 칩 -->
-        <section class="section">
-          <div class="section-title">
-            <span>2. 내 주변 카페 찾기 & 실시간 검색</span>
-            <span class="cafe-mode-badge" id="current-radius-badge">반경 1km</span>
-          </div>
-
-          <!-- 공공 카페 탐색용 반경 선택 칩 (F1: 1km / 3km / 5km 선택, 기본 1km) -->
-          <div class="select-label" style="margin-bottom: 6px;">공공 카페 탐색 반경 지정</div>
-          <div class="radius-chip-container" role="radiogroup" aria-label="카페 탐색 반경 선택">
-            <button type="button" class="radius-chip active" data-radius="1" aria-pressed="true" onclick="selectCafeRadius(1)">
-              <span>🎯 1km</span>
-            </button>
-            <button type="button" class="radius-chip" data-radius="3" aria-pressed="false" onclick="selectCafeRadius(3)">
-              <span>📍 3km</span>
-            </button>
-            <button type="button" class="radius-chip" data-radius="5" aria-pressed="false" onclick="selectCafeRadius(5)">
-              <span>🗺️ 5km</span>
-            </button>
-          </div>
-
-          <!-- 접근성 상태 안내 (aria-live="polite") -->
-          <div id="status-live-region" class="sr-only" aria-live="polite" aria-atomic="true"></div>
-
-          <!-- 자유 텍스트 검색 바 -->
           <div class="search-bar">
-            <input type="text" id="search-input" aria-label="검색어 입력" class="shadcn-input" placeholder="장소명, 카페, 키워드 입력..." onkeypress="handleSearchKeyPress(event)" />
+            <input type="text" id="search-input" aria-label="검색어 입력" class="shadcn-input" placeholder="장소명, 카페, 병원, 산책로 검색..." onkeypress="handleSearchKeyPress(event)" />
             <button class="shadcn-btn" onclick="executeTextSearch()">
               <span>검색</span>
               <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><circle cx="11" cy="11" r="8"></circle><line x1="21" y1="21" x2="16.65" y2="16.65"></line></svg>
             </button>
           </div>
 
-          <!-- 추천 검색 키워드 칩 목록 (가장 컴팩트하게 정렬) -->
-          <div class="recommend-title">자주 찾는 장소 추천</div>
-          <div class="chip-container" id="chip-container">
-            <!-- 스크립트로 칩 목록 렌더링 -->
+          <!-- 탐색 반경 선택 칩 -->
+          <div class="radius-chip-container" role="radiogroup" aria-label="카페 탐색 반경 선택">
+            <button type="button" class="radius-chip active" data-radius="1" aria-pressed="true" onclick="selectCafeRadius(1)">🎯 반경 1km</button>
+            <button type="button" class="radius-chip" data-radius="3" aria-pressed="false" onclick="selectCafeRadius(3)">📍 반경 3km</button>
+            <button type="button" class="radius-chip" data-radius="5" aria-pressed="false" onclick="selectCafeRadius(5)">🗺️ 반경 5km</button>
           </div>
-        </section>
+        </div>
 
-        <!-- 3단계: 검색 결과 리스트 -->
-        <section class="section results-section">
+        <!-- 접근성 상태 안내 (aria-live="polite") -->
+        <div id="status-live-region" class="sr-only" aria-live="polite" aria-atomic="true"></div>
+
+        <!-- 가로 스크롤 추천 카테고리 칩 바 -->
+        <div class="chip-scroll-container" id="chip-container">
+          <!-- 스크립트로 칩 목록 렌더링 -->
+        </div>
+
+        <!-- 검색 결과 스크롤 섹션 -->
+        <section class="results-section">
           <div class="results-header-info">
             <div class="section-title" style="margin-bottom: 0;">
-              3. 검색 결과 <span class="badge-count" id="result-count">0</span>
+              검색 결과 <span class="badge-count" id="result-count">0</span>
             </div>
             <button class="btn-clear-search hidden" id="btn-clear" onclick="clearSearch()">검색 초기화</button>
           </div>
@@ -1278,13 +1315,31 @@
         </section>
       </div>
 
-      <!-- 패널 2: 정부 혜택 찾기 (행정안전부 공공서비스 혜택) -->
-      <div id="panel-benefits" class="hidden">
-        <section class="section">
-          <div class="section-title">
-            <span>정부 혜택 탐색</span>
+      <!-- 패널 2: 맞춤 모임 & 메뉴 (스마트 벙 모임 + 뭐먹지 + 데이트 코스) -->
+      <div id="panel-bung" class="hidden">
+        <!-- 1등 메인 CTA 카드: 스마트 벙 모임 -->
+        <div class="bung-smart-card">
+          <div class="bung-smart-title">
+            <span>🍻 동네 모임 · 벙 맛집 찾기</span>
+            <span class="badge-count">1등 추천</span>
           </div>
-          <p class="subtitle" style="margin-bottom: 8px;">상황을 선택하거나 궁금한 내용을 검색해 보세요.</p>
+          <p class="bung-smart-desc">인원수, 예산, 시간대, 모임 분위기를 맞춤 설정하고 가장 적합한 장소 후보를 탐색합니다.</p>
+          <button type="button" class="bung-trigger-btn" onclick="openBungModal()">
+            <span>⚡ 스마트 모임 조건으로 맛집 검색</span>
+          </button>
+        </div>
+
+        <!-- 상황별 맞춤 추천 프리셋 그리드 -->
+        <div class="section-title"><span>상황별 맞춤 코스 & 추천</span></div>
+        <div class="preset-grid">
+          <button type="button" class="preset-card-btn" onclick="openFoodPanel('점심')">🍱 오늘 점심 뭐 먹지</button>
+          <button type="button" class="preset-card-btn" onclick="openFoodPanel('저녁')">🌙 오늘 저녁 뭐 먹지</button>
+          <button type="button" class="preset-card-btn" onclick="executeRecommendPreset('데이트')">💑 데이트 2~3단계 코스</button>
+          <button type="button" class="preset-card-btn" onclick="executeRecommendPreset('헬스장')">🏋️ 가까운 헬스장</button>
+          <button type="button" class="preset-card-btn" onclick="executeRecommendPreset('산책로')">🌳 산책로 · 공원</button>
+          <button type="button" class="preset-card-btn" onclick="executeRecommendPreset('카페')">☕ 분위기 좋은 카페</button>
+        </div>
+      </div>
 
           <div class="select-label" style="margin-bottom: 4px;">상황별 빠른 탐색</div>
           <div class="quick-chip-grid" role="radiogroup" aria-label="상황별 빠른 탐색">
@@ -1315,13 +1370,13 @@
         <section class="section results-section">
           <div class="results-header-info">
             <div class="section-title" style="margin-bottom: 0;">
-              맞춤 혜택 목록 <span class="badge-count" id="benefit-result-count">0</span>
+              혜택 확인 결과 <span class="badge-count" id="benefit-result-count">0</span>
             </div>
           </div>
 
           <div id="benefit-status-live-region" class="sr-only" aria-live="polite" aria-atomic="true"></div>
           <div class="results-list" id="benefit-results-list" aria-live="polite">
-            <div class="empty-state">위의 빠른 탐색 버튼을 누르시거나 혜택 키워드를 검색해 보세요!</div>
+            <div class="empty-state">상황을 선택하거나 검색어를 입력하면 이곳에 결과와 다음 행동이 표시됩니다.</div>
           </div>
         </section>
       </div>
@@ -1329,7 +1384,7 @@
       <!-- 🔌 공공데이터 연결 상태 접이식 패널 -->
       <section class="data-sources-container">
         <button type="button" class="data-sources-toggle-btn" aria-expanded="false" aria-controls="data-sources-body" onclick="toggleDataSourcesPanel()">
-          <span>🔌 공공데이터 연결 상태</span>
+          <span>서비스 연결 상태</span>
           <span id="ds-toggle-icon">▼</span>
         </button>
         <div id="data-sources-body" class="data-sources-body hidden">
@@ -1513,6 +1568,8 @@
     let selectedPlace = ZONES_DATA.seoul[0]; // 기본 중심: 서울시청
     let activeSearchKeyword = "";
     let searchRequestId = 0; // 늦게 도착한 이전 검색 응답을 무시하기 위한 세대 번호
+    let locationRequestId = 0;
+    let locationWatchdog = null;
 
     // 공공 카페 & 반경 시각화 전용 변수 (F1~F4)
     let selectedRadiusKm = 1;     // F1: 1km, 3km, 5km 반경 (기본 1km)
@@ -1552,45 +1609,14 @@
       updatePlaceOptions();
       renderRecommendChips();
 
-      // 최초 구동 시 브라우저 Geolocation 기반 내 위치 조회 자동 시도
-      tryAutoDetectLocation();
+      // 위치 권한은 사용자의 명시적 동작으로만 요청합니다.
+      updateCenterMarker();
+      setLocationStatus("ready", "서울시청 기준", "내 위치를 사용하려면 위 버튼을 누르세요. 권한 없이도 지역 검색은 가능합니다.");
     }
 
-    // 초기 실행 시 자동 위치 감지
+    // 이전 호출 호환용: 자동 권한 요청 없이 현재 선택 지역을 준비합니다.
     function tryAutoDetectLocation() {
-      if (navigator.geolocation) {
-        navigator.geolocation.getCurrentPosition(
-          (position) => {
-            // 위치 수신 성공 시 권역 드롭다운을 '내 위치'로 자동 교체
-            const zoneSelect = document.getElementById("select-zone");
-            zoneSelect.value = "mylocation";
-
-            // 상세 지역은 내 위치 기준이므로 숨김 처리
-            document.getElementById("group-detail-place").style.display = "none";
-
-            selectedPlace = {
-              name: "내 현재 위치",
-              emoji: "📍",
-              lat: position.coords.latitude,
-              lng: position.coords.longitude,
-              desc: "브라우저 GPS 기기로 획득한 현재 사용자 실제 위치입니다."
-            };
-
-            focusOnPlace();
-
-            document.getElementById("results-list").innerHTML =
-              '<div class="empty-state">🎉 내 현재 위치를 감지했습니다!<br>검색창에 장소명을 치거나 하단 칩을 눌러 주변을 조회하세요.</div>';
-          },
-          (error) => {
-            // 실패 또는 권한 차단 시, 콤보박스의 기본선택값인 계양구청 유지
-            console.log("초기 내 위치 획득 실패(기본값 유지):", error.message);
-            updateCenterMarker();
-          },
-          { timeout: 3500 }
-        );
-      } else {
-        updateCenterMarker();
-      }
+      updateCenterMarker();
     }
 
     // 기본 권역 드롭다운 변경 시 호출
@@ -1618,6 +1644,7 @@
         // 해당 권역의 첫 번째 지점을 기본값으로 선정
         selectedPlace = ZONES_DATA[zoneKey][0];
         focusOnPlace();
+        setLocationStatus("ready", `${selectedPlace.name} 기준`, "선택한 지역을 중심으로 장소를 찾습니다.");
 
         // 검색어가 있었다면 즉시 해당 지역 기준으로 자동 재검색
         if (inputVal) {
@@ -1658,6 +1685,7 @@
 
       selectedPlace = ZONES_DATA[zoneKey][placeIndex];
       focusOnPlace();
+      setLocationStatus("ready", `${selectedPlace.name} 기준`, "선택한 지점을 중심으로 장소를 찾습니다.");
 
       // 검색어가 있었다면 새로운 상세 지점 기준으로 즉시 자동 재검색
       if (inputVal) {
@@ -1665,63 +1693,116 @@
       }
     }
 
+    function setLocationStatus(state, title, copy) {
+      const status = document.getElementById("location-status");
+      const titleEl = document.getElementById("location-status-title");
+      const copyEl = document.getElementById("location-status-copy");
+      if (status) status.dataset.state = state;
+      if (titleEl) titleEl.textContent = title;
+      if (copyEl) copyEl.textContent = copy;
+    }
+
+    function setLocationButtonBusy(isBusy) {
+      const button = document.getElementById("btn-use-location");
+      if (!button) return;
+      button.disabled = isBusy;
+      button.textContent = isBusy ? "위치 확인 중…" : "◎ 내 위치 사용";
+    }
+
+    function renderLocationFailure(reason) {
+      const messages = {
+        denied: ["위치 권한이 꺼져 있습니다", "주소창의 위치 권한을 허용한 뒤 다시 시도하거나, 지역을 직접 선택하세요."],
+        unavailable: ["현재 위치 신호를 받지 못했습니다", "실내나 데스크톱에서는 GPS가 늦을 수 있습니다. 지역 선택으로 바로 계속할 수 있습니다."],
+        timeout: ["위치 확인 시간이 초과됐습니다", "서울시청 기준은 그대로 유지됩니다. 다시 시도하거나 지역을 직접 선택하세요."],
+        unsupported: ["이 브라우저는 위치 기능을 지원하지 않습니다", "지역을 직접 선택하면 모든 장소 검색 기능을 사용할 수 있습니다."]
+      };
+      const [title, copy] = messages[reason] || messages.unavailable;
+      setLocationStatus("error", title, copy);
+      setLocationButtonBusy(false);
+
+      const listContainer = document.getElementById("results-list");
+      if (!listContainer) return;
+      const state = document.createElement("div");
+      state.className = "service-fallback";
+      const heading = document.createElement("strong");
+      heading.textContent = title;
+      const description = document.createElement("p");
+      description.textContent = copy;
+      const retry = document.createElement("button");
+      retry.type = "button";
+      retry.className = "location-action-btn";
+      retry.textContent = "내 위치 다시 확인";
+      retry.onclick = getMyLocation;
+      state.append(heading, description, retry);
+      listContainer.replaceChildren(state);
+    }
+
     // Geolocation 연동 수동 위치 획득
     function getMyLocation() {
       const listContainer = document.getElementById("results-list");
       const inputVal = document.getElementById("search-input").value.trim();
+      const requestId = ++locationRequestId;
+      let completed = false;
 
-      listContainer.innerHTML = '<div class="empty-state">📡 현재 위치 정보(GPS)를 조회하고 있습니다...</div>';
+      listContainer.innerHTML = '<div class="empty-state">📡 현재 위치를 확인하고 있습니다. 권한 창이 보이면 허용을 선택하세요.</div>';
+      setLocationStatus("loading", "현재 위치 확인 중", "브라우저 위치 권한과 기기 신호를 확인하고 있습니다.");
+      setLocationButtonBusy(true);
 
       if (!navigator.geolocation) {
-        alert("이 브라우저에서는 위치 서비스 기능이 지원되지 않습니다.");
-        fallbackToIncheon();
+        renderLocationFailure("unsupported");
         return;
       }
 
+      const finish = (callback) => {
+        if (completed || requestId !== locationRequestId) return;
+        completed = true;
+        if (locationWatchdog) clearTimeout(locationWatchdog);
+        locationWatchdog = null;
+        callback();
+      };
+
+      const timeoutMs = Number(window.__MIA_LOCATION_TIMEOUT_MS) || 9000;
+      locationWatchdog = setTimeout(() => finish(() => renderLocationFailure("timeout")), timeoutMs);
+
       navigator.geolocation.getCurrentPosition(
-        (position) => {
+        (position) => finish(() => {
           selectedPlace = {
             name: "내 현재 위치",
             emoji: "📍",
             lat: position.coords.latitude,
             lng: position.coords.longitude,
-            desc: "브라우저 GPS 기기로 획득한 현재 사용자 실제 위치입니다."
+            desc: "브라우저 위치 권한으로 확인한 현재 위치입니다."
           };
+          document.getElementById("select-zone").value = "mylocation";
+          document.getElementById("group-detail-place").style.display = "none";
           focusOnPlace();
+          setLocationStatus("ready", "내 현재 위치 기준", "위치 확인이 완료됐습니다. 주변 장소를 바로 검색할 수 있습니다.");
+          setLocationButtonBusy(false);
 
           if (inputVal) {
-            // 기존 검색어가 있었을 경우 내 위치 중심 검색으로 자동 갱신
             activeSearchKeyword = inputVal;
             searchPlaces();
           } else {
-            listContainer.innerHTML = '<div class="empty-state">내 현재 위치 조회에 성공했습니다!<br>주변에서 찾고 싶은 키워드를 검색해 보세요.</div>';
+            listContainer.innerHTML = '<div class="empty-state">현재 위치를 기준으로 준비했습니다. 아래 추천을 고르거나 장소를 검색하세요.</div>';
           }
-        },
-        (error) => {
-          console.error(error);
-          let msg = "위치 정보를 연동할 수 없습니다. ";
-          if (error.code === error.PERMISSION_DENIED) {
-            msg += "브라우저의 위치 조회 권한 요청이 차단되었습니다. 주소창 설정에서 권한을 승인해 주세요.";
-          } else if (error.code === error.POSITION_UNAVAILABLE) {
-            msg += "GPS 디바이스 신호를 가져올 수 없습니다.";
-          } else if (error.code === error.TIMEOUT) {
-            msg += "위치 정보 검색 시간이 초과되었습니다.";
-          }
-          alert(msg);
-          fallbackToIncheon();
-        },
-        { enableHighAccuracy: true, timeout: 8000, maximumAge: 0 }
+        }),
+        (error) => finish(() => {
+          const reason = error.code === 1 ? "denied" : error.code === 3 ? "timeout" : "unavailable";
+          renderLocationFailure(reason);
+        }),
+        { enableHighAccuracy: false, timeout: 7000, maximumAge: 60000 }
       );
     }
 
-    // 위치 획득 에러 시 안전하게 기본값으로 환원
+    // 기존 호출 호환용: 위치 실패 시 서울시청 기준으로 환원
     function fallbackToIncheon() {
       const zoneSelect = document.getElementById("select-zone");
-      zoneSelect.value = "incheon";
+      zoneSelect.value = "seoul";
       document.getElementById("group-detail-place").style.display = "flex";
       updatePlaceOptions();
-      selectedPlace = ZONES_DATA.incheon[0];
+      selectedPlace = ZONES_DATA.seoul[0];
       focusOnPlace();
+      setLocationStatus("ready", "서울시청 기준", "선택한 지역을 중심으로 장소를 찾습니다.");
     }
 
     // 추천 카테고리 칩 UI 구성
@@ -1771,13 +1852,21 @@
         }
       });
 
-      // 백엔드 API 연동 시도 (미완료 시 기존 카카오 키워드 검색 Fallback)
-      fetchCafes({
-        lat: selectedPlace.lat,
-        lng: selectedPlace.lng,
-        radiusKm: selectedRadiusKm,
-        query: inputVal
-      });
+      // 일반 장소 검색은 지도 검색을 기본 경로로 사용해 별도 공공 API 설정에 의존하지 않습니다.
+      searchPlaces();
+    }
+
+    // 선택한 기준 위치로 지도·중심 마커·검색 반경을 일관되게 이동합니다.
+    function focusOnPlace() {
+      if (!selectedPlace || !isKakaoMapReady()) {
+        setLocationStatus("error", "지도를 준비하지 못했습니다", "페이지를 새로고침한 뒤 다시 시도하세요.");
+        return;
+      }
+      const position = new kakao.maps.LatLng(selectedPlace.lat, selectedPlace.lng);
+      map.setLevel(4);
+      map.panTo(position);
+      updateCenterMarker();
+      updateCafeRadiusCircle(selectedPlace.lat, selectedPlace.lng, selectedRadiusKm);
     }
 
     // 공공 카페 전용 마커 정리
@@ -2141,10 +2230,17 @@
           const errMsg = (data && data.error && data.error.message)
             ? data.error.message
             : "카페 데이터를 불러오지 못했습니다.";
-          showCafeMessage(
-            "⚠️ " + errMsg + " (상태 코드: " + response.status + ")",
-            "카페 데이터를 불러오지 못했습니다. 상태 코드 " + response.status
-          );
+          if (response.status === 503 && isKakaoMapReady()) {
+            activeSearchKeyword = query || "카페";
+            searchPlacesWithHeaderNotice(
+              activeSearchKeyword,
+              "지도에서 찾은 주변 카페",
+              "공공 카페 연결이 쉬는 동안 지도 장소 검색 결과를 보여드립니다.",
+              radiusKm
+            );
+            return;
+          }
+          showCafeMessage(`⚠️ ${errMsg}`, "공공 카페 데이터를 불러오지 못했습니다.");
           return;
         }
 
@@ -2351,6 +2447,17 @@
       }
     }
 
+    // 스마트 벙 조건 선택 모달 제어 도우미
+    function openBungModal() {
+      const modal = document.getElementById("modal-bung-conditions");
+      if (modal) modal.classList.remove("hidden");
+    }
+
+    function closeBungModal() {
+      const modal = document.getElementById("modal-bung-conditions");
+      if (modal) modal.classList.add("hidden");
+    }
+
     // 벙 맛집 모임 장소 후보 검색 실행
     function executeBungSearch() {
       const getActiveVal = (groupId) => {
@@ -2363,22 +2470,21 @@
       const time = getActiveVal("opts-bung-time") || "저녁";
       const vibe = getActiveVal("opts-bung-vibe") || "대화하기 좋은";
 
-      const terms = [people, budget, vibe, time, "맛집"].filter(Boolean);
-      const keyword = terms.join(" ");
+      const keyword = "맛집";
 
       const queryInput = document.getElementById("search-input");
       if (queryInput) queryInput.value = keyword;
 
-      const noticeText = `💡 ${people} · ${budget ? budget + ' · ' : ''}${vibe} (${time}) 추천 모임 장소입니다. (방문 전 단체석 및 영업시간을 확인하세요.)`;
+      const noticeText = `${people} · ${budget || "예산 무관"} · ${vibe} · ${time}. 가까운 맛집을 먼저 보여드리며, 단체석·가격·영업시간은 방문 전에 확인하세요.`;
+
+      // 주변 탐색 탭으로 전환하여 결과를 표시
+      switchViewMode("nearby");
 
       searchPlacesWithHeaderNotice(
         keyword,
-        "모임 장소 후보",
+        "가까운 모임 맛집 후보",
         noticeText
       );
-
-      const bungPanel = document.getElementById("panel-bung-conditions");
-      if (bungPanel) bungPanel.classList.add("hidden");
     }
 
     // 점심/저녁 뭐먹지 조건 패널 열기
@@ -2402,13 +2508,19 @@
         localStorage.setItem("last_food_preference", JSON.stringify({ meal: currentFoodMeal, vibe, timestamp: Date.now() }));
       } catch {}
 
-      let query = `${currentFoodMeal} ${vibe} 맛집`;
-      if (vibe === "새로운 메뉴") query = `${currentFoodMeal} 이색 맛집`;
+      const foodKeywords = {
+        "든든하게": "한식",
+        "가볍게": "샐러드",
+        "매콤하게": "매운 음식",
+        "따뜻하게": "국밥",
+        "새로운 메뉴": "이색 맛집"
+      };
+      const query = foodKeywords[vibe] || "맛집";
 
       const queryInput = document.getElementById("search-input");
       if (queryInput) queryInput.value = query;
 
-      searchPlacesWithHeaderNotice(query, `${currentFoodMeal} 메뉴 후보`);
+      searchPlacesWithHeaderNotice(query, `${currentFoodMeal} 메뉴 후보`, `${vibe} 먹고 싶은 기분에 맞춰 '${query}' 주변 장소를 찾았습니다.`);
 
       const foodPanel = document.getElementById("panel-food-conditions");
       if (foodPanel) foodPanel.classList.add("hidden");
@@ -2440,7 +2552,7 @@
         searchPlacesWithHeaderNotice("맛집", "주변 맛집");
       } else if (type === "병원약국") {
         if (queryInput) queryInput.value = "병원 약국";
-        searchPlacesWithHeaderNotice("병원 약국", "주변 병원 · 약국");
+        searchMultiplePlaceCategories(["병원", "약국"], "주변 병원 · 약국");
       }
     }
 
@@ -2465,9 +2577,9 @@
       };
 
       const steps = [
-        { stepName: "1단계: 식사", keyword: "분위기 데이트 맛집", emoji: "🍽️" },
-        { stepName: "2단계: 카페", keyword: "분위기 카페", emoji: "☕" },
-        { stepName: "3단계: 산책", keyword: "산책로 공원", emoji: "🌳" }
+        { stepName: "1단계: 식사", keyword: "맛집", emoji: "🍽️" },
+        { stepName: "2단계: 카페", keyword: "카페", emoji: "☕" },
+        { stepName: "3단계: 산책", keyword: "공원", emoji: "🌳" }
       ];
 
       let stepResults = [];
@@ -2582,9 +2694,9 @@
     }
 
     // 커스텀 헤더 및 안내 태그가 포함된 키워드 장소 검색 어댑터 (세대 번호 요청 검사 포함)
-    function searchPlacesWithHeaderNotice(keyword, customTitle = null, customNotice = null) {
+    function searchPlacesWithHeaderNotice(keyword, customTitle = null, customNotice = null, radiusKm = 2) {
       if (!isKakaoMapReady()) {
-        updateStatusLiveRegion("카카오 지도가 준비되는 중입니다.");
+        showCafeMessage("지도가 아직 준비되지 않았습니다. 잠시 후 다시 시도하세요.", "지도 준비가 완료되지 않았습니다.");
         return;
       }
       clearAllSearchState();
@@ -2593,7 +2705,7 @@
       const center = getSelectedLocation();
       const options = {
         location: new kakao.maps.LatLng(center.lat, center.lng),
-        radius: 2000
+        radius: Math.min(Math.max(Number(radiusKm) || 2, 1), 20) * 1000
       };
 
       if (!placeServices) return;
@@ -2604,9 +2716,46 @@
         } else if (status === kakao.maps.services.Status.ZERO_RESULT) {
           renderPlacesWithCustomHeader([], customTitle, customNotice);
         } else {
-          updateStatusLiveRegion("검색 중 오류가 발생했습니다.");
+          showCafeMessage("장소 검색 연결이 원활하지 않습니다. 잠시 후 다시 시도하세요.", "장소 검색 중 오류가 발생했습니다.");
         }
       }, options);
+    }
+
+    function searchMultiplePlaceCategories(keywords, customTitle) {
+      if (!isKakaoMapReady()) {
+        showCafeMessage("지도가 아직 준비되지 않았습니다. 잠시 후 다시 시도하세요.", "지도 준비가 완료되지 않았습니다.");
+        return;
+      }
+
+      clearAllSearchState();
+      const reqId = recommendSearchRequestId;
+      const center = getSelectedLocation();
+      const options = {
+        location: new kakao.maps.LatLng(center.lat, center.lng),
+        radius: 2000
+      };
+      const merged = [];
+      const seen = new Set();
+      let completed = 0;
+
+      keywords.forEach((keyword) => {
+        placeServices.keywordSearch(keyword, (data, status) => {
+          if (reqId !== recommendSearchRequestId) return;
+          completed += 1;
+          if (status === kakao.maps.services.Status.OK && Array.isArray(data)) {
+            data.slice(0, 5).forEach((place) => {
+              const key = place.id || `${place.x}:${place.y}`;
+              if (!seen.has(key)) {
+                seen.add(key);
+                merged.push(place);
+              }
+            });
+          }
+          if (completed === keywords.length) {
+            renderPlacesWithCustomHeader(merged, customTitle, "병원과 약국을 각각 검색해 가까운 후보를 함께 보여드립니다.");
+          }
+        }, options);
+      });
     }
 
     // customTitle과 customNotice를 안전하게 지원하는 장소 렌더러
@@ -2702,31 +2851,35 @@
     let selectedQuickCategory = "";
     let isDataSourcesOpen = false;
 
-    // 모드 전환 탭 토글 (📍 내 주변 찾기 ↔ 🎁 정부 혜택 찾기)
+    // 모드 전환 탭 토글 (📍 내 주변 탐색 / 🍱 맞춤 모임·메뉴 / 🎁 정부 혜택)
     function switchViewMode(mode) {
       currentViewMode = mode;
       const tabNearby = document.getElementById("tab-nearby");
+      const tabBung = document.getElementById("tab-bung");
       const tabBenefits = document.getElementById("tab-benefits");
+
       const panelNearby = document.getElementById("panel-nearby");
+      const panelBung = document.getElementById("panel-bung");
       const panelBenefits = document.getElementById("panel-benefits");
 
-      if (!tabNearby || !tabBenefits || !panelNearby || !panelBenefits) return;
+      const tabs = [
+        { name: "nearby", btn: tabNearby, panel: panelNearby },
+        { name: "bung", btn: tabBung, panel: panelBung },
+        { name: "benefits", btn: tabBenefits, panel: panelBenefits }
+      ];
 
-      if (mode === "benefits") {
-        tabNearby.classList.remove("active");
-        tabNearby.setAttribute("aria-selected", "false");
-        tabBenefits.classList.add("active");
-        tabBenefits.setAttribute("aria-selected", "true");
-        panelNearby.classList.add("hidden");
-        panelBenefits.classList.remove("hidden");
-      } else {
-        tabBenefits.classList.remove("active");
-        tabBenefits.setAttribute("aria-selected", "false");
-        tabNearby.classList.add("active");
-        tabNearby.setAttribute("aria-selected", "true");
-        panelBenefits.classList.add("hidden");
-        panelNearby.classList.remove("hidden");
-      }
+      tabs.forEach(t => {
+        if (!t.btn || !t.panel) return;
+        if (t.name === mode) {
+          t.btn.classList.add("active");
+          t.btn.setAttribute("aria-selected", "true");
+          t.panel.classList.remove("hidden");
+        } else {
+          t.btn.classList.remove("active");
+          t.btn.setAttribute("aria-selected", "false");
+          t.panel.classList.add("hidden");
+        }
+      });
     }
 
     // 상황별 빠른 탐색 칩 클릭
@@ -2798,11 +2951,11 @@
         if (requestId !== benefitSearchRequestId) return;
 
         if (response.status === 404) {
-          renderBenefitError("백엔드 혜택 기능을 준비하고 있습니다.");
+          renderBenefitFallback(params.query, "실시간 혜택 검색 기능을 준비하고 있습니다.");
           return;
         }
         if (response.status === 503) {
-          renderBenefitError("혜택 API 인증키 설정을 확인해 주세요.");
+          renderBenefitFallback(params.query, "실시간 혜택 연결이 잠시 쉬고 있습니다.");
           return;
         }
         if (!response.ok) {
@@ -2813,7 +2966,7 @@
               errMessage = errData.error.message;
             }
           } catch {}
-          renderBenefitError(errMessage);
+          renderBenefitFallback(params.query, errMessage);
           return;
         }
 
@@ -2823,7 +2976,7 @@
       } catch (error) {
         if (error.name === "AbortError") return;
         if (requestId !== benefitSearchRequestId) return;
-        renderBenefitError("혜택 정보를 불러오지 못했습니다. 잠시 후 다시 시도해 주세요.");
+        renderBenefitFallback(params.query, "실시간 혜택 연결을 확인하지 못했습니다.");
       }
     }
 
@@ -2844,6 +2997,29 @@
       if (liveRegion) liveRegion.textContent = messageText;
     }
 
+    function renderBenefitFallback(query = "", reason = "실시간 혜택 목록을 불러오지 못했습니다.") {
+      const listContainer = document.getElementById("benefit-results-list");
+      const countBadge = document.getElementById("benefit-result-count");
+      const liveRegion = document.getElementById("benefit-status-live-region");
+      if (countBadge) countBadge.textContent = "공식";
+      if (!listContainer) return;
+
+      const state = document.createElement("div");
+      state.className = "service-fallback";
+      const title = document.createElement("strong");
+      title.textContent = query ? `'${query}' 혜택을 정부24에서 이어서 확인하세요` : "정부24 혜택알리미에서 이어서 확인하세요";
+      const description = document.createElement("p");
+      description.textContent = `${reason} 이 화면의 운영 설정을 사용자가 해결할 필요는 없습니다. 공식 혜택알리미에서 간편찾기와 맞춤 안내를 이용할 수 있습니다.`;
+      const link = document.createElement("a");
+      link.href = "https://plus.gov.kr/portal/benefitV2/";
+      link.target = "_blank";
+      link.rel = "noopener noreferrer";
+      link.textContent = "정부24 혜택알리미 열기 ↗";
+      state.append(title, description, link);
+      listContainer.replaceChildren(state);
+      if (liveRegion) liveRegion.textContent = `${reason} 정부24 공식 확인 경로를 안내합니다.`;
+    }
+
     // 혜택 목록 안전 DOM 렌더러 (XSS 100% 차단 textContent 및 createElement 전용)
     function renderBenefitResults(items, totalCount, matchedKeyword = "") {
       const listContainer = document.getElementById("benefit-results-list");
@@ -2856,11 +3032,7 @@
       listContainer.innerHTML = "";
 
       if (!items || items.length === 0) {
-        const emptyDiv = document.createElement("div");
-        emptyDiv.className = "empty-state";
-        emptyDiv.textContent = "조건에 부합하는 공공 혜택이 없습니다. 다른 키워드나 빠른 탐색 버튼을 선택해 보세요.";
-        listContainer.appendChild(emptyDiv);
-        if (liveRegion) liveRegion.textContent = "검색 조건에 맞는 공공 혜택이 없습니다.";
+        renderBenefitFallback(matchedKeyword, "조건에 맞는 실시간 결과가 없습니다.");
         return;
       }
 
@@ -3124,5 +3296,59 @@
     }
 
   </script>
+
+  <!-- 스마트 벙 모임 조건 선택 팝업 모달 (Glassmorphic Modal) -->
+  <div id="modal-bung-conditions" class="modal-backdrop hidden" onclick="if(event.target===this) closeBungModal();">
+    <div class="modal-container">
+      <div class="modal-header">
+        <div class="modal-title">
+          <span>🍻 동네 모임 · 벙 맛집 조건 설정</span>
+        </div>
+        <button type="button" class="modal-close-btn" onclick="closeBungModal()">✕</button>
+      </div>
+
+      <div style="display:flex; flex-direction:column; gap:12px;">
+        <div>
+          <div class="condition-group-title">👥 인원수</div>
+          <div class="condition-opt-group" id="opts-bung-people">
+            <button type="button" class="condition-opt-btn active" data-val="2명" onclick="selectConditionOpt('opts-bung-people', this)">2명</button>
+            <button type="button" class="condition-opt-btn" data-val="3~4명" onclick="selectConditionOpt('opts-bung-people', this)">3~4명</button>
+            <button type="button" class="condition-opt-btn" data-val="5명 이상" onclick="selectConditionOpt('opts-bung-people', this)">5명 이상</button>
+          </div>
+        </div>
+
+        <div>
+          <div class="condition-group-title">💰 1인당 예산</div>
+          <div class="condition-opt-group" id="opts-bung-budget">
+            <button type="button" class="condition-opt-btn" data-val="1만원 이하" onclick="selectConditionOpt('opts-bung-budget', this)">1만원 이하</button>
+            <button type="button" class="condition-opt-btn active" data-val="1~2만원" onclick="selectConditionOpt('opts-bung-budget', this)">1~2만원</button>
+            <button type="button" class="condition-opt-btn" data-val="2만원 이상" onclick="selectConditionOpt('opts-bung-budget', this)">2만원 이상</button>
+          </div>
+        </div>
+
+        <div>
+          <div class="condition-group-title">⏰ 시간대</div>
+          <div class="condition-opt-group" id="opts-bung-time">
+            <button type="button" class="condition-opt-btn" data-val="점심" onclick="selectConditionOpt('opts-bung-time', this)">점심</button>
+            <button type="button" class="condition-opt-btn active" data-val="저녁" onclick="selectConditionOpt('opts-bung-time', this)">저녁</button>
+            <button type="button" class="condition-opt-btn" data-val="야식" onclick="selectConditionOpt('opts-bung-time', this)">야식</button>
+          </div>
+        </div>
+
+        <div>
+          <div class="condition-group-title">✨ 모임 분위기</div>
+          <div class="condition-opt-group" id="opts-bung-vibe">
+            <button type="button" class="condition-opt-btn active" data-val="대화하기 좋은" onclick="selectConditionOpt('opts-bung-vibe', this)">대화하기 좋은</button>
+            <button type="button" class="condition-opt-btn" data-val="활기찬" onclick="selectConditionOpt('opts-bung-vibe', this)">활기찬</button>
+            <button type="button" class="condition-opt-btn" data-val="든든한 식사" onclick="selectConditionOpt('opts-bung-vibe', this)">든든한 식사</button>
+          </div>
+        </div>
+
+        <button type="button" class="condition-submit-btn" onclick="executeBungSearch(); closeBungModal();">
+          🚀 맞춤 모임 장소 후보 찾기
+        </button>
+      </div>
+    </div>
+  </div>
 </body>
 </html>
