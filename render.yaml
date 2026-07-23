@@ -6,7 +6,7 @@ services:
     runtime: node          # Node.js 앱
     plan: free             # 무료 요금제 (신용카드 불필요)
     region: singapore      # 한국에서 가장 가까운 무료 리전
-    buildCommand: cd backend && npm install   # 배포 시 패키지 설치
+    buildCommand: npm ci --prefix backend && npm ci --prefix frontend && npm run build --prefix frontend
     startCommand: cd backend && npm start     # 서버 실행 (node server.js)
     envVars:
       - key: NODE_VERSION

@@ -1,9 +1,11 @@
 const path = require("node:path");
+const fs = require("node:fs");
 const dotenv = require("dotenv");
 const express = require("express");
 const { CafeApiError, fetchNearbyCafes } = require("./services/semas-cafes");
 const { BenefitApiError, fetchBenefits } = require("./services/mois-benefits");
 const { createDataSourceMonitor } = require("./services/data-source-status");
+const { PlaceApiError, fetchNearbyPlaces } = require("./services/osm-places");
 
 // 인증키는 로컬 루트의 .env 또는 Render 환경변수에서만 읽습니다.
 // 테스트에서는 process.env만 주입해 로컬 비밀 파일을 읽지 않습니다.
@@ -16,6 +18,45 @@ app.disable("x-powered-by");
 const PORT = process.env.PORT || 3000;
 
 const monitor = createDataSourceMonitor(process.env);
+
+app.use((req, res, next) => {
+  res.setHeader("Content-Security-Policy", [
+    "default-src 'self'",
+    "script-src 'self'",
+    "style-src 'self' 'unsafe-inline'",
+    "img-src 'self' data: blob: https://*.tile.openstreetmap.org",
+    "connect-src 'self'",
+    "font-src 'self' data:",
+    "object-src 'none'",
+    "base-uri 'self'",
+    "frame-ancestors 'none'",
+    "form-action 'self'",
+  ].join("; "));
+  res.setHeader("X-Frame-Options", "DENY");
+  res.setHeader("X-Content-Type-Options", "nosniff");
+  res.setHeader("Referrer-Policy", "strict-origin-when-cross-origin");
+  res.setHeader("Permissions-Policy", "geolocation=(self), camera=(), microphone=()");
+  if (req.secure || req.get("x-forwarded-proto") === "https") {
+    res.setHeader("Strict-Transport-Security", "max-age=31536000");
+  }
+  next();
+});
+
+app.get("/api/health", (req, res) => {
+  res.setHeader("Cache-Control", "no-store");
+  return res.status(200).json({
+    status: "ready",
+    capabilities: {
+      places: "available",
+      optionalDataSources: monitor.snapshot().map(({ id, configured, verificationStatus }) => ({
+        id,
+        configured,
+        verificationStatus,
+      })),
+    },
+    checkedAt: new Date().toISOString(),
+  });
+});
 
 app.get("/api/cafes", async (req, res) => {
   const serviceKey = process.env.SEMAS_STORE_API_KEY;
@@ -69,6 +110,18 @@ app.get("/api/benefits", async (req, res) => {
   }
 });
 
+app.get("/api/places", async (req, res) => {
+  res.setHeader("Cache-Control", "public, max-age=60");
+  try {
+    return res.status(200).json(await fetchNearbyPlaces(req.query));
+  } catch (error) {
+    const status = error instanceof PlaceApiError ? error.status : 502;
+    const code = error instanceof PlaceApiError ? error.code : "PLACE_UPSTREAM_ERROR";
+    const message = error instanceof PlaceApiError ? error.message : "주변 장소를 불러오지 못했습니다.";
+    return res.status(status).json({ error: { code, message, retryable: status >= 500 } });
+  }
+});
+
 function sendDataSourceStatus(req, res) {
   res.setHeader("Cache-Control", "no-store");
   return res.status(200).json({
@@ -82,8 +135,13 @@ app.get("/api/data-sources", sendDataSourceStatus);
 app.get("/api/data-source-status", sendDataSourceStatus);
 
 // HTML은 캐시를 끄고, 정적 자원은 짧게 캐시해 이전 버전 오버랩을 방지합니다.
+const frontendDist = path.join(__dirname, "../frontend/dist");
+const frontendRoot = fs.existsSync(frontendDist)
+  ? frontendDist
+  : path.join(__dirname, "../frontend/public");
+
 app.use(
-  express.static(path.join(__dirname, "../frontend/public"), {
+  express.static(frontendRoot, {
     setHeaders: (res, filePath) => {
       if (filePath.endsWith(".html")) {
         res.setHeader("Cache-Control", "no-cache, no-store, must-revalidate");
