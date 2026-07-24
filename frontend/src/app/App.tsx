@@ -223,7 +223,7 @@ export function App() {
         <Tabs value={mode} onValueChange={setMode} aria-label="서비스 모드">
           <TabsList>
             <TabsTrigger value="explore"><Compass size={16} /> 주변 탐색</TabsTrigger>
-            <TabsTrigger value="benefits"><Gift size={16} /> 정부 혜택</TabsTrigger>
+            <TabsTrigger value="benefits"><Gift size={16} /> 정부 지원 정보</TabsTrigger>
           </TabsList>
         </Tabs>
         <div className="top-actions">
@@ -366,10 +366,10 @@ export function App() {
       ) : (
         <section id="main-workspace" className="benefit-workspace">
           <aside className="benefit-filter">
-            <Badge>GOV BENEFIT FINDER</Badge>
-            <h1>놓치기 쉬운 혜택,<br />조건부터 좁혀보세요.</h1>
-            <p>원시 API 오류 대신 공식 확인 경로까지 이어드립니다.</p>
-            <label className="field-label" htmlFor="benefit-search">상황 또는 혜택명</label>
+            <Badge>GOV SUPPORT GUIDE</Badge>
+            <h1>공식 지원사업,<br />확인 경로부터 찾으세요.</h1>
+            <p>입력한 주제와 관련된 공식 기관 안내·신청 경로를 연결합니다.</p>
+            <label className="field-label" htmlFor="benefit-search">상황 또는 지원사업명</label>
             <form className="benefit-search" onSubmit={(event) => { event.preventDefault(); void runBenefitSearch() }}>
               <input id="benefit-search" value={benefitQuery} onChange={(event) => setBenefitQuery(event.target.value)} placeholder="예: 청년 창업, 소상공인" />
               <Button type="submit"><Search size={16} /> 찾기</Button>
@@ -382,8 +382,8 @@ export function App() {
             <div className="official-note"><Building2 size={20} /><span><strong>공식 정보가 기준입니다</strong><small>신청 전 담당 기관의 최신 조건을 확인하세요.</small></span></div>
           </aside>
           <div className="benefit-results" aria-live="polite">
-            <div className="benefit-title"><span><small>RESULTS</small><h2>{benefitState === "degraded" ? "공식 확인 경로" : "혜택 검색 결과"}</h2></span><Badge>{benefits.length}건</Badge></div>
-            {benefitState === "idle" ? <div className="benefit-guide"><div><Gift size={32} /><h3>상황을 하나 선택해 보세요</h3><p>검색 결과는 읽기 편한 카드로 정리됩니다.</p></div><ol><li><span>01</span><strong>상황 선택</strong><small>왼쪽에서 내 조건과 가까운 항목을 고릅니다.</small></li><li><span>02</span><strong>지원 내용 비교</strong><small>대상·기관·신청 방법을 카드에서 비교합니다.</small></li><li><span>03</span><strong>공식 기관 확인</strong><small>최종 신청 조건은 담당 기관에서 확인합니다.</small></li></ol></div> : null}
+            <div className="benefit-title"><span><small>RESULTS</small><h2>{benefitState === "degraded" ? "공식 확인 경로" : "공식 지원사업 검색 결과"}</h2></span><Badge>{benefits.length}건</Badge></div>
+            {benefitState === "idle" ? <div className="benefit-guide"><div><Gift size={32} /><h3>확인할 주제를 선택해 보세요</h3><p>관련 공식 지원사업과 확인 경로를 카드로 정리합니다.</p></div><ol><li><span>01</span><strong>주제 선택</strong><small>왼쪽에서 찾으려는 상황이나 사업을 고릅니다.</small></li><li><span>02</span><strong>공식 정보 확인</strong><small>지원 내용과 소관 기관을 카드에서 살펴봅니다.</small></li><li><span>03</span><strong>자격 조건 확인</strong><small>최종 신청 자격과 기간은 담당 기관에서 확인합니다.</small></li></ol></div> : null}
             {benefitState === "loading" ? <div className="benefit-grid">{[1,2,3,4,5,6].map((item) => <div key={item} className="benefit-skeleton" />)}</div> : null}
             {benefitState === "degraded" ? <div className="benefit-disclosure"><Building2 size={20} /><span><strong>공식 안내 링크를 보여드립니다</strong><small>현재 결과는 자격·소득·지역 조건을 검증한 맞춤 판정 결과가 아니라, 입력한 검색어와 관련된 공식 확인 경로입니다.</small></span></div> : null}
             {benefitState === "error" || benefitState === "empty" ? (

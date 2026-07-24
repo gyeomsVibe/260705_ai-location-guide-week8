@@ -116,8 +116,8 @@ with sync_playwright() as playwright:
     expect(page.get_by_text("0.3km · cafe")).to_be_visible()
     page.screenshot(path=str(ARTIFACT_DIR / "desktop-explore.png"), full_page=True)
 
-    page.get_by_role("tab", name="정부 혜택").click()
-    expect(page.get_by_role("heading", name="놓치기 쉬운 혜택, 조건부터 좁혀보세요.")).to_be_visible()
+    page.get_by_role("tab", name="정부 지원 정보").click()
+    expect(page.get_by_role("heading", name="공식 지원사업, 확인 경로부터 찾으세요.")).to_be_visible()
     expect(page.get_by_role("heading", name="동네에서 뭐 할까?")).to_have_count(0)
     expect(page.get_by_role("button", name="소상공인")).to_be_visible()
     assert page.locator(".benefit-presets button").count() == 4
@@ -130,15 +130,15 @@ with sync_playwright() as playwright:
 
     denied_page, denied_errors = prepare_page(browser, {"width": 1280, "height": 800}, "denied")
     denied_page.get_by_role("button", name="내 위치").click()
-    expect(denied_page.get_by_text("위치 권한이 꺼져 있습니다. 위 지역 목록으로 계속 탐색할 수 있어요.")).to_be_visible()
-    expect(denied_page.get_by_label("탐색 기준")).to_be_enabled()
+    expect(denied_page.get_by_text("위치 권한이 꺼져 있습니다. 전국 지역 검색으로 계속 탐색할 수 있어요.")).to_be_visible()
+    expect(denied_page.locator("#region")).to_be_enabled()
     assert not denied_errors, denied_errors
     denied_page.close()
 
     mobile, mobile_errors = prepare_page(browser, {"width": 390, "height": 844})
     assert mobile.evaluate("document.documentElement.scrollWidth <= innerWidth")
     expect(mobile.get_by_label("서울시청 주변 지도")).to_be_visible()
-    mobile.get_by_role("tab", name="정부 혜택").click()
+    mobile.get_by_role("tab", name="정부 지원 정보").click()
     expect(mobile.get_by_role("heading", name="동네에서 뭐 할까?")).to_have_count(0)
     assert mobile.locator(".benefit-presets button").count() == 4
     assert mobile.evaluate("document.documentElement.scrollWidth <= innerWidth")

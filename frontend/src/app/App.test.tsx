@@ -139,7 +139,7 @@ describe("생활 탐색 워크스페이스", () => {
     vi.stubGlobal("fetch", vi.fn(() => jsonResponse({ error: { code: "PUBLIC_API_NOT_CONFIGURED", message: "not configured" } }, 503)))
     render(<App />)
     expect(screen.queryByRole("button", { name: /소상공인/ })).not.toBeInTheDocument()
-    await userEvent.click(screen.getByRole("tab", { name: "정부 혜택" }))
+    await userEvent.click(screen.getByRole("tab", { name: "정부 지원 정보" }))
     expect(screen.queryByRole("heading", { name: "동네에서 뭐 할까?" })).not.toBeInTheDocument()
     expect(screen.queryByRole("button", { name: "카페" })).not.toBeInTheDocument()
     await userEvent.click(screen.getByRole("button", { name: /소상공인/ }))
@@ -154,13 +154,14 @@ describe("생활 탐색 워크스페이스", () => {
       degraded: true,
     })))
     render(<App />)
-    await userEvent.click(screen.getByRole("tab", { name: "정부 혜택" }))
+    await userEvent.click(screen.getByRole("tab", { name: "정부 지원 정보" }))
     await userEvent.click(screen.getByRole("button", { name: /소상공인/ }))
     expect(await screen.findByRole("heading", { name: "소상공인 지원사업 공식 확인" })).toBeVisible()
     expect(screen.getByRole("link", { name: /상세 확인/ })).toHaveAttribute("href", "https://www.sbiz24.kr/")
     expect(screen.getByRole("heading", { name: "공식 확인 경로" })).toBeVisible()
     expect(screen.getByText(/맞춤 판정 결과가 아니라/)).toBeVisible()
     expect(screen.queryByRole("heading", { name: "맞춤 혜택" })).not.toBeInTheDocument()
+    expect(screen.queryByText(/원시 API 오류/)).not.toBeInTheDocument()
   })
 
   it("데이트 코스는 공원과 카페를 같은 중심·반경으로 함께 탐색한다", async () => {
@@ -203,7 +204,7 @@ describe("생활 탐색 워크스페이스", () => {
     const pending: Array<(response: Response) => void> = []
     vi.stubGlobal("fetch", vi.fn(() => new Promise<Response>((resolve) => pending.push(resolve))))
     render(<App />)
-    await userEvent.click(screen.getByRole("tab", { name: "정부 혜택" }))
+    await userEvent.click(screen.getByRole("tab", { name: "정부 지원 정보" }))
     await userEvent.click(screen.getByRole("button", { name: /1인 창조기업/ }))
     await waitFor(() => expect(pending).toHaveLength(1))
     await userEvent.click(screen.getByRole("button", { name: /소상공인/ }))

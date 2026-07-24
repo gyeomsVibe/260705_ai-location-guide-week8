@@ -27,10 +27,11 @@ with sync_playwright() as playwright:
     assert result_count > 0
     page.screenshot(path=str(screenshot), full_page=True)
 
-    page.get_by_role("tab", name="정부 혜택").click()
+    page.get_by_role("tab", name="정부 지원 정보").click()
     expect(page.get_by_role("heading", name="동네에서 뭐 할까?")).to_have_count(0)
     page.get_by_role("button", name="소상공인").click()
-    expect(page.get_by_role("link", name="정부24에서 계속 찾기")).to_be_visible(timeout=30000)
+    expect(page.get_by_role("heading", name="공식 확인 경로")).to_be_visible(timeout=30000)
+    expect(page.get_by_role("link", name="상세 확인").first).to_be_visible(timeout=30000)
     assert not page_errors, page_errors
     browser.close()
     print(json.dumps({"status": "passed", "placeResults": result_count, "screenshot": str(screenshot)}, ensure_ascii=False))
