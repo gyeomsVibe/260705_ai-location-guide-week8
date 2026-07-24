@@ -38,6 +38,11 @@ export function fetchPlaces(
   return getJson<{ items: Place[]; count: number; attribution: string }>(`/api/places?${params}`, signal)
 }
 
+export function fetchRegions(query: string, signal?: AbortSignal) {
+  const params = new URLSearchParams({ q: query.trim(), limit: "5" })
+  return getJson<{ items: Coordinates[]; count: number; attribution: string }>(`/api/geocode?${params}`, signal)
+}
+
 export function fetchBenefits(query: string, signal?: AbortSignal) {
   const params = new URLSearchParams({ limit: "24" })
   if (query.trim()) params.set("q", query.trim())

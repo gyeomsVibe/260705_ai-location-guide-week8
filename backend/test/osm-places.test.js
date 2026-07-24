@@ -44,3 +44,20 @@ test("빠른 장소 검색 실패 시 보조 공개 서버로 폴백한다", asy
   assert.equal(calls, 2);
   assert.equal(result.items[0].name, "폴백 카페");
 });
+
+test("빠른 장소 검색이 200 빈 배열이어도 보조 검색으로 폴백한다", async () => {
+  let calls = 0;
+  const fakeFetch = async () => {
+    calls += 1;
+    if (calls === 1) return { ok: true, json: async () => [] };
+    return {
+      ok: true,
+      json: async () => ({ elements: [
+        { type: "node", id: 8, lat: 37.567, lon: 126.979, tags: { name: "보조 헬스장", leisure: "fitness_centre" } },
+      ] }),
+    };
+  };
+  const result = await fetchNearbyPlaces({ category: "gym" }, fakeFetch);
+  assert.equal(calls, 2);
+  assert.equal(result.items[0].name, "보조 헬스장");
+});

@@ -6,6 +6,8 @@ const { CafeApiError, fetchNearbyCafes } = require("./services/semas-cafes");
 const { BenefitApiError, fetchBenefits } = require("./services/mois-benefits");
 const { createDataSourceMonitor } = require("./services/data-source-status");
 const { PlaceApiError, fetchNearbyPlaces } = require("./services/osm-places");
+const { GeocodeApiError, geocodeKoreanRegion } = require("./services/osm-geocode");
+const { getOfficialBenefits } = require("./services/official-benefits");
 
 // 인증키는 로컬 루트의 .env 또는 Render 환경변수에서만 읽습니다.
 // 테스트에서는 process.env만 주입해 로컬 비밀 파일을 읽지 않습니다.
@@ -89,12 +91,7 @@ app.get("/api/benefits", async (req, res) => {
   res.setHeader("Cache-Control", "no-store");
 
   if (!serviceKey) {
-    return res.status(503).json({
-      error: {
-        code: "PUBLIC_API_NOT_CONFIGURED",
-        message: "공공서비스 혜택 데이터 연결이 아직 설정되지 않았습니다."
-      }
-    });
+    return res.status(200).json(getOfficialBenefits(req.query));
   }
 
   try {
@@ -118,6 +115,18 @@ app.get("/api/places", async (req, res) => {
     const status = error instanceof PlaceApiError ? error.status : 502;
     const code = error instanceof PlaceApiError ? error.code : "PLACE_UPSTREAM_ERROR";
     const message = error instanceof PlaceApiError ? error.message : "주변 장소를 불러오지 못했습니다.";
+    return res.status(status).json({ error: { code, message, retryable: status >= 500 } });
+  }
+});
+
+app.get("/api/geocode", async (req, res) => {
+  res.setHeader("Cache-Control", "public, max-age=300");
+  try {
+    return res.status(200).json(await geocodeKoreanRegion(req.query));
+  } catch (error) {
+    const status = error instanceof GeocodeApiError ? error.status : 502;
+    const code = error instanceof GeocodeApiError ? error.code : "GEOCODE_UPSTREAM_ERROR";
+    const message = error instanceof GeocodeApiError ? error.message : "지역을 찾지 못했습니다.";
     return res.status(status).json({ error: { code, message, retryable: status >= 500 } });
   }
 });

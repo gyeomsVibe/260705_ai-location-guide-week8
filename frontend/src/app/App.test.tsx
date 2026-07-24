@@ -1,4 +1,4 @@
-import { render, screen } from "@testing-library/react"
+import { render, screen, waitFor } from "@testing-library/react"
 import userEvent from "@testing-library/user-event"
 import { beforeEach, describe, expect, it, vi } from "vitest"
 import { App } from "./App"
@@ -54,6 +54,29 @@ describe("생활 탐색 워크스페이스", () => {
     expect(screen.getByRole("button", { name: "3km" })).toHaveAttribute("aria-pressed", "true")
   })
 
+  it("전국 지역 검색 결과 좌표로 지도와 장소 검색을 함께 이동한다", async () => {
+    const fetchMock = vi.fn((input: RequestInfo | URL) => {
+      const url = String(input)
+      if (url.startsWith("/api/geocode")) {
+        return jsonResponse({ items: [{ label: "제주시 · 제주특별자치도 · 대한민국", lat: 33.4996, lng: 126.5312 }], count: 1 })
+      }
+      return jsonResponse({ items: [], count: 0 })
+    })
+    vi.stubGlobal("fetch", fetchMock)
+    render(<App />)
+    const input = screen.getByRole("textbox", { name: "전국 지역 검색" })
+    await userEvent.clear(input)
+    await userEvent.type(input, "제주시")
+    await userEvent.click(screen.getByRole("button", { name: "이동" }))
+
+    expect(await screen.findByLabelText("테스트 지도")).toHaveTextContent("제주시")
+    await waitFor(() => expect(fetchMock).toHaveBeenCalledWith(
+      expect.stringMatching(/\/api\/places\?.*lat=33\.4996.*lng=126\.5312/),
+      expect.objectContaining({ signal: expect.any(AbortSignal) }),
+    ))
+    expect(screen.getByText(/중심으로 지도와 검색 반경을 이동했습니다/)).toBeVisible()
+  })
+
   it("위치 권한 거부 후에도 수동 지역 탐색을 제공한다", async () => {
     Object.defineProperty(navigator, "geolocation", {
       configurable: true,
@@ -75,5 +98,36 @@ describe("생활 탐색 워크스페이스", () => {
     await userEvent.click(screen.getByRole("button", { name: /소상공인/ }))
     expect(await screen.findByRole("link", { name: /정부24에서 계속 찾기/ })).toBeVisible()
     expect(screen.queryByText(/API.*키/i)).not.toBeInTheDocument()
+  })
+
+  it("혜택 대체 응답도 빈 화면 대신 공식 카드를 표시한다", async () => {
+    vi.stubGlobal("fetch", vi.fn(() => jsonResponse({
+      items: [{ id: "official-1", name: "소상공인 지원사업 공식 확인", summary: "현재 모집 사업 확인", agency: "소상공인시장진흥공단", supportType: "사업 지원", detailUrl: "https://www.sbiz24.kr/" }],
+      count: 1,
+      degraded: true,
+    })))
+    render(<App />)
+    await userEvent.click(screen.getByRole("tab", { name: "정부 혜택" }))
+    await userEvent.click(screen.getByRole("button", { name: /소상공인/ }))
+    expect(await screen.findByRole("heading", { name: "소상공인 지원사업 공식 확인" })).toBeVisible()
+    expect(screen.getByRole("link", { name: /상세 확인/ })).toHaveAttribute("href", "https://www.sbiz24.kr/")
+  })
+
+  it("혜택을 빠르게 연속 선택해도 늦은 이전 응답이 최신 결과를 덮지 않는다", async () => {
+    const pending: Array<(response: Response) => void> = []
+    vi.stubGlobal("fetch", vi.fn(() => new Promise<Response>((resolve) => pending.push(resolve))))
+    render(<App />)
+    await userEvent.click(screen.getByRole("tab", { name: "정부 혜택" }))
+    await userEvent.click(screen.getByRole("button", { name: /1인 창조기업/ }))
+    await waitFor(() => expect(pending).toHaveLength(1))
+    await userEvent.click(screen.getByRole("button", { name: /소상공인/ }))
+    await waitFor(() => expect(pending).toHaveLength(2))
+
+    pending[1](new Response(JSON.stringify({ items: [{ id: "new", name: "최신 소상공인 결과" }], count: 1 }), { status: 200, headers: { "Content-Type": "application/json" } }))
+    expect(await screen.findByRole("heading", { name: "최신 소상공인 결과" })).toBeVisible()
+    pending[0](new Response(JSON.stringify({ items: [{ id: "old", name: "늦게 도착한 이전 결과" }], count: 1 }), { status: 200, headers: { "Content-Type": "application/json" } }))
+
+    await waitFor(() => expect(screen.queryByText("늦게 도착한 이전 결과")).not.toBeInTheDocument())
+    expect(screen.getByRole("heading", { name: "최신 소상공인 결과" })).toBeVisible()
   })
 })

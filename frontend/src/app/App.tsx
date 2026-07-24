@@ -9,17 +9,10 @@ import { Button } from "../components/ui/button"
 import { Card, CardContent, CardHeader } from "../components/ui/card"
 import { Tabs, TabsList, TabsTrigger } from "../components/ui/tabs"
 import { MapCanvas } from "../components/map-canvas"
-import { ApiError, fetchBenefits, fetchDataSources, fetchPlaces } from "../lib/api"
+import { fetchBenefits, fetchDataSources, fetchPlaces, fetchRegions } from "../lib/api"
 import type { Benefit, Coordinates, LoadState, Place } from "../types"
 
-const REGIONS: Coordinates[] = [
-  { label: "서울시청", lat: 37.5665, lng: 126.978 },
-  { label: "강남역", lat: 37.4979, lng: 127.0276 },
-  { label: "성수동", lat: 37.5446, lng: 127.0559 },
-  { label: "홍대입구", lat: 37.5572, lng: 126.9254 },
-  { label: "여의도", lat: 37.5219, lng: 126.9245 },
-  { label: "부산 서면", lat: 35.1578, lng: 129.059 },
-]
+const INITIAL_CENTER: Coordinates = { label: "서울시청", lat: 37.5665, lng: 126.978 }
 
 const CATEGORIES = [
   { id: "restaurant", label: "맛집", icon: Utensils },
@@ -53,7 +46,10 @@ function stateCopy(state: LoadState, error: string) {
 
 export function App() {
   const [mode, setMode] = useState("explore")
-  const [center, setCenter] = useState<Coordinates>(REGIONS[0])
+  const [center, setCenter] = useState<Coordinates>(INITIAL_CENTER)
+  const [regionQuery, setRegionQuery] = useState(INITIAL_CENTER.label)
+  const [regionState, setRegionState] = useState<LoadState>("idle")
+  const [regionMessage, setRegionMessage] = useState("전국 시·군·구·동을 검색할 수 있습니다.")
   const [radius, setRadius] = useState(1)
   const [category, setCategory] = useState("restaurant")
   const [query, setQuery] = useState("")
@@ -68,6 +64,8 @@ export function App() {
   const [sourcesOpen, setSourcesOpen] = useState(false)
   const [sources, setSources] = useState<Array<{ id: string; label?: string; status: string; configured?: boolean }>>([])
   const requestRef = useRef<AbortController | null>(null)
+  const regionRequestRef = useRef<AbortController | null>(null)
+  const benefitRequestRef = useRef<AbortController | null>(null)
 
   const runPlaceSearch = useCallback(async (
     nextCategory = category,
@@ -79,11 +77,13 @@ export function App() {
     const controller = new AbortController()
     requestRef.current = controller
     setCategory(nextCategory)
+    setQuery(nextQuery)
     setSelectedId(null)
     setPlaceError("")
     setPlaceState("loading")
     try {
       const result = await fetchPlaces(nextCenter, nextCategory, nextRadius, nextQuery, controller.signal)
+      if (controller.signal.aborted || requestRef.current !== controller) return
       setPlaces(result.items)
       setPlaceState(result.items.length ? "success" : "empty")
     } catch (error) {
@@ -104,6 +104,7 @@ export function App() {
       (position) => {
         const next = { label: "내 현재 위치", lat: position.coords.latitude, lng: position.coords.longitude }
         setCenter(next)
+        setRegionQuery(next.label)
         setGeoState("idle")
         void runPlaceSearch(category, query, next)
       },
@@ -112,20 +113,62 @@ export function App() {
     )
   }
 
-  const runBenefitSearch = async (nextQuery = benefitQuery) => {
-    setBenefitQuery(nextQuery)
-    setBenefitState("loading")
+  const runRegionSearch = async () => {
+    const normalizedQuery = regionQuery.trim()
+    if (normalizedQuery.length < 2) {
+      setRegionState("error")
+      setRegionMessage("전국 시·군·구·동 이름을 2자 이상 입력해 주세요.")
+      return
+    }
+    regionRequestRef.current?.abort()
+    const controller = new AbortController()
+    regionRequestRef.current = controller
+    setRegionState("loading")
+    setRegionMessage("입력한 지역의 중심 좌표를 찾고 있습니다.")
     try {
-      const result = await fetchBenefits(nextQuery)
-      setBenefits(result.items)
-      setBenefitState(result.items.length ? "success" : "empty")
+      const result = await fetchRegions(normalizedQuery, controller.signal)
+      if (controller.signal.aborted || regionRequestRef.current !== controller) return
+      if (!result.items.length) {
+        setRegionState("empty")
+        setRegionMessage("일치하는 국내 지역이 없습니다. 시·군·구·동을 함께 입력해 보세요.")
+        return
+      }
+      const next = result.items[0]
+      setCenter(next)
+      setRegionQuery(next.label)
+      setRegionState("success")
+      setRegionMessage(`${next.label} 중심으로 지도와 검색 반경을 이동했습니다.`)
+      await runPlaceSearch(category, query, next, radius)
     } catch (error) {
-      setBenefits([])
-      setBenefitState(error instanceof ApiError && error.status === 503 ? "degraded" : "error")
+      if (controller.signal.aborted) return
+      setRegionState("error")
+      setRegionMessage(error instanceof Error ? error.message : "지역을 찾지 못했습니다.")
     }
   }
 
-  useEffect(() => () => requestRef.current?.abort(), [])
+  const runBenefitSearch = async (nextQuery = benefitQuery) => {
+    benefitRequestRef.current?.abort()
+    const controller = new AbortController()
+    benefitRequestRef.current = controller
+    setBenefitQuery(nextQuery)
+    setBenefitState("loading")
+    try {
+      const result = await fetchBenefits(nextQuery, controller.signal)
+      if (controller.signal.aborted || benefitRequestRef.current !== controller) return
+      setBenefits(result.items)
+      setBenefitState(result.items.length ? "success" : "empty")
+    } catch (error) {
+      if (controller.signal.aborted) return
+      setBenefits([])
+      setBenefitState("error")
+    }
+  }
+
+  useEffect(() => () => {
+    requestRef.current?.abort()
+    regionRequestRef.current?.abort()
+    benefitRequestRef.current?.abort()
+  }, [])
 
   useEffect(() => {
     if (!sourcesOpen) return
@@ -176,24 +219,30 @@ export function App() {
 
             <div className="location-row">
               <label className="field-label" htmlFor="region">탐색 기준</label>
-              <div className="location-controls">
-                <select
-                  id="region"
-                  value={center.label}
-                  onChange={(event) => {
-                    const next = REGIONS.find((region) => region.label === event.target.value)
-                    if (next) setCenter(next)
-                  }}
-                >
-                  {REGIONS.map((region) => <option key={region.label}>{region.label}</option>)}
-                </select>
-                <Button variant="secondary" onClick={useMyLocation} disabled={geoState === "loading"}>
+              <form className="location-controls" onSubmit={(event) => { event.preventDefault(); void runRegionSearch() }}>
+                <span className="region-input">
+                  <Search size={16} />
+                  <input
+                    id="region"
+                    value={regionQuery}
+                    onChange={(event) => setRegionQuery(event.target.value)}
+                    placeholder="전국 시·군·구·동 검색"
+                    aria-label="전국 지역 검색"
+                    autoComplete="off"
+                  />
+                </span>
+                <Button type="submit" disabled={regionState === "loading"}>
+                  {regionState === "loading" ? <RefreshCw className="spin" size={16} /> : <MapPin size={16} />}
+                  이동
+                </Button>
+                <Button type="button" variant="secondary" onClick={useMyLocation} disabled={geoState === "loading"}>
                   {geoState === "loading" ? <RefreshCw className="spin" size={16} /> : <LocateFixed size={16} />}
                   {geoState === "loading" ? "확인 중" : "내 위치"}
                 </Button>
-              </div>
-              {geoState === "denied" ? <p className="inline-notice">위치 권한이 꺼져 있습니다. 위 지역 목록으로 계속 탐색할 수 있어요.</p> : null}
-              {geoState === "error" ? <p className="inline-notice">현재 위치를 확인하지 못했습니다. 지역을 직접 선택해 주세요.</p> : null}
+              </form>
+              <p className={regionState === "error" || regionState === "empty" ? "inline-notice" : "region-hint"}>{regionMessage}</p>
+              {geoState === "denied" ? <p className="inline-notice">위치 권한이 꺼져 있습니다. 전국 지역 검색으로 계속 탐색할 수 있어요.</p> : null}
+              {geoState === "error" ? <p className="inline-notice">현재 위치를 확인하지 못했습니다. 지역을 직접 검색해 주세요.</p> : null}
             </div>
 
             <form className="search-row" onSubmit={(event) => { event.preventDefault(); void runPlaceSearch("all", query) }}>

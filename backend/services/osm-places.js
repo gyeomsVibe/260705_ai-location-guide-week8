@@ -162,7 +162,9 @@ async function fetchNearbyPlaces(query, fetchImpl = fetch) {
     });
     if (response.ok) {
       const items = normalizeNominatimPlaces(await response.json(), request);
-      return { items, count: items.length, attribution: "© OpenStreetMap contributors" };
+      if (items.length) {
+        return { items, count: items.length, attribution: "© OpenStreetMap contributors" };
+      }
     }
   } catch (error) {
     if (error?.name === "AbortError") timedOut = true;
