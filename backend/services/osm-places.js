@@ -3,6 +3,7 @@ const OVERPASS_URLS = [
   "https://overpass.kumi.systems/api/interpreter",
 ];
 const NOMINATIM_URL = "https://nominatim.openstreetmap.org/search";
+const { nominatimClient } = require("./nominatim-client");
 const NOMINATIM_TERMS = {
   all: "amenity",
   restaurant: "restaurant",
@@ -153,7 +154,9 @@ async function fetchNearbyPlaces(query, fetchImpl = fetch) {
   const nominatimController = new AbortController();
   const nominatimTimeout = setTimeout(() => nominatimController.abort(), 10000);
   try {
-    const response = await fetchImpl(buildNominatimUrl(request), {
+    const response = await nominatimClient.request(buildNominatimUrl(request), {
+      fetchImpl,
+      bypassQueue: fetchImpl !== globalThis.fetch,
       headers: {
         "Accept": "application/json",
         "User-Agent": "ai-location-guide/2.0 (educational local discovery service)",
@@ -161,7 +164,7 @@ async function fetchNearbyPlaces(query, fetchImpl = fetch) {
       signal: nominatimController.signal,
     });
     if (response.ok) {
-      const items = normalizeNominatimPlaces(await response.json(), request);
+      const items = normalizeNominatimPlaces(response.payload, request);
       if (items.length) {
         return { items, count: items.length, attribution: "© OpenStreetMap contributors" };
       }

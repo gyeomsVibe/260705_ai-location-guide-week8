@@ -46,11 +46,11 @@ export function fetchRegions(query: string, signal?: AbortSignal) {
 export function fetchBenefits(query: string, signal?: AbortSignal) {
   const params = new URLSearchParams({ limit: "24" })
   if (query.trim()) params.set("q", query.trim())
-  return getJson<{ items: Benefit[]; count: number }>(`/api/benefits?${params}`, signal)
+  return getJson<{ items: Benefit[]; count: number; degraded?: boolean; source?: string }>(`/api/benefits?${params}`, signal)
 }
 
 export function fetchDataSources(signal?: AbortSignal) {
-  return getJson<{ items: Array<{ id: string; label?: string; status: string }>; checkedAt: string }>(
+  return getJson<{ items: Array<{ id: string; label?: string; status: string; configured?: boolean }>; checkedAt: string }>(
     "/api/data-sources",
     signal,
   )

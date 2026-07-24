@@ -1,4 +1,5 @@
 const NOMINATIM_URL = "https://nominatim.openstreetmap.org/search";
+const { nominatimClient } = require("./nominatim-client");
 
 class GeocodeApiError extends Error {
   constructor(status, code, message) {
@@ -58,8 +59,10 @@ async function geocodeKoreanRegion(query, fetchImpl = fetch) {
   const controller = new AbortController();
   const timeout = setTimeout(() => controller.abort(), 10000);
   try {
-    const response = await fetchImpl(buildGeocodeUrl(request), {
+    const response = await nominatimClient.request(buildGeocodeUrl(request), {
+      fetchImpl,
       signal: controller.signal,
+      bypassQueue: fetchImpl !== globalThis.fetch,
       headers: {
         Accept: "application/json",
         "User-Agent": "ai-location-guide/2.0 (educational local discovery service)",
@@ -68,7 +71,7 @@ async function geocodeKoreanRegion(query, fetchImpl = fetch) {
     if (!response.ok) {
       throw new GeocodeApiError(502, "GEOCODE_UPSTREAM_ERROR", "지역 검색 연결이 원활하지 않습니다.");
     }
-    const items = normalizeGeocodeResults(await response.json(), request.limit);
+    const items = normalizeGeocodeResults(response.payload, request.limit);
     return { items, count: items.length, attribution: "© OpenStreetMap contributors" };
   } catch (error) {
     if (error instanceof GeocodeApiError) throw error;

@@ -24,10 +24,10 @@ const CATEGORIES = [
 ]
 
 const SCENARIOS = [
-  { label: "점심 뭐 먹지", note: "가까운 식사", category: "restaurant", icon: Sun },
-  { label: "저녁 한 끼", note: "퇴근 후 선택", category: "restaurant", icon: Moon },
-  { label: "데이트 코스", note: "공원부터 시작", category: "park", icon: Sparkles },
-  { label: "동네 모임", note: "대화하기 좋은 곳", category: "cafe", icon: Users },
+  { label: "점심 뭐 먹지", note: "가까운 식사 · 1km", categories: ["restaurant"], radiusKm: 1, icon: Sun },
+  { label: "저녁 한 끼", note: "식사 선택 · 3km", categories: ["restaurant"], radiusKm: 3, icon: Moon },
+  { label: "데이트 코스", note: "공원 + 카페 · 3km", categories: ["park", "cafe"], radiusKm: 3, icon: Sparkles },
+  { label: "동네 모임", note: "카페 + 식사 · 3km", categories: ["cafe", "restaurant"], radiusKm: 3, icon: Users },
 ]
 
 const BENEFIT_PRESETS = [
@@ -50,12 +50,16 @@ export function App() {
   const [regionQuery, setRegionQuery] = useState(INITIAL_CENTER.label)
   const [regionState, setRegionState] = useState<LoadState>("idle")
   const [regionMessage, setRegionMessage] = useState("전국 시·군·구·동을 검색할 수 있습니다.")
+  const [regionCandidates, setRegionCandidates] = useState<Coordinates[]>([])
   const [radius, setRadius] = useState(1)
   const [category, setCategory] = useState("restaurant")
+  const [activeCategories, setActiveCategories] = useState(["restaurant"])
+  const [searchIntent, setSearchIntent] = useState("맛집")
   const [query, setQuery] = useState("")
   const [places, setPlaces] = useState<Place[]>([])
   const [placeState, setPlaceState] = useState<LoadState>("idle")
   const [placeError, setPlaceError] = useState("")
+  const [placeWarning, setPlaceWarning] = useState("")
   const [selectedId, setSelectedId] = useState<string | null>(null)
   const [geoState, setGeoState] = useState<"idle" | "loading" | "denied" | "error">("idle")
   const [benefitQuery, setBenefitQuery] = useState("")
@@ -68,31 +72,49 @@ export function App() {
   const benefitRequestRef = useRef<AbortController | null>(null)
 
   const runPlaceSearch = useCallback(async (
-    nextCategory = category,
+    nextCategories: string | string[] = activeCategories,
     nextQuery = query,
     nextCenter = center,
     nextRadius = radius,
+    nextIntent?: string,
   ) => {
+    const categories = Array.isArray(nextCategories) ? nextCategories : [nextCategories]
     requestRef.current?.abort()
     const controller = new AbortController()
     requestRef.current = controller
-    setCategory(nextCategory)
+    setCategory(categories[0])
+    setActiveCategories(categories)
+    setSearchIntent(nextIntent || (nextQuery.trim() ? `“${nextQuery.trim()}” 검색` : CATEGORIES.find((item) => item.id === categories[0])?.label || "통합 검색"))
     setQuery(nextQuery)
     setSelectedId(null)
     setPlaceError("")
+    setPlaceWarning("")
     setPlaceState("loading")
     try {
-      const result = await fetchPlaces(nextCenter, nextCategory, nextRadius, nextQuery, controller.signal)
+      const settledResponses = await Promise.allSettled(categories.map((nextCategory) => (
+        fetchPlaces(nextCenter, nextCategory, nextRadius, nextQuery, controller.signal)
+      )))
       if (controller.signal.aborted || requestRef.current !== controller) return
-      setPlaces(result.items)
-      setPlaceState(result.items.length ? "success" : "empty")
+      const responses = settledResponses.flatMap((result) => result.status === "fulfilled" ? [result.value] : [])
+      if (!responses.length) {
+        const rejected = settledResponses.find((result) => result.status === "rejected")
+        throw rejected?.status === "rejected" ? rejected.reason : new Error("주변 장소를 불러오지 못했습니다.")
+      }
+      if (settledResponses.some((result) => result.status === "rejected")) {
+        setPlaceWarning("일부 목적의 연결이 지연되어 확인된 결과만 먼저 보여드립니다.")
+      }
+      const uniquePlaces = Array.from(
+        new Map(responses.flatMap((result) => result.items).map((place) => [place.id, place])).values(),
+      ).sort((a, b) => a.distanceKm - b.distanceKm).slice(0, 30)
+      setPlaces(uniquePlaces)
+      setPlaceState(uniquePlaces.length ? "success" : "empty")
     } catch (error) {
       if (controller.signal.aborted) return
       setPlaces([])
       setPlaceError(error instanceof Error ? error.message : "주변 장소를 불러오지 못했습니다.")
       setPlaceState("error")
     }
-  }, [category, center, query, radius])
+  }, [activeCategories, center, query, radius])
 
   const useMyLocation = () => {
     if (!navigator.geolocation) {
@@ -106,11 +128,20 @@ export function App() {
         setCenter(next)
         setRegionQuery(next.label)
         setGeoState("idle")
-        void runPlaceSearch(category, query, next)
+        void runPlaceSearch(activeCategories, query, next)
       },
       (error) => setGeoState(error.code === 1 ? "denied" : "error"),
       { enableHighAccuracy: false, timeout: 8000, maximumAge: 120000 },
     )
+  }
+
+  const moveToRegion = async (next: Coordinates) => {
+    setRegionCandidates([])
+    setCenter(next)
+    setRegionQuery(next.label)
+    setRegionState("success")
+    setRegionMessage(`${next.label} 중심으로 지도와 검색 반경을 이동했습니다.`)
+    await runPlaceSearch(activeCategories, query, next, radius)
   }
 
   const runRegionSearch = async () => {
@@ -124,6 +155,7 @@ export function App() {
     const controller = new AbortController()
     regionRequestRef.current = controller
     setRegionState("loading")
+    setRegionCandidates([])
     setRegionMessage("입력한 지역의 중심 좌표를 찾고 있습니다.")
     try {
       const result = await fetchRegions(normalizedQuery, controller.signal)
@@ -133,12 +165,13 @@ export function App() {
         setRegionMessage("일치하는 국내 지역이 없습니다. 시·군·구·동을 함께 입력해 보세요.")
         return
       }
-      const next = result.items[0]
-      setCenter(next)
-      setRegionQuery(next.label)
-      setRegionState("success")
-      setRegionMessage(`${next.label} 중심으로 지도와 검색 반경을 이동했습니다.`)
-      await runPlaceSearch(category, query, next, radius)
+      if (result.items.length > 1) {
+        setRegionCandidates(result.items)
+        setRegionState("success")
+        setRegionMessage("검색할 지역을 선택해 주세요.")
+        return
+      }
+      await moveToRegion(result.items[0])
     } catch (error) {
       if (controller.signal.aborted) return
       setRegionState("error")
@@ -156,7 +189,7 @@ export function App() {
       const result = await fetchBenefits(nextQuery, controller.signal)
       if (controller.signal.aborted || benefitRequestRef.current !== controller) return
       setBenefits(result.items)
-      setBenefitState(result.items.length ? "success" : "empty")
+      setBenefitState(result.items.length ? (result.degraded ? "degraded" : "success") : "empty")
     } catch (error) {
       if (controller.signal.aborted) return
       setBenefits([])
@@ -177,7 +210,7 @@ export function App() {
     return () => controller.abort()
   }, [sourcesOpen])
 
-  const activeCategory = CATEGORIES.find((item) => item.id === category)?.label || "통합 검색"
+  const activeCategory = searchIntent
   const feedback = stateCopy(placeState, placeError)
 
   return (
@@ -225,7 +258,7 @@ export function App() {
                   <input
                     id="region"
                     value={regionQuery}
-                    onChange={(event) => setRegionQuery(event.target.value)}
+                    onChange={(event) => { setRegionQuery(event.target.value); setRegionCandidates([]) }}
                     placeholder="전국 시·군·구·동 검색"
                     aria-label="전국 지역 검색"
                     autoComplete="off"
@@ -241,6 +274,15 @@ export function App() {
                 </Button>
               </form>
               <p className={regionState === "error" || regionState === "empty" ? "inline-notice" : "region-hint"}>{regionMessage}</p>
+              {regionCandidates.length ? (
+                <div className="region-candidates" aria-label="지역 검색 결과">
+                  {regionCandidates.map((candidate) => (
+                    <button key={`${candidate.lat}-${candidate.lng}`} type="button" onClick={() => void moveToRegion(candidate)}>
+                      <MapPin size={14} /><span>{candidate.label}</span><ChevronRight size={14} />
+                    </button>
+                  ))}
+                </div>
+              ) : null}
               {geoState === "denied" ? <p className="inline-notice">위치 권한이 꺼져 있습니다. 전국 지역 검색으로 계속 탐색할 수 있어요.</p> : null}
               {geoState === "error" ? <p className="inline-notice">현재 위치를 확인하지 못했습니다. 지역을 직접 검색해 주세요.</p> : null}
             </div>
@@ -260,7 +302,7 @@ export function App() {
                   aria-pressed={radius === value}
                   onClick={() => {
                     setRadius(value)
-                    void runPlaceSearch(category, query, center, value)
+                    void runPlaceSearch(activeCategories, query, center, value, searchIntent)
                   }}
                 >
                   {value}km
@@ -282,8 +324,8 @@ export function App() {
             <section className="compact-section">
               <div className="section-heading"><h2>동네에서 뭐 할까?</h2><span>상황별 빠른 결정</span></div>
               <div className="scenario-grid">
-                {SCENARIOS.map(({ label, note, category: scenarioCategory, icon: Icon }) => (
-                  <button key={label} className="scenario" onClick={() => void runPlaceSearch(scenarioCategory, "")}>
+                {SCENARIOS.map(({ label, note, categories, radiusKm, icon: Icon }) => (
+                  <button key={label} className="scenario" onClick={() => { setRadius(radiusKm); void runPlaceSearch(categories, "", center, radiusKm, label) }}>
                     <Icon size={18} /><span><strong>{label}</strong><small>{note}</small></span><ChevronRight size={15} />
                   </button>
                 ))}
@@ -295,6 +337,7 @@ export function App() {
                 <h2>가까운 결과 <Badge>{places.length}</Badge></h2>
                 {placeState === "success" ? <span>거리순</span> : null}
               </div>
+              {placeWarning ? <p className="partial-notice">{placeWarning}</p> : null}
               {placeState === "idle" ? (
                 <div className="empty-state"><MapPin size={24} /><strong>첫 목적을 골라보세요</strong><p>바로 찾기나 상황 카드를 누르면 결과가 여기에 나타납니다.</p></div>
               ) : null}
@@ -339,13 +382,14 @@ export function App() {
             <div className="official-note"><Building2 size={20} /><span><strong>공식 정보가 기준입니다</strong><small>신청 전 담당 기관의 최신 조건을 확인하세요.</small></span></div>
           </aside>
           <div className="benefit-results" aria-live="polite">
-            <div className="benefit-title"><span><small>RESULTS</small><h2>맞춤 혜택</h2></span><Badge>{benefits.length}건</Badge></div>
+            <div className="benefit-title"><span><small>RESULTS</small><h2>{benefitState === "degraded" ? "공식 확인 경로" : "혜택 검색 결과"}</h2></span><Badge>{benefits.length}건</Badge></div>
             {benefitState === "idle" ? <div className="benefit-guide"><div><Gift size={32} /><h3>상황을 하나 선택해 보세요</h3><p>검색 결과는 읽기 편한 카드로 정리됩니다.</p></div><ol><li><span>01</span><strong>상황 선택</strong><small>왼쪽에서 내 조건과 가까운 항목을 고릅니다.</small></li><li><span>02</span><strong>지원 내용 비교</strong><small>대상·기관·신청 방법을 카드에서 비교합니다.</small></li><li><span>03</span><strong>공식 기관 확인</strong><small>최종 신청 조건은 담당 기관에서 확인합니다.</small></li></ol></div> : null}
             {benefitState === "loading" ? <div className="benefit-grid">{[1,2,3,4,5,6].map((item) => <div key={item} className="benefit-skeleton" />)}</div> : null}
-            {benefitState === "degraded" || benefitState === "error" || benefitState === "empty" ? (
+            {benefitState === "degraded" ? <div className="benefit-disclosure"><Building2 size={20} /><span><strong>공식 안내 링크를 보여드립니다</strong><small>현재 결과는 자격·소득·지역 조건을 검증한 맞춤 판정 결과가 아니라, 입력한 검색어와 관련된 공식 확인 경로입니다.</small></span></div> : null}
+            {benefitState === "error" || benefitState === "empty" ? (
               <div className="benefit-recovery"><div className="recovery-lead"><WifiOff size={32} /><span><small>DEGRADED, NOT DEAD</small><h3>{benefitState === "empty" ? "조건에 맞는 혜택이 없습니다" : "혜택 데이터 연결이 준비 중입니다"}</h3><p>검색을 멈추지 않고 공식 경로에서 같은 조건으로 계속 확인할 수 있습니다.</p></span></div><div className="recovery-actions"><div><span>01</span><strong>검색 조건 유지</strong><small>선택한 “{benefitQuery || "현재 조건"}”을 기억하세요.</small></div><div><span>02</span><strong>정부24로 이동</strong><small>공식 혜택알리미에서 최신 정보를 확인합니다.</small></div><div><span>03</span><strong>담당 기관 확인</strong><small>신청 전 대상과 기간을 최종 확인합니다.</small></div></div><Button asChild><a href="https://plus.gov.kr/" target="_blank" rel="noreferrer">정부24에서 계속 찾기 <ChevronRight size={16} /></a></Button></div>
             ) : null}
-            {benefitState === "success" ? (
+            {benefitState === "success" || benefitState === "degraded" ? (
               <div className="benefit-grid">
                 {benefits.map((benefit) => (
                   <Card key={benefit.id}>
@@ -366,7 +410,12 @@ export function App() {
             <p>장소 탐색은 별도 키 없이 동작합니다. 공공 데이터는 연결 여부에 따라 보조 기능으로 제공됩니다.</p>
             <div className="source-list">
               <div><span className="source-icon ready"><Check size={15} /></span><span><strong>OpenStreetMap 장소 탐색</strong><small>기본 지도와 주변 장소</small></span><Badge>사용 가능</Badge></div>
-              {sources.map((source) => <div key={source.id}><span className={source.configured ? "source-icon ready" : "source-icon"}>{source.configured ? <Check size={15} /> : <X size={15} />}</span><span><strong>{source.label || source.id}</strong><small>{source.configured ? "설정됨" : "선택 기능 · 미설정"}</small></span><Badge>{source.configured ? "대기/정상" : "선택"}</Badge></div>)}
+              {sources.map((source) => {
+                const planned = source.status === "planned"
+                const description = planned ? "아직 제공되지 않는 기능" : source.configured ? "연결 설정됨" : "선택 연동 · 미설정"
+                const badge = planned ? "도입 예정" : source.configured ? "연결됨" : "미설정"
+                return <div key={source.id}><span className={source.configured ? "source-icon ready" : "source-icon"}>{source.configured ? <Check size={15} /> : planned ? <Sparkles size={15} /> : <X size={15} />}</span><span><strong>{source.label || source.id}</strong><small>{description}</small></span><Badge>{badge}</Badge></div>
+              })}
             </div>
           </section>
         </div>
